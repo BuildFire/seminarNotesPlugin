@@ -1,1 +1,1 @@
-# seminarNotePlugin-
+# seminarNotesPlugin
