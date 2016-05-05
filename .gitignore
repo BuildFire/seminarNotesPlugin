@@ -31,3 +31,12 @@ node_modules
 
 # Optional REPL history
 .node_repl_history
+
+#.idea folder
+.idea/*
+
+#bower components
+test/assets/bower_components
+
+#coverage folder
+test/coverage
