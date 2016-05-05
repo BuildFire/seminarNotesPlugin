@@ -1,0 +1,22 @@
+{
+  "author":"BuildFire"
+,"pluginName":"Seminar Notes"
+,"pluginDescription":"This plugin will show seminar notes."
+,"supportEmail":"[Your support Email]"
+,"control":{
+  "content":{
+    "enabled":true
+  }
+, "design":{
+    "enabled":true
+  }
+, "settings":{
+    "enabled":false
+  }
+}
+,"widget":{
+
+},
+  "features" : [],
+  "languages" : ["en"]
+}
