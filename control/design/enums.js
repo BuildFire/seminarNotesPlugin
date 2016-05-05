@@ -28,7 +28,8 @@
         {name: "Item_List_1"},
         {name: "Item_List_2"},
         {name: "Item_List_3"},
-        {name: "Item_List_4"}
+        {name: "Item_List_4"},
+        {name: "Item_List_5"}
       ]
     });
 })(window.angular);
