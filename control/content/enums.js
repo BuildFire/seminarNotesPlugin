@@ -25,10 +25,10 @@
     })
     .constant('LAYOUTS', {
       itemListLayout: [
-        {name: "Item_LIST_1"},
-        {name: "Item_LIST_"},
-        {name: "Item_LIST_"},
-        {name: "Item_LIST_"}
+        {name: "Item_List_1"},
+        {name: "Item_List_2"},
+        {name: "Item_List_3"},
+        {name: "Item_List_4"}
       ]
     })
     .constant('PAGINATION', {
