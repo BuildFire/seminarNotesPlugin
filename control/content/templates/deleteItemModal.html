@@ -1,0 +1,18 @@
+<div class="header clearfix border-bottom-grey">
+  <h4 class="margin-zero">Delete Item?</h4>
+  <span class="icon icon-cross2 close-modal" ng-click="closeDialog()"></span></div>
+<div class="padded clearfix">
+  <div class="content">
+    <p class="margin-top-five">Are you sure you want to delete this item?</p>
+    <p class="margin-zero text-danger">Deleting this item will also delete any associated notes users have created on their devices.</p>
+  </div>
+</div>
+<div class="bottom border-top-grey clearfix">
+  <div class="col-md-6 pull-left text-center">
+    <a class="text-primary default-background-hover transition-third"
+       ng-click="closeDialog('cancel')">Cancel</a>
+  </div>
+  <div class="col-md-6 pull-right text-center border-left-grey">
+    <a class="text-danger default-background-hover transition-third" ng-click="closeDialog()">Delete</a>
+  </div>
+</div>

@@ -1,172 +1,203 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="seminarNotesPluginWidget">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-	<!-- CSS -->
-	<link href="../../../../styles/helper.css" rel="stylesheet">
-	<link href="../../../../styles/siteIcons.css" rel="stylesheet">
-	<link href="assets/style.css" rel="stylesheet">
-	
-	<!-- JS -->
-	<script src="../../../scripts/buildfire.js"></script>
-   
- 	<!--
-    <script src="../../../../scripts/angular/angular.min.js"></script>
-    <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
+  <!-- CSS -->
+  <link rel="stylesheet" href="../../../styles/siteIcons.css">
+  <link rel="stylesheet" href="../../../styles/helper.css">
+  <link rel="stylesheet" href="../../../scripts/owlCarousel/owlCarousel.css">
 
-    <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
-    -->
+  <!-- JS -->
+  <script src="../../../scripts/buildfire.js"></script>
+
+  <!-- Angular, jQuery & Owl Carousel-->
+
+  <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
+  <script src="../../../scripts/owlCarousel/owlCarousel.js"></script>
+  <script
+      src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
+  <script src="../../../scripts/angular/angular.min.js"></script>
+  <script src="../../../scripts/angular/angular-route.min.js"></script>
+  <script src="../../../scripts/angular/ui-bootstrap.min.js"></script>
+
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- App -->
+  <script src="app.js" type="application/javascript"></script>
+  <script src="enums.js"></script>
+  <script src="app.services.js"></script>
+  <script src="controllers/widget.home.controller.js"
+          type="application/javascript"></script>
+  <script src="controllers/widget.item.controller.js"
+          type="application/javascript"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="no-scroll holder padding-zero has-bottom">
-	<div class="scrollable">
-		<div class="seminar-notes layout3">
-			<div class="plugin-slide">
-				<img src="../../../styles/media/holder-16x9.png">
-			</div>
-			<div class="padded">
-				<p class="margin-zero">this is a wysiwyg. this is a wysiwyg. this is a wysiwyg.</p>
-			</div>
-			<div class="list-layout">
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="square-icon list-media-holder pull-left">
-							<img src="../../../styles/media/holder-1x1.png">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<div class="copy-holder">
-								<p class="ellipsis margin-zero text-primary margin-top-five">
-									This is a title
-								</p>
-								<p class="ellipsis margin-zero bodyTextTheme">
-									This is a summary
-								</p>
-								<p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
-									<i>June 7, 2016</i>
-								</p>
-							</div>
-							<div class="bookmark-holder">
-								<span class="icon icon-bookmark2"></span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="square-icon list-media-holder pull-left">
-							<img src="../../../styles/media/holder-1x1.png">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<div class="copy-holder">
-								<p class="ellipsis margin-zero text-primary margin-top-five">
-									This is a title
-								</p>
-								<p class="ellipsis margin-zero bodyTextTheme">
-									This is a summary
-								</p>
-								<p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
-									<i>June 7, 2016</i>
-								</p>
-							</div>
-							<div class="bookmark-holder">
-								<span class="icon icon-bookmark2 text-primary"></span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="square-icon list-media-holder pull-left">
-							<img src="../../../styles/media/holder-1x1.png">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<div class="copy-holder">
-								<p class="ellipsis margin-zero text-primary margin-top-five">
-									This is a title
-								</p>
-								<p class="ellipsis margin-zero bodyTextTheme">
-									This is a summary
-								</p>
-								<p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
-									<i>June 7, 2016</i>
-								</p>
-							</div>
-							<div class="bookmark-holder">
-								<span class="icon icon-bookmark2"></span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="square-icon list-media-holder pull-left">
-							<img src="../../../styles/media/holder-1x1.png">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<div class="copy-holder">
-								<p class="ellipsis margin-zero text-primary margin-top-five">
-									This is a title
-								</p>
-								<p class="ellipsis margin-zero bodyTextTheme">
-									This is a summary
-								</p>
-								<p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
-									<i>June 7, 2016</i>
-								</p>
-							</div>
-							<div class="bookmark-holder">
-								<span class="icon icon-bookmark2 text-primary"></span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="square-icon list-media-holder pull-left">
-							<img src="../../../styles/media/holder-1x1.png">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<div class="copy-holder">
-								<p class="ellipsis margin-zero text-primary margin-top-five">
-									This is a title
-								</p>
-								<p class="ellipsis margin-zero bodyTextTheme">
-									This is a summary
-								</p>
-								<p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
-									<i>June 7, 2016</i>
-								</p>
-							</div>
-							<div class="bookmark-holder">
-								<span class="icon icon-bookmark2"></span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="bottom fixed-bottom primaryBackgroundTheme">
-		<div class="col-xs-3 pull-left text-center">
-			<a class="whiteTheme stretch active">Items</a>
-		</div>
-		<div class="col-xs-3 pull-left text-center">
-			<a class="whiteTheme stretch">Notes</a>
-		</div>
-		<div class="col-xs-3 pull-left text-center">
-			<a class="whiteTheme stretch">Bookmarks</a>
-		</div>
-		<div class="col-xs-3 pull-left text-center">
-			<a class="whiteTheme stretch">Search</a>
-		</div>
-	</div>
-	
-	<!-- Simple Popup that notifies user if item is bookmarked or removed from bookmarks (show for 2 seconds) -->
-	<div class="simple-popup activ">
-		<div class="content border-radius-four text-center">
-			<p class="whiteTheme margin-zero text-center">Item bookmarked</p>
-			<span class="whiteTheme icon icon-check"></span>
-		</div>
-	</div>
+<div class="scrollable">
+  <div class="seminar-notes layout3">
+    <div class="plugin-slide">
+      <img src="../../../styles/media/holder-16x9.png">
+    </div>
+    <div class="padded">
+      <p class="margin-zero">this is a wysiwyg. this is a wysiwyg. this is a
+        wysiwyg.</p>
+    </div>
+    <div class="list-layout">
+      <div class="list-item">
+        <div class="list-item-media text-left overflow-hidden">
+          <div class="square-icon list-media-holder pull-left">
+            <img src="../../../styles/media/holder-1x1.png">
+          </div>
+          <div
+              class="list-item-copy text-left padding-left-ten padding-right-ten">
+            <div class="copy-holder">
+              <p class="ellipsis margin-zero text-primary margin-top-five">
+                This is a title
+              </p>
+
+              <p class="ellipsis margin-zero bodyTextTheme">
+                This is a summary
+              </p>
+
+              <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
+                <i>June 7, 2016</i>
+              </p>
+            </div>
+            <div class="bookmark-holder">
+              <span class="icon icon-bookmark2"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-media text-left overflow-hidden">
+          <div class="square-icon list-media-holder pull-left">
+            <img src="../../../styles/media/holder-1x1.png">
+          </div>
+          <div
+              class="list-item-copy text-left padding-left-ten padding-right-ten">
+            <div class="copy-holder">
+              <p class="ellipsis margin-zero text-primary margin-top-five">
+                This is a title
+              </p>
+
+              <p class="ellipsis margin-zero bodyTextTheme">
+                This is a summary
+              </p>
+
+              <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
+                <i>June 7, 2016</i>
+              </p>
+            </div>
+            <div class="bookmark-holder">
+              <span class="icon icon-bookmark2 text-primary"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-media text-left overflow-hidden">
+          <div class="square-icon list-media-holder pull-left">
+            <img src="../../../styles/media/holder-1x1.png">
+          </div>
+          <div
+              class="list-item-copy text-left padding-left-ten padding-right-ten">
+            <div class="copy-holder">
+              <p class="ellipsis margin-zero text-primary margin-top-five">
+                This is a title
+              </p>
+
+              <p class="ellipsis margin-zero bodyTextTheme">
+                This is a summary
+              </p>
+
+              <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
+                <i>June 7, 2016</i>
+              </p>
+            </div>
+            <div class="bookmark-holder">
+              <span class="icon icon-bookmark2"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-media text-left overflow-hidden">
+          <div class="square-icon list-media-holder pull-left">
+            <img src="../../../styles/media/holder-1x1.png">
+          </div>
+          <div
+              class="list-item-copy text-left padding-left-ten padding-right-ten">
+            <div class="copy-holder">
+              <p class="ellipsis margin-zero text-primary margin-top-five">
+                This is a title
+              </p>
+
+              <p class="ellipsis margin-zero bodyTextTheme">
+                This is a summary
+              </p>
+
+              <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
+                <i>June 7, 2016</i>
+              </p>
+            </div>
+            <div class="bookmark-holder">
+              <span class="icon icon-bookmark2 text-primary"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-media text-left overflow-hidden">
+          <div class="square-icon list-media-holder pull-left">
+            <img src="../../../styles/media/holder-1x1.png">
+          </div>
+          <div
+              class="list-item-copy text-left padding-left-ten padding-right-ten">
+            <div class="copy-holder">
+              <p class="ellipsis margin-zero text-primary margin-top-five">
+                This is a title
+              </p>
+
+              <p class="ellipsis margin-zero bodyTextTheme">
+                This is a summary
+              </p>
+
+              <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
+                <i>June 7, 2016</i>
+              </p>
+            </div>
+            <div class="bookmark-holder">
+              <span class="icon icon-bookmark2"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bottom fixed-bottom primaryBackgroundTheme">
+  <div class="col-xs-3 pull-left text-center">
+    <a class="whiteTheme stretch active">Items</a>
+  </div>
+  <div class="col-xs-3 pull-left text-center">
+    <a class="whiteTheme stretch">Notes</a>
+  </div>
+  <div class="col-xs-3 pull-left text-center">
+    <a class="whiteTheme stretch">Bookmarks</a>
+  </div>
+  <div class="col-xs-3 pull-left text-center">
+    <a class="whiteTheme stretch">Search</a>
+  </div>
+</div>
+
+<!-- Simple Popup that notifies user if item is bookmarked or removed from bookmarks (show for 2 seconds) -->
+<div class="simple-popup activ">
+  <div class="content border-radius-four text-center">
+    <p class="whiteTheme margin-zero text-center">Item bookmarked</p>
+    <span class="whiteTheme icon icon-check"></span>
+  </div>
+</div>
 </body>
 </html>

@@ -1,1 +1,1 @@
-# seminarNotesPlugin
+# seminarNotesPlugin ![](https://api.travis-ci.org/BuildFire/seminarNotesPlugin.svg)
