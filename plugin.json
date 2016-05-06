@@ -2,7 +2,7 @@
   "author":"BuildFire"
 ,"pluginName":"Seminar Notes"
 ,"pluginDescription":"This plugin will show seminar notes."
-,"supportEmail":"[Your support Email]"
+,"supportEmail":"support@buildfire.com"
 ,"control":{
   "content":{
     "enabled":true

@@ -1,0 +1,148 @@
+<!-- Remove Start-->
+<br><br><br>
+<hr>
+<br><br>
+<h4 class="margin-top-zero">Add New Item UI</h4>
+<br>
+<!-- Remove End -->
+
+<tabset justified="true">
+  <tab heading="Item Content">
+    <div class="item clearfix row">
+      <div class="col-md-3 labels pull-left">
+        <span>Item Title</span>
+      </div>
+      <div class="col-md-9 main pull-right">
+        <input type="text" class="form-control" placeholder="Item Title">
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="col-md-3 labels pull-left">
+        <span>Item Summary</span>
+      </div>
+      <div class="col-md-9 main pull-right">
+        <input type="text" class="form-control" placeholder="Item Summary">
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="col-md-3 labels pull-left">
+        <span>Publication Date</span>
+      </div>
+      <div class="col-md-9 main pull-right">
+        <input type="text" class="form-control" placeholder="Publication Date">
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="col-md-3 labels pull-left">
+        <span>List Image</span>
+      </div>
+      <div class="col-md-9 main pull-right">
+        <div class="screens clearfix">
+          <div class="screen logoicon pull-left text-center">
+            <a class="border-radius-three default-background-hover">
+              <span class="add-icon">+</span>
+              <img ng-src="{{ tools.resizeImage(info.logoUrl,{width:300}) }}">
+            </a>
+            <label class="secondary">600x280</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="col-md-3">
+        carousel
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="col-md-3 labels pull-left">
+        <span>Links/Actions</span>
+      </div>
+      <div class="col-md-9 main pull-right">
+        <textarea placeholder="standard link/action list"
+                  class="form-control"></textarea>
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="col-md-12 labels pull-left">
+        <span>Content</span>
+      </div>
+    </div>
+    <div class="item clearfix row margin-top-ten">
+      <div class="col-md-12 main pull-left">
+        <textarea placeholder="WYSIWYG" class="form-control"></textarea>
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="col-md-3 main pull-right">
+        <a class="btn btn-primary stretch">Done</a>
+      </div>
+    </div>
+  </tab>
+  <tab heading="Item Design">
+    <div class="item clearfix row margin-top-thirty">
+      <div class="labels col-xs-3 pull-left">
+        <span>List Layout</span>
+      </div>
+      <div class="main col-xs-9 pull-right">
+        <div class="screens clearfix">
+          <div class="screen layouticon pull-left">
+            <a class="border-grey border-radius-three default-background-hover text-center">
+              <span class="add-icon">+</span>
+              <img src="http://www.placehold.it/60x100">
+            </a>
+          </div>
+          <div
+              class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
+            <a data-number="{{$index + 1}}"
+               class="layouticon border-grey border-radius-three default-background-hover text-center"
+               ng-click="DesignHome.changeLayout(layout.name)">
+              <img src="http://www.placehold.it/60x100">
+            </a>
+            <a data-number="{{$index + 1}}"
+               class="layouticon border-grey border-radius-three default-background-hover text-center"
+               ng-click="DesignHome.changeLayout(layout.name)">
+              <img src="http://www.placehold.it/60x100">
+            </a>
+            <a data-number="{{$index + 1}}"
+               class="layouticon border-grey border-radius-three default-background-hover text-center"
+               ng-click="DesignHome.changeLayout(layout.name)">
+              <img src="http://www.placehold.it/60x100">
+            </a>
+            <a data-number="{{$index + 1}}"
+               class="layouticon border-grey border-radius-three default-background-hover text-center"
+               ng-click="DesignHome.changeLayout(layout.name)">
+              <img src="http://www.placehold.it/60x100">
+            </a>
+            <a data-number="{{$index + 1}}"
+               class="layouticon border-grey border-radius-three default-background-hover text-center"
+               ng-click="DesignHome.changeLayout(layout.name)">
+              <img src="http://www.placehold.it/60x100">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row margin-top-thirty">
+      <div class="labels col-xs-3 pull-left">
+        <span>Background Image</span>
+      </div>
+      <div class="main col-xs-9 pull-right">
+        <div class="screens clearfix">
+          <div class="screen layouticon pull-left">
+            <a class="border-grey border-radius-three default-background-hover text-center">
+              <span class="add-icon">+</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </tab>
+</tabset>
