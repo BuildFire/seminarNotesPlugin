@@ -2,11 +2,10 @@
 (function (angular, buildfire) {
   angular
     .module('seminarNotesPluginContent')
-    .controller('ContentItemCtrl', ['$scope', '$routeParams', 'Buildfire', 'DataStore', 'TAG_NAMES', '$location', '$timeout',
-      function ($scope, $routeParams, Buildfire, DataStore, TAG_NAMES, $location, $timeout) {
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
+    .controller('ContentItemCtrl', ['$scope', '$routeParams', 'Buildfire', 'DataStore', 'TAG_NAMES', '$location', '$timeout', 'RankOfLastItem',
+      function ($scope, $routeParams, Buildfire, DataStore, TAG_NAMES, $location, $timeout, RankOfLastItem) {
         var ContentItem = this;
-
+        var _rankOfLastItem = RankOfLastItem.getRank();
         var _data = {
           "title": "",
           "summary": "",
@@ -15,7 +14,8 @@
           "publishedOn": "",
           "links": [],
           "description": "",
-          "carouselImages": []
+          "carouselImages": [],
+          "rank": _rankOfLastItem
         };
 
         ContentItem.item = {
@@ -39,45 +39,45 @@
         console.log("-------------------------------------------------");
         // create a new instance of the buildfire carousel editor
         /*var editor = new Buildfire.components.carousel.editor("#carousel2");
-        console.log(editor);
+         console.log(editor);
 
-        // this method will be called when a new item added to the list
-        editor.onAddItems = function (items) {
-          if (!ContentItem.item.data.carouselImages)
-            ContentItem.item.data.carouselImages = [];
-          ContentItem.item.data.carouselImages.push.apply(ContentItem.item.data.carouselImages, items);
-          $scope.$digest();
-        };
-        // this method will be called when an item deleted from the list
-        editor.onDeleteItem = function (item, index) {
-          ContentItem.item.data.carouselImages.splice(index, 1);
-          $scope.$digest();
-        };
-        // this method will be called when you edit item details
-        editor.onItemChange = function (item, index) {
-          ContentItem.item.data.carouselImages.splice(index, 1, item);
-          $scope.$digest();
-        };
-        // this method will be called when you change the order of items
-        editor.onOrderChange = function (item, oldIndex, newIndex) {
-          var items = ContentItem.item.data.carouselImages,
-            tmp = items[oldIndex],
-            i;
+         // this method will be called when a new item added to the list
+         editor.onAddItems = function (items) {
+         if (!ContentItem.item.data.carouselImages)
+         ContentItem.item.data.carouselImages = [];
+         ContentItem.item.data.carouselImages.push.apply(ContentItem.item.data.carouselImages, items);
+         $scope.$digest();
+         };
+         // this method will be called when an item deleted from the list
+         editor.onDeleteItem = function (item, index) {
+         ContentItem.item.data.carouselImages.splice(index, 1);
+         $scope.$digest();
+         };
+         // this method will be called when you edit item details
+         editor.onItemChange = function (item, index) {
+         ContentItem.item.data.carouselImages.splice(index, 1, item);
+         $scope.$digest();
+         };
+         // this method will be called when you change the order of items
+         editor.onOrderChange = function (item, oldIndex, newIndex) {
+         var items = ContentItem.item.data.carouselImages,
+         tmp = items[oldIndex],
+         i;
 
-          if (oldIndex < newIndex) {
-            for (i = oldIndex + 1; i <= newIndex; i++) {
-              items[i - 1] = items[i];
-            }
-          } else {
-            for (i = oldIndex - 1; i >= newIndex; i--) {
-              items[i + 1] = items[i];
-            }
-          }
-          items[newIndex] = tmp;
+         if (oldIndex < newIndex) {
+         for (i = oldIndex + 1; i <= newIndex; i++) {
+         items[i - 1] = items[i];
+         }
+         } else {
+         for (i = oldIndex - 1; i >= newIndex; i--) {
+         items[i + 1] = items[i];
+         }
+         }
+         items[newIndex] = tmp;
 
-          ContentItem.item.data.carouselImages = items;
-          $scope.$digest();
-        };*/
+         ContentItem.item.data.carouselImages = items;
+         $scope.$digest();
+         };*/
 
         console.log("===================================================");
 
@@ -92,23 +92,23 @@
 
         /* Build fire thumbnail component to add thumbnail image*/
         /*var listImage = new Buildfire.components.images.thumbnail("#listImage", {
-          title: "List Image",
-          dimensionsLabel: "600x280"
-        });
+         title: "List Image",
+         dimensionsLabel: "600x280"
+         });
 
-        listImage.onChange = function (url) {
-          ContentItem.item.data.listImage = url;
-          if (!$scope.$$phase && !$scope.$root.$$phase) {
-            $scope.$apply();
-          }
-        };
+         listImage.onChange = function (url) {
+         ContentItem.item.data.listImage = url;
+         if (!$scope.$$phase && !$scope.$root.$$phase) {
+         $scope.$apply();
+         }
+         };
 
-        listImage.onDelete = function (url) {
-          ContentItem.item.data.listImage = "";
-          if (!$scope.$$phase && !$scope.$root.$$phase) {
-            $scope.$apply();
-          }
-        };*/
+         listImage.onDelete = function (url) {
+         ContentItem.item.data.listImage = "";
+         if (!$scope.$$phase && !$scope.$root.$$phase) {
+         $scope.$apply();
+         }
+         };*/
 
         var updateMasterItem = function (item) {
           ContentItem.masterItem = angular.copy(item);
