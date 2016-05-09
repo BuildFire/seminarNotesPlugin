@@ -23,13 +23,14 @@
     <div class="dropdown" dropdown>
       <button class="btn btn-default text-left dropdown-toggle"
               data-toggle="dropdown" dropdown-toggle aria-expanded="true">
-        <span class="pull-left">Sort By</span>
+        <span class="pull-left">{{ContentHome.data.content.sortBy || ContentHome.sortingOptions[0]}}</span>
         <span class="chevron icon-chevron-down pull-right"></span>
       </button>
       <ul class="dropdown-menu extended" role="menu">
-        <li><a>Option 1</a></li>
-        <li><a>Option 2</a></li>
-        <li><a>Option 3</a></li>
+        <li ng-repeat="value in ContentHome.sortingOptions"
+            ng-click="ContentHome.sortItemBy(this.value)">
+          <a tabindex="-1" class="transition-third">{{value}}</a>
+        </li>
       </ul>
     </div>
   </div>
