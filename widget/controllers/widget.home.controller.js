@@ -11,7 +11,7 @@
 
                 WidgetHome.data={
                     design:{
-                        itemList:LAYOUTS.itemListLayout[0].name
+                        itemListLayout:LAYOUTS.itemListLayout[0].name
                     }
                 };
                 WidgetHome.init = function () {
@@ -19,29 +19,29 @@
 
                             if(result && result.data){
                                  WidgetHome.data = result.data;
-
                             }
                             else{
                                 WidgetHome.data={
                                     design:{
-                                        itemList:LAYOUTS.itemListLayout[0].name
+                                        itemListLayout:LAYOUTS.itemListLayout[0].name
                                     }
                                 };
                             }
                             if(WidgetHome.data && !WidgetHome.data.design){
                                 WidgetHome.data.design={
-                                        itemList:LAYOUTS.itemListLayout[0].name
+                                    itemListLayout:LAYOUTS.itemListLayout[0].name
                                     };
                             }
                             currentListLayout = WidgetHome.data.design.itemList;
                             if (!WidgetHome.data.design)
                                 WidgetHome.data.design = {};
-                           if (!WidgetHome.data.design.itemList) {
-                                WidgetHome.data.design.itemList = LAYOUTS.itemListLayout[0].name;
+                           if (!WidgetHome.data.design.itemListLayout) {
+                                WidgetHome.data.design.itemListLayout = LAYOUTS.itemListLayout[0].name;
                             }
+console.log("==============", WidgetHome.data.design.itemListLayout)
                         }
                         , error = function (err) {
-                            WidgetHome.data={design:{itemList:LAYOUTS.itemListLayout[0].name}};
+                            WidgetHome.data={design:{itemListLayout:LAYOUTS.itemListLayout[0].name}};
                             console.error('Error while getting data', err);
                         };
                     DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
@@ -88,10 +88,10 @@
                                 WidgetHome.data.content = {};
                         }
 
-                        if (!WidgetHome.data.design.itemList) {
-                            WidgetHome.data.design.itemList = LAYOUTS.itemListLayout[0].name;
+                        if (!WidgetHome.data.design.itemListLayout) {
+                            WidgetHome.data.design.itemListLayout = LAYOUTS.itemListLayout[0].name;
                         }
-                        if (currentListLayout != WidgetHome.data.design.itemList && WidgetHome.view && WidgetHome.data.content.carouselImages) {
+                        if (currentListLayout != WidgetHome.data.design.itemListLayout && WidgetHome.view && WidgetHome.data.content.carouselImages) {
                             WidgetHome.view._destroySlider();
                             WidgetHome.view = null;
                             console.log("==========1")
