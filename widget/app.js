@@ -86,14 +86,11 @@
                     });
             }
         })
-
-        .directive("buildFireCarousel", ["$rootScope", "$timeout", function ($rootScope, $timeout) {
+        .directive("buildFireCarousel", ["$rootScope", function ($rootScope) {
             return {
                 restrict: 'A',
                 link: function (scope, elem, attrs) {
-                    $timeout(function () {
-                        $rootScope.$broadcast("Carousel:LOADED");
-                    });
+                    $rootScope.$broadcast("Carousel:LOADED");
                 }
             };
         }])
