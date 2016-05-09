@@ -24,7 +24,7 @@
       ITEM_ARRAY_FOUND: 'Array of Items provided'
     })
     .constant('LAYOUTS', {
-      itemListLayout: [
+        itemListLayout: [
         {name: "Item_List_1"},
         {name: "Item_List_2"},
         {name: "Item_List_3"},
