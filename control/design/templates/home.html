@@ -3,7 +3,21 @@
     <span>Item List Layout</span>
   </div>
   <div class="main col-md-9 pull-right">
+    <div class="screens clearfix">
+      <div class="screen layouticon pull-left">
+        <a class="border-radius-three default-background-hover text-center"  ng-if="DesignHome.data.design.itemListLayout.length">
+          <span class="add-icon hidden">+</span>
+          <img ng-src="images/{{DesignHome.data.design.itemListLayout}}.png">
+        </a>
 
+      </div>
+      <div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
+        <a data-number="{{$index + 1}}"
+           ng-repeat="layout in DesignHome.layouts.itemListLayout" class="layouticon border-radius-three default-background-hover text-center" ng-click="DesignHome.changeListLayout(layout.name)">
+          <img ng-src="images/{{layout.name}}.png">
+        </a>
+      </div>
+    </div>
   </div>
 </div>
-<hr>
+<div id="background"></div>
