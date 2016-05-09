@@ -5,7 +5,7 @@
         .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce',
             function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce) {
                 var WidgetHome = this;
-
+                var currentListLayout = null;
                 $rootScope.deviceHeight = window.innerHeight;
                 $rootScope.deviceWidth = window.innerWidth;
 
@@ -16,9 +16,10 @@
                 };
                 WidgetHome.init = function () {
                     var success = function (result) {
-                            console.log("=========",result)
+
                             if(result && result.data){
                                  WidgetHome.data = result.data;
+
                             }
                             else{
                                 WidgetHome.data={
@@ -27,6 +28,12 @@
                                     }
                                 };
                             }
+                            if(WidgetHome.data && !WidgetHome.data.design){
+                                WidgetHome.data.design={
+                                        itemList:LAYOUTS.itemListLayout[0].name
+                                    };
+                            }
+                            currentListLayout = WidgetHome.data.design.itemList;
                             if (!WidgetHome.data.design)
                                 WidgetHome.data.design = {};
                            if (!WidgetHome.data.design.itemList) {
@@ -58,6 +65,7 @@
                  * This event listener is bound for "Carousel:LOADED" event broadcast
                  */
                 $rootScope.$on("Carousel:LOADED", function () {
+                    WidgetHome.view= null;
                     if (!WidgetHome.view) {
                         WidgetHome.view = new Buildfire.components.carousel.view("#carousel", []);
                     }
@@ -68,5 +76,37 @@
                     }
                 });
 
+                var onUpdateCallback = function (event) {
+                    console.log(event)
+                    setTimeout(function () {
+                        $scope.$digest();
+                        if (event && event.tag === TAG_NAMES.SEMINAR_INFO) {
+                            WidgetHome.data = event.data;
+                            if (!WidgetHome.data.design)
+                                WidgetHome.data.design = {};
+                            if (!WidgetHome.data.content)
+                                WidgetHome.data.content = {};
+                        }
+
+                        if (!WidgetHome.data.design.itemList) {
+                            WidgetHome.data.design.itemList = LAYOUTS.itemListLayout[0].name;
+                        }
+                        if (currentListLayout != WidgetHome.data.design.itemList && WidgetHome.view && WidgetHome.data.content.carouselImages) {
+                            WidgetHome.view._destroySlider();
+                            WidgetHome.view = null;
+                            console.log("==========1")
+                        }
+                        else {
+                            if (WidgetHome.view) {
+                                WidgetHome.view.loadItems(WidgetHome.data.content.carouselImages);
+                                console.log("==========2")
+                            }
+                        }
+                        currentListLayout = WidgetHome.data.design.itemList;
+                         $scope.$digest();
+                        $rootScope.$digest();
+                    }, 0);
+                };
+                DataStore.onUpdate().then(null, null, onUpdateCallback);
             }])
 })(window.angular, window.buildfire);
