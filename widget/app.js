@@ -1,7 +1,7 @@
 'use strict';
 
 (function (angular, buildfire, window) {
-    angular.module('seminarNotesPluginWidget', ['ngRoute', 'ui.bootstrap'])
+    angular.module('seminarNotesPluginWidget', ['infinite-scroll', 'ngRoute', 'ui.bootstrap'])
         .config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
 
             /**

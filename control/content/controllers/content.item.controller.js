@@ -251,6 +251,7 @@
         };
 
         ContentItem.gotToHome = function () {
+            buildfire.messaging.sendMessageToWidget({})
           $location.path('#/');
         };
 

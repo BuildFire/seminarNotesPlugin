@@ -8,7 +8,12 @@
                 var currentListLayout = null;
                 $rootScope.deviceHeight = window.innerHeight;
                 $rootScope.deviceWidth = window.innerWidth;
-
+                WidgetHome.busy = false;
+                WidgetHome.items = [];
+                var searchOptions = {
+                    skip: 0,
+                    limit: PAGINATION.itemCount
+                };
                 WidgetHome.data={
                     design:{
                         itemListLayout:LAYOUTS.itemListLayout[0].name
@@ -96,6 +101,10 @@
                             if (!WidgetHome.data.content)
                                 WidgetHome.data.content = {};
                         }
+                        else  if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {
+                            console.log("============items",event)
+                            //WidgetHome.items.push(event.data);
+                        }
 
                         if (!WidgetHome.data.design.itemListLayout) {
                             WidgetHome.data.design.itemListLayout = LAYOUTS.itemListLayout[0].name;
@@ -117,12 +126,26 @@
                     }, 0);
                 };
                 DataStore.onUpdate().then(null, null, onUpdateCallback);
-                var successAll = function (resultAll) {
-                        console.log("==============",resultAll )
-                    },
-                    errorAll = function (error) {
-                        console.log("error", error)
-                    };
-                DataStore.search({}, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
+
+                WidgetHome.loadMore = function () {
+                    console.log("===============In loadmore")
+                    if (WidgetHome.busy) return;
+                    WidgetHome.busy = true;
+                    WidgetHome.getItems();
+                };
+                WidgetHome.getItems = function() {
+                    var successAll = function (resultAll) {
+                            WidgetHome.items = WidgetHome.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
+                            console.log("==============", WidgetHome.items)
+                            searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
+                            if (resultAll.length == PAGINATION.itemCount) {
+                                WidgetHome.busy = false;
+                            }
+                        },
+                        errorAll = function (error) {
+                            console.log("error", error)
+                        };
+                    DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
+                }
             }])
 })(window.angular, window.buildfire);
