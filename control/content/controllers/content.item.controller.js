@@ -11,7 +11,7 @@
           "deepLinkUrl": "",
           "summary": "",
           "listImage": "",
-          "createdOn": "",
+          "dateCreated": "",
           "publishedOn": "",
           "links": [],
           "description": "",

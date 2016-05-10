@@ -257,10 +257,10 @@
               ContentHome.searchOptions.sort = {"publishedOn": -1};
               break;
             case SORT.NEWEST_FIRST:
-              ContentHome.searchOptions.sort = {"createdOn": 1};
+              ContentHome.searchOptions.sort = {"dateCreated": 1};
               break;
             case SORT.OLDEST_FIRST:
-              ContentHome.searchOptions.sort = {"createdOn": -1};
+              ContentHome.searchOptions.sort = {"dateCreated": -1};
               break;
             default :
               ContentHome.itemSortableOptions.disabled = false;
