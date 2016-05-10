@@ -32,13 +32,13 @@
                                     itemListLayout:LAYOUTS.itemListLayout[0].name
                                     };
                             }
-                            currentListLayout = WidgetHome.data.design.itemList;
+                            currentListLayout = WidgetHome.data.design.itemListLayout;
                             if (!WidgetHome.data.design)
                                 WidgetHome.data.design = {};
                            if (!WidgetHome.data.design.itemListLayout) {
                                 WidgetHome.data.design.itemListLayout = LAYOUTS.itemListLayout[0].name;
                             }
-console.log("==============", WidgetHome.data.design.itemListLayout)
+                            console.log("==============", WidgetHome.data.design.itemListLayout)
                         }
                         , error = function (err) {
                             WidgetHome.data={design:{itemListLayout:LAYOUTS.itemListLayout[0].name}};
@@ -75,7 +75,16 @@ console.log("==============", WidgetHome.data.design.itemListLayout)
                         WidgetHome.view.loadItems([]);
                     }
                 });
+                WidgetHome.Items = function () {
 
+                        ViewStack.push({
+                            template: 'bookmarks',
+                            params: {
+                                controller: "WidgetItemsCtrl as WidgetItems",
+                                shouldUpdateTemplate : true
+                            }
+                        });
+                };
                 var onUpdateCallback = function (event) {
                     console.log(event)
                     setTimeout(function () {
@@ -102,11 +111,18 @@ console.log("==============", WidgetHome.data.design.itemListLayout)
                                 console.log("==========2")
                             }
                         }
-                        currentListLayout = WidgetHome.data.design.itemList;
+                        currentListLayout = WidgetHome.data.design.itemListLayout;
                          $scope.$digest();
                         $rootScope.$digest();
                     }, 0);
                 };
                 DataStore.onUpdate().then(null, null, onUpdateCallback);
+                var successAll = function (resultAll) {
+                        console.log("==============",resultAll )
+                    },
+                    errorAll = function (error) {
+                        console.log("error", error)
+                    };
+                DataStore.search({}, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
             }])
 })(window.angular, window.buildfire);
