@@ -33,6 +33,6 @@
       ]
     })
     .constant('PAGINATION', {
-      itemCount: 6
+      itemCount: 10
     });
 })(window.angular);
