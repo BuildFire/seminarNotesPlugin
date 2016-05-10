@@ -52,92 +52,37 @@
 </div>
 <hr class="none">
 <div class="draggable-list-view wide-list has-btn links-list">
-  <div class="d-item double-line square-icon clearfix">
-    <span class="icon icon-menu pull-left"></span>
-
-    <div class="media-holder pull-left">
-      <img src="http://www.placehold.it/80x50">
-    </div>
-    <div class="copy pull-right">
-      <div class="col-md-4 padding-zero pull-left">
-        <a class="text-primary"><span
-            class="title ellipsis pull-left">Item Name</span></a>
-        <span class="title ellipsis pull-left">Item Summary</span>
+  <div ng-if="ContentHome.data" infinite-scroll-distance="1" data-infinite-container=".infinite-scroll-parent"
+       infinite-scroll="ContentHome.loadMore()" infinite-scroll-disabled="ContentHome.noMore">
+    <div ui-sortable="ContentHome.itemSortableOptions" ng-model="ContentHome.items">
+      <div class="well text-center margin-bottom-zero border-none" ng-if="!ContentHome.items.length">
+        <p class="margin-zero">No items found.</p>
       </div>
-      <div class="col-md-7 padding-right-zero pull-left">
-        <span class="title pull-left ellipsis">Created: July 3, 2016</span>
+      <div ng-if="ContentHome.items.length"
+           class="d-item double-line square-icon clearfix" ng-repeat="item in ContentHome.items">
+        <span class="icon icon-menu pull-left"></span>
+        <div class="media-holder pull-left">
+          <img ng-src="{{item.data.listImage | getImageUrl : 60:60}}" ng-if="item.data.listImage">
+          <img src="../../../../styles/media/holder-1x1.png"
+               ng-if="!item.data.listImage">
+        </div>
+        <div class="copy pull-right">
+          <div class="col-md-4 padding-zero pull-left">
+            <a class="text-primary"><span
+                class="title ellipsis pull-left">{{item.data.title}}</span></a>
+            <span class="title ellipsis pull-left">{{item.data.summary}}</span>
+          </div>
+          <div class="col-md-7 padding-right-zero pull-left">
+            <span class="title pull-left ellipsis">Created: {{item.data.dateCreated |
+              date}}</span>
         <span
-            class="title pull-left ellipsis">Pub. Date: January 24, 2016</span>
-      </div>
-      <div class="pull-right">
-	                <span class="btn-icon btn-delete-icon btn-danger"><span>
-      </div>
-    </div>
-  </div>
-  <div class="d-item double-line square-icon clearfix">
-    <span class="icon icon-menu pull-left"></span>
-
-    <div class="media-holder pull-left">
-      <img src="http://www.placehold.it/80x50">
-    </div>
-    <div class="copy pull-right">
-      <div class="col-md-4 padding-zero pull-left">
-        <a class="text-primary"><span
-            class="title ellipsis pull-left">Item Name</span></a>
-        <span class="title ellipsis pull-left">Item Summary</span>
-      </div>
-      <div class="col-md-7 padding-right-zero pull-left">
-        <span class="title pull-left ellipsis">Created: July 3, 2016</span>
-        <span
-            class="title pull-left ellipsis">Pub. Date: January 24, 2016</span>
-      </div>
-      <div class="pull-right">
-	                <span class="btn-icon btn-delete-icon btn-danger"><span>
-      </div>
-    </div>
-  </div>
-  <div class="d-item double-line square-icon clearfix">
-    <span class="icon icon-menu pull-left"></span>
-
-    <div class="media-holder pull-left">
-      <img src="http://www.placehold.it/80x50">
-    </div>
-    <div class="copy pull-right">
-      <div class="col-md-4 padding-zero pull-left">
-        <a class="text-primary"><span
-            class="title ellipsis pull-left">Item Name</span></a>
-        <span class="title ellipsis pull-left">Item Summary</span>
-      </div>
-      <div class="col-md-7 padding-right-zero pull-left">
-        <span class="title pull-left ellipsis">Created: July 3, 2016</span>
-        <span
-            class="title pull-left ellipsis">Pub. Date: January 24, 2016</span>
-      </div>
-      <div class="pull-right">
-	                <span class="btn-icon btn-delete-icon btn-danger"><span>
-      </div>
-    </div>
-  </div>
-  <div class="d-item double-line square-icon clearfix">
-    <span class="icon icon-menu pull-left"></span>
-
-    <div class="media-holder pull-left">
-      <img src="http://www.placehold.it/80x50">
-    </div>
-    <div class="copy pull-right">
-      <div class="col-md-4 padding-zero pull-left">
-        <a class="text-primary"><span
-            class="title ellipsis pull-left">Item Name</span></a>
-        <span class="title ellipsis pull-left">Item Summary</span>
-      </div>
-      <div class="col-md-7 padding-right-zero pull-left">
-        <span class="title pull-left ellipsis">Created: July 3, 2016</span>
-        <span
-            class="title pull-left ellipsis">Pub. Date: January 24, 2016</span>
-      </div>
-      <div class="pull-right">
-	                <span class="btn-icon btn-delete-icon btn-danger"
-                        onclick="alert('open deleteItem.html modal');"><span>
+            class="title pull-left ellipsis" ng-if="item.publishedOn">Pub.
+          Date: {{item.data.publishedOn | date}}</span>
+          </div>
+          <div class="pull-right">
+	                <span class="btn-icon btn-delete-icon btn-danger" ng-click="ContentHome.removeListItem($index)"><span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
