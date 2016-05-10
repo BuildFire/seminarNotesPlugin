@@ -18,6 +18,8 @@
   <script src="../../../scripts/angular/angular.min.js"></script>
   <script src="../../../scripts/angular/angular-route.min.js"></script>
   <script src="../../../scripts/angular/ui-bootstrap.min.js"></script>
+  <script src="assets/js/ng-infinite-scroll.custom.js"
+          type="application/javascript"></script>
 
   <!-- Meta -->
   <meta charset="utf-8">
@@ -35,7 +37,7 @@
   <link rel="stylesheet" href="../../../styles/transitionAnimation.css">
 </head>
 <body >
-<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content  ">
+<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content">
   <div ng-if="WidgetHome.data.design.itemListLayout" ng-include="'templates/' +  WidgetHome.data.design.itemListLayout + '.html'">
   </div>
 </div>
