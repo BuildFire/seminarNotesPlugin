@@ -62,6 +62,39 @@
           SORT.OLDEST_FIRST
         ];
 
+        /**
+         * ContentHome.removeListItem() used to delete an item from people list
+         * @param _index tells the index of item to be deleted.
+         */
+        ContentHome.removeListItem = function (_index) {
+
+          buildfire.navigation.scrollTop();
+
+          var modalInstance = $modal.open({
+            templateUrl: 'templates/deleteItemModal.html',
+            controller: 'RemovePopupCtrl',
+            controllerAs: 'RemovePopup',
+            size: 'sm',
+            resolve: {
+              itemInfo: function () {
+                return ContentHome.items[_index];
+              }
+            }
+          });
+          modalInstance.result.then(function (message) {
+            if (message === 'yes') {
+              var item = ContentHome.items[_index];
+              DataStore.deleteById(item.id, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
+                ContentHome.items.splice(_index, 1);
+              }, function (error) {
+                console.log("Error deleting item :", error);
+              });
+            }
+          }, function (data) {
+            //do something on cancel
+          });
+        };
+
         /*
          * create an artificial delay so api isnt called on every character entered
          * */
