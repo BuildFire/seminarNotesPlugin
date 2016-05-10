@@ -24,8 +24,9 @@
                         </div>
                         <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                             <div class="copy-holder">
-                                <p class="ellipsis margin-zero text-primary margin-top-five">
-                                    {{item.data.title}}
+                                <p
+                                    class="ellipsis margin-zero text-primary margin-top-five">
+                                    <a  ng-click="WidgetHome.openDetails()">{{item.data.title}}</a>
                                 </p>
 
                                 <p class="ellipsis margin-zero bodyTextTheme">

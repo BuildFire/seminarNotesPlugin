@@ -22,7 +22,7 @@
 					<div class="blackLayer"></div>
 					<div class="backgroundLayer" style="background:url('../../../styles/media/holder-1x1.png');"></div>
 					<div class="item-text">
-						<p class="ellipsis item-title margin-zero whiteTheme text-center"> {{item.data.title}}</p>
+						<p class="ellipsis item-title margin-zero whiteTheme text-center"><a  ng-click="WidgetHome.openDetails()">{{item.data.title}}</a></p>
 						<p class="ellipsis item-summary margin-zero whiteTheme text-center">{{item.data.summary}} </p>
 						<p class="ellipsis item-date margin-zero whiteTheme text-center">{{item.data.publishDate | date:'medium'}}</p>
 					</div>
