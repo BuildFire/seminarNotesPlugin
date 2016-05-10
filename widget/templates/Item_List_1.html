@@ -26,7 +26,8 @@
                             <div class="copy-holder">
                                 <p
                                     class="ellipsis margin-zero text-primary margin-top-five">
-                                    <a  ng-click="WidgetHome.openDetails()">{{item.data.title}}</a>
+                                    <a
+                                        ng-click="WidgetHome.openDetails(item.id)">{{item.data.title}}</a>
                                 </p>
 
                                 <p class="ellipsis margin-zero bodyTextTheme">
@@ -34,7 +35,7 @@
                                 </p>
 
                                 <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
-                                    <i>{{item.data.publishDate | date:'medium'}}</i>
+                                    <i>{{item.data.publishDate | date}}</i>
                                 </p>
                             </div>
                             <div class="bookmark-holder">

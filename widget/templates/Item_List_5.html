@@ -22,9 +22,9 @@
                        getImageUrl :162 :162}}">
 						<div class="blackLayer"></div>
 						<div class="item-text">
-							<p class="item-title margin-zero whiteTheme text-center"><a  ng-click="WidgetHome.openDetails()">{{item.data.title}}</a></p>
+							<p class="item-title margin-zero whiteTheme text-center"><a  ng-click="WidgetHome.openDetails(item.id)">{{item.data.title}}</a></p>
 							<p class="item-summary margin-zero whiteTheme text-center">{{item.data.summary}}</p>
-							<p class="item-date margin-zero whiteTheme text-center">{{item.data.publishDate | date:'medium'}}</p>
+							<p class="item-date margin-zero whiteTheme text-center">{{item.data.publishDate | date}}</p>
 						</div>
 						<!-- Use these theme classes when inactive/not selected -->
 						<div class="bookmark-icon primaryBackgroundTheme">

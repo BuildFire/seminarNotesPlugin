@@ -147,12 +147,13 @@
           DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
         };
 
-        WidgetHome.openDetails = function () {
+        WidgetHome.openDetails = function (itemId) {
           ViewStack.push({
             template: 'item_detail',
             params: {
               controller: "WidgetItemCtrl as WidgetItem",
-              shouldUpdateTemplate: true
+              shouldUpdateTemplate: true,
+              itemId : itemId
             }
           });
         }
