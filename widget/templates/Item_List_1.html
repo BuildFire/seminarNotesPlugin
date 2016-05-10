@@ -1,4 +1,4 @@
-<div class="no-scroll holder padding-zero has-bottom">
+<div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu clearfix">
     <div class="scrollable">
         <div class="seminar-notes layout3">
             <div class="plugin-slide" ng-if="!WidgetHome.data.content.carouselImages.length">
@@ -141,7 +141,7 @@
     </div>
     <div class="bottom fixed-bottom primaryBackgroundTheme">
         <div class="col-xs-3 pull-left text-center">
-            <a class="whiteTheme stretch active">Items</a>
+            <a class="whiteTheme stretch active" ng-click="WidgetHome.Items()">Items</a>
         </div>
         <div class="col-xs-3 pull-left text-center">
             <a class="whiteTheme stretch">Notes</a>

@@ -32,9 +32,10 @@
   <script src="controllers/widget.item.controller.js"
           type="application/javascript"></script>
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="../../../styles/transitionAnimation.css">
 </head>
 <body >
-<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content">
+<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content  ">
   <div ng-if="WidgetHome.data.design.itemListLayout" ng-include="'templates/' +  WidgetHome.data.design.itemListLayout + '.html'">
   </div>
 </div>

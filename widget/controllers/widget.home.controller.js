@@ -75,7 +75,16 @@
                         WidgetHome.view.loadItems([]);
                     }
                 });
+                WidgetHome.Items = function () {
 
+                        ViewStack.push({
+                            template: 'bookmarks',
+                            params: {
+                                controller: "WidgetItemsCtrl as WidgetItems",
+                                shouldUpdateTemplate : true
+                            }
+                        });
+                };
                 var onUpdateCallback = function (event) {
                     console.log(event)
                     setTimeout(function () {
@@ -108,5 +117,12 @@
                     }, 0);
                 };
                 DataStore.onUpdate().then(null, null, onUpdateCallback);
+                var successAll = function (resultAll) {
+                        console.log("==============",resultAll )
+                    },
+                    errorAll = function (error) {
+                        console.log("error", error)
+                    };
+                DataStore.search({}, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
             }])
 })(window.angular, window.buildfire);
