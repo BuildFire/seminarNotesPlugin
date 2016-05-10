@@ -12,6 +12,15 @@
     </div>
     <hr class="none">
     <div class="item clearfix row">
+      <div class="labels col-md-3 padding-right-zero pull-left">
+        <span>Deep Link URL</span>
+      </div>
+      <div class="main col-md-9 pull-right">
+        <span>{{ContentItem.item.data.deepLinkUrl}}</span>
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
       <div class="col-md-3 labels pull-left">
         <span>Item Summary</span>
       </div>
@@ -26,20 +35,19 @@
         <span>Publication Date</span>
       </div>
       <div class="col-md-9 main pull-right">
-        <input type="date" class="form-control"
+        <input type="date" class="form-control" date-time=""
                placeholder="Publication Date"
                ng-model="ContentItem.item.data.publishDate">
       </div>
     </div>
     <hr class="none">
-    <!--<div id="listImage"></div>-->
+    <div id="listImage"></div>
     <hr class="none">
-   <!-- <div class="carousel-padding-botton" id="carousel2"></div>-->
-    <!-- Show If No images -->
-    <!--<div class="well text-center margin-bottom-zero border-none carousel-list-noImage-margin"
+    <div class="carousel-padding-botton" id="carousel2"></div>
+    <div class="well text-center margin-bottom-zero border-none carousel-list-noImage-margin"
          ng-hide="ContentItem.item.data.carouselImages.length">
       <p class="margin-zero">No images found.</p>
-    </div>-->
+    </div>
     <hr class="none">
     <div class="item clearfix row">
       <div class="labels col-md-3 padding-right-zero pull-left">
@@ -111,63 +119,6 @@
     </div>
   </tab>
   <tab heading="Item Design">
-    <div class="item clearfix row margin-top-thirty">
-      <div class="labels col-xs-3 pull-left">
-        <span>List Layout</span>
-      </div>
-      <div class="main col-xs-9 pull-right">
-        <div class="screens clearfix">
-          <div class="screen layouticon pull-left">
-            <a class="border-grey border-radius-three default-background-hover text-center">
-              <span class="add-icon">+</span>
-              <img src="http://www.placehold.it/60x100">
-            </a>
-          </div>
-          <div
-              class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
-            <a data-number="{{$index + 1}}"
-               class="layouticon border-grey border-radius-three default-background-hover text-center"
-               ng-click="DesignHome.changeLayout(layout.name)">
-              <img src="http://www.placehold.it/60x100">
-            </a>
-            <a data-number="{{$index + 1}}"
-               class="layouticon border-grey border-radius-three default-background-hover text-center"
-               ng-click="DesignHome.changeLayout(layout.name)">
-              <img src="http://www.placehold.it/60x100">
-            </a>
-            <a data-number="{{$index + 1}}"
-               class="layouticon border-grey border-radius-three default-background-hover text-center"
-               ng-click="DesignHome.changeLayout(layout.name)">
-              <img src="http://www.placehold.it/60x100">
-            </a>
-            <a data-number="{{$index + 1}}"
-               class="layouticon border-grey border-radius-three default-background-hover text-center"
-               ng-click="DesignHome.changeLayout(layout.name)">
-              <img src="http://www.placehold.it/60x100">
-            </a>
-            <a data-number="{{$index + 1}}"
-               class="layouticon border-grey border-radius-three default-background-hover text-center"
-               ng-click="DesignHome.changeLayout(layout.name)">
-              <img src="http://www.placehold.it/60x100">
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr class="none">
-    <div class="item clearfix row margin-top-thirty">
-      <div class="labels col-xs-3 pull-left">
-        <span>Background Image</span>
-      </div>
-      <div class="main col-xs-9 pull-right">
-        <div class="screens clearfix">
-          <div class="screen layouticon pull-left">
-            <a class="border-grey border-radius-three default-background-hover text-center">
-              <span class="add-icon">+</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div id="background"></div>
   </tab>
 </tabset>

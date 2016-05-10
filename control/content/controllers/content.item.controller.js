@@ -8,6 +8,7 @@
         var _rankOfLastItem = RankOfLastItem.getRank();
         var _data = {
           "title": "",
+          "deepLinkUrl": "",
           "summary": "",
           "listImage": "",
           "createdOn": "",
@@ -15,8 +16,11 @@
           "links": [],
           "description": "",
           "carouselImages": [],
-          "rank": _rankOfLastItem
+          "rank": _rankOfLastItem,
+          "itemListBgImage": ""
         };
+
+        var editor, listImage, background = "";
 
         ContentItem.item = {
           data: angular.copy(_data)
@@ -36,50 +40,95 @@
           trusted: true,
           theme: 'modern'
         };
-        console.log("-------------------------------------------------");
-        // create a new instance of the buildfire carousel editor
-        /*var editor = new Buildfire.components.carousel.editor("#carousel2");
-         console.log(editor);
 
-         // this method will be called when a new item added to the list
-         editor.onAddItems = function (items) {
-         if (!ContentItem.item.data.carouselImages)
-         ContentItem.item.data.carouselImages = [];
-         ContentItem.item.data.carouselImages.push.apply(ContentItem.item.data.carouselImages, items);
-         $scope.$digest();
-         };
-         // this method will be called when an item deleted from the list
-         editor.onDeleteItem = function (item, index) {
-         ContentItem.item.data.carouselImages.splice(index, 1);
-         $scope.$digest();
-         };
-         // this method will be called when you edit item details
-         editor.onItemChange = function (item, index) {
-         ContentItem.item.data.carouselImages.splice(index, 1, item);
-         $scope.$digest();
-         };
-         // this method will be called when you change the order of items
-         editor.onOrderChange = function (item, oldIndex, newIndex) {
-         var items = ContentItem.item.data.carouselImages,
-         tmp = items[oldIndex],
-         i;
+        $scope.$on('$viewContentLoaded', function () {
+          $timeout(function () {
+            // create a new instance of the buildfire carousel editor
+            editor = new Buildfire.components.carousel.editor("#carousel2");
+            console.log(editor);
 
-         if (oldIndex < newIndex) {
-         for (i = oldIndex + 1; i <= newIndex; i++) {
-         items[i - 1] = items[i];
-         }
-         } else {
-         for (i = oldIndex - 1; i >= newIndex; i--) {
-         items[i + 1] = items[i];
-         }
-         }
-         items[newIndex] = tmp;
+            // this method will be called when a new item added to the list
+            editor.onAddItems = function (items) {
+              if (!ContentItem.item.data.carouselImages)
+                ContentItem.item.data.carouselImages = [];
+              ContentItem.item.data.carouselImages.push.apply(ContentItem.item.data.carouselImages, items);
+              $scope.$digest();
+            };
+            // this method will be called when an item deleted from the list
+            editor.onDeleteItem = function (item, index) {
+              ContentItem.item.data.carouselImages.splice(index, 1);
+              $scope.$digest();
+            };
+            // this method will be called when you edit item details
+            editor.onItemChange = function (item, index) {
+              ContentItem.item.data.carouselImages.splice(index, 1, item);
+              $scope.$digest();
+            };
+            // this method will be called when you change the order of items
+            editor.onOrderChange = function (item, oldIndex, newIndex) {
+              var items = ContentItem.item.data.carouselImages,
+                tmp = items[oldIndex],
+                i;
 
-         ContentItem.item.data.carouselImages = items;
-         $scope.$digest();
-         };*/
+              if (oldIndex < newIndex) {
+                for (i = oldIndex + 1; i <= newIndex; i++) {
+                  items[i - 1] = items[i];
+                }
+              } else {
+                for (i = oldIndex - 1; i >= newIndex; i--) {
+                  items[i + 1] = items[i];
+                }
+              }
+              items[newIndex] = tmp;
 
-        console.log("===================================================");
+              ContentItem.item.data.carouselImages = items;
+              $scope.$digest();
+            };
+
+
+            /* Build fire thumbnail component to add thumbnail image*/
+            listImage = new Buildfire.components.images.thumbnail("#listImage", {
+              title: "List Image",
+              dimensionsLabel: "600x280"
+            });
+
+            listImage.onChange = function (url) {
+              ContentItem.item.data.listImage = url;
+              if (!$scope.$$phase && !$scope.$root.$$phase) {
+                $scope.$apply();
+              }
+            };
+
+            listImage.onDelete = function (url) {
+              ContentItem.item.data.listImage = "";
+              if (!$scope.$$phase && !$scope.$root.$$phase) {
+                $scope.$apply();
+              }
+            };
+
+            /* background image add <start>*/
+            background = new Buildfire.components.images.thumbnail("#background");
+
+            background.onChange = function (url) {
+              ContentItem.item.data.itemListBgImage = url;
+              if (!$scope.$$phase && !$scope.$root.$$phase) {
+                $scope.$apply();
+              }
+            };
+
+            background.onDelete = function (url) {
+              ContentItem.item.data.itemListBgImage = "";
+              if (!$scope.$$phase && !$scope.$root.$$phase) {
+                $scope.$apply();
+              }
+            };
+
+            if ($routeParams.id) {
+              ContentItem.getItem($routeParams.id);
+            }
+
+          }, 0);
+        });
 
         /**
          * link and sortable options
@@ -89,26 +138,6 @@
         ContentItem.linksSortableOptions = {
           handle: '> .cursor-grab'
         };
-
-        /* Build fire thumbnail component to add thumbnail image*/
-        /*var listImage = new Buildfire.components.images.thumbnail("#listImage", {
-         title: "List Image",
-         dimensionsLabel: "600x280"
-         });
-
-         listImage.onChange = function (url) {
-         ContentItem.item.data.listImage = url;
-         if (!$scope.$$phase && !$scope.$root.$$phase) {
-         $scope.$apply();
-         }
-         };
-
-         listImage.onDelete = function (url) {
-         ContentItem.item.data.listImage = "";
-         if (!$scope.$$phase && !$scope.$root.$$phase) {
-         $scope.$apply();
-         }
-         };*/
 
         var updateMasterItem = function (item) {
           ContentItem.masterItem = angular.copy(item);
@@ -161,6 +190,9 @@
               editor.loadItems([]);
             else
               editor.loadItems(ContentItem.item.data.carouselImages);
+            if (ContentItem.item.data.itemListBgImage) {
+              background.loadbackground(ContentItem.item.data.itemListBgImage);
+            }
             _data.dateCreated = result.data.dateCreated;
             updateMasterItem(ContentItem.item);
           }, errorItem = function () {
@@ -221,10 +253,6 @@
         ContentItem.gotToHome = function () {
           $location.path('#/');
         };
-
-        if ($routeParams.id) {
-          ContentItem.getItem($routeParams.id);
-        }
 
         var tmrDelayForItem = null;
 

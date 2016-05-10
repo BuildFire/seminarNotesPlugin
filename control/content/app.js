@@ -1,7 +1,7 @@
 'use strict';
 
 (function (angular) {
-  angular.module('seminarNotesPluginContent', ['ngRoute', 'ui.tinymce', 'ui.bootstrap','ui.sortable'])
+  angular.module('seminarNotesPluginContent', ['ngRoute', 'ui.tinymce', 'ui.bootstrap', 'ui.sortable'])
     //injected ngRoute for routing
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider
@@ -35,5 +35,21 @@
             height: height
           });
       }
-    }]);
+    }])
+    .directive('dateTime', function () {
+      return {
+        require: 'ngModel',
+        scope: {},
+        link: function (scope, elem, attrs, ngModel) {
+          ngModel.$formatters.push(function (value) {
+            //to view
+            return new Date(value);
+          });
+          ngModel.$parsers.push(function (value) {
+            //to model
+            return +new Date(value);
+          });
+        }
+      };
+    });
 })(window.angular);
