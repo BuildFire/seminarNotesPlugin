@@ -1,23 +1,26 @@
-<div class="infinite-scroll-parent no-scroll holder padding-zero has-bottom sticky-bottom-menu clearfix" >
+<div class="infinite-scroll-parent no-scroll holder padding-zero has-bottom sticky-bottom-menu clearfix">
     <div class="scrollable">
         <div class="seminar-notes layout3">
-            <div class="plugin-slide" ng-if="!WidgetHome.data.content.carouselImages.length">
-                <img src="../../../styles/media/holder-16x9.png">
-            </div>
+            <!--<div class="plugin-slide" ng-if="!WidgetHome.data.content.carouselImages.length">-->
+            <!--<img src="../../../styles/media/holder-16x9.png">-->
+            <!--</div>-->
             <div id="carousel" ng-if="WidgetHome.data.content.carouselImages.length"
                  build-fire-carousel=""
                  ng-style="WidgetHome.data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
             <div class="padded">
-                <p class="margin-zero"  ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
+                <p class="margin-zero" ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
             </div>
             <div class="list-layout" infinite-scroll="WidgetHome.loadMore()"
                  infinite-scroll-distance="1"
                  data-infinite-container=".infinite-scroll-parent"
                  infinite-scroll-disabled="WidgetHome.busy">
-                <div class="list-item" ng-repeat = "item in WidgetHome.items">
+                <div class="list-item" ng-repeat="item in WidgetHome.items">
                     <div class="list-item-media text-left overflow-hidden">
                         <div class="square-icon list-media-holder pull-left">
-                            <img src="../../../styles/media/holder-1x1.png">
+                            <img ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
+                            <img  ng-show="item.data.listImage" class="border-radius-three" ng-if="item.data.listImage"
+                                  load-image="1x1" data-final-src="{{item.data.listImage |
+                       getImageUrl : 60:60}}">
                         </div>
                         <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                             <div class="copy-holder">

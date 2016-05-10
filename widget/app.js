@@ -118,6 +118,17 @@
                     buildfire.navigation._goBackOne();
                 }
             };
+        }]).filter('cropImage', [function () {
+            return function (url, width, height, noDefault) {
+                if (noDefault) {
+                    if (!url)
+                        return '';
+                }
+                return buildfire.imageLib.cropImage(url, {
+                    width: width,
+                    height: height
+                });
+            };
         }]);
 
 
