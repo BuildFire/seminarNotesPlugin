@@ -60,7 +60,8 @@
       </div>
       <div ng-if="ContentHome.items.length"
            class="d-item double-line square-icon clearfix" ng-repeat="item in ContentHome.items">
-        <span class="icon icon-menu pull-left"></span>
+        <span class="icon icon-menu pull-left cursor-grab" aria-hidden="true"
+              ng-class="{ 'disabled': ContentHome.itemSortableOptions.disabled }"></span>
         <div class="media-holder pull-left">
           <img ng-src="{{item.data.listImage | getImageUrl : 60:60}}" ng-if="item.data.listImage">
           <img src="../../../../styles/media/holder-1x1.png"
@@ -80,7 +81,8 @@
           Date: {{item.data.publishedOn | date}}</span>
           </div>
           <div class="pull-right">
-	                <span class="btn-icon btn-delete-icon btn-danger" ng-click="ContentHome.removeListItem($index)"><span>
+	                <span class="btn-icon btn-delete-icon btn-danger"
+                        ng-click="ContentHome.removeListItem($index)"></span>
           </div>
         </div>
       </div>

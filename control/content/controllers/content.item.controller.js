@@ -149,7 +149,9 @@
 
         ContentItem.addNewItem = function () {
           ContentItem.isNewItemInserted = true;
+          _rankOfLastItem = _rankOfLastItem + 10;
           ContentItem.item.data.dateCreated = +new Date();
+          ContentItem.item.data.rank = _rankOfLastItem;
           localStorage.setItem('pluginLoadedFirst', true);
 
           var successItem = function (result) {
@@ -157,6 +159,8 @@
             ContentItem.isUpdating = false;
             ContentItem.item.id = result.id;
             _data.dateCreated = ContentItem.item.data.dateCreated;
+            _data.rank = ContentItem.item.data.rank;
+            RankOfLastItem.setRank(_rankOfLastItem);
             updateMasterItem(ContentItem.item);
             ContentItem.item.data.deepLinkUrl = Buildfire.deeplink.createLink({id: result.id});
             if (ContentItem.item.id) {
@@ -194,6 +198,10 @@
               background.loadbackground(ContentItem.item.data.itemListBgImage);
             }
             _data.dateCreated = result.data.dateCreated;
+            _data.rank = result.data.rank;
+            if(result && result.data && !result.data.deepLinkUrl) {
+              ContentItem.item.data.deepLinkUrl = Buildfire.deeplink.createLink({id: result.id});
+            }
             updateMasterItem(ContentItem.item);
           }, errorItem = function () {
             throw console.error('There was a problem fetching your data', err);

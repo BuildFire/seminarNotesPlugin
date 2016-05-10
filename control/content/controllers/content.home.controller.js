@@ -126,6 +126,7 @@
                   editor.loadItems(ContentHome.data.content.carouselImages);
               }
               ContentHome.itemSortableOptions.disabled = !(ContentHome.data.content.sortBy === SORT.MANUALLY);
+              RankOfLastItem.setRank(ContentHome.data.content.rankOfLastItem || 0);
               //Remove after implementing lazy loading
               ContentHome.loadMore();
               updateMasterItem(ContentHome.data);
@@ -206,16 +207,12 @@
               }
               if (isRankChanged) {
                 DataStore.update(draggedItem.id, draggedItem.data, TAG_NAMES.SEMINAR_ITEMS).then(function (success) {
-                  if (err) {
-                    console.error('Error during updating rank');
-                  } else {
-                    if (ContentHome.data.content.rankOfLastItem < maxRank) {
-                      ContentHome.data.content.rankOfLastItem = maxRank;
-                      RankOfLastItem.setRank(maxRank);
-                    }
+                  if (ContentHome.data.content.rankOfLastItem < maxRank) {
+                    ContentHome.data.content.rankOfLastItem = maxRank;
+                    RankOfLastItem.setRank(maxRank);
                   }
                 }, function (error) {
-
+                  console.error('Error during updating rank');
                 })
               }
             }
@@ -290,10 +287,10 @@
               ContentHome.searchOptions.sort = {"publishedOn": -1};
               break;
             case SORT.NEWEST_FIRST:
-              ContentHome.searchOptions.sort = {"dateCreated": 1};
+              ContentHome.searchOptions.sort = {"dateCreated": -1};
               break;
             case SORT.OLDEST_FIRST:
-              ContentHome.searchOptions.sort = {"dateCreated": -1};
+              ContentHome.searchOptions.sort = {"dateCreated": 1};
               break;
             default :
               ContentHome.itemSortableOptions.disabled = false;
