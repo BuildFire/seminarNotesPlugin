@@ -241,7 +241,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	background:#fff;
 }
 .holder .bottom div a.active{
-	font-weight:500;
+	font-weight:bold;
 }
 .holder .bottom .extra-links a{
 	position:absolute;

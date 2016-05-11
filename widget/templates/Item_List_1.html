@@ -14,7 +14,7 @@
                  infinite-scroll-distance="1"
                  data-infinite-container=".infinite-scroll-parent"
                  infinite-scroll-disabled="WidgetHome.busy">
-                <div class="list-item" ng-repeat="item in WidgetHome.items">
+                <div class="list-item" ng-repeat="item in WidgetHome.items" ng-if="isFetchedAllData">
                     <div class="list-item-media text-left overflow-hidden">
                         <div class="square-icon list-media-holder pull-left">
                             <img ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
@@ -38,9 +38,10 @@
                                     <i>{{item.data.publishDate | date}}</i>
                                 </p>
                             </div>
-                            <div class="bookmark-holder">
-                                <span class="icon icon-bookmark2"></span>
-                            </div>
+
+                            <fieldset class="bookmark-holder" ng-click="WidgetHome.addToBookmark(item.id)" ng-disabled="item.isBookmarked || isClicked">
+                                <span class="icon icon-bookmark2 " ng-class="item.isBookmarked || isClicked?'text-primary':''"></span>
+                            </fieldset>
                         </div>
                     </div>
                 </div>

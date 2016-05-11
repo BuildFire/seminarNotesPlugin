@@ -2,14 +2,18 @@
 
 (function (angular, buildfire) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce',
-      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce) {
+    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData',
+      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData) {
         var WidgetHome = this;
         var currentListLayout = null;
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth;
         WidgetHome.busy = false;
         WidgetHome.items = [];
+        $scope.isClicked = false;
+        WidgetHome.bookmarkItem = [];
+        WidgetHome.bookmarks = {};
+        $scope.isFetchedAllData = false;
         var searchOptions = {
           skip: 0,
           limit: PAGINATION.itemCount
@@ -50,7 +54,25 @@
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
+          var err = function(error){
+            console.log("============ There is an error in getting data", error);
+          },result = function(result){
+            console.log("===========search",result);
+            WidgetHome.bookmarks = result;
+          }
+          UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+
         };
+        WidgetHome.getBookmarks = function(){
+          for (var item = 0; item<  WidgetHome.items.length; item++){
+            for (var bookmark in WidgetHome.bookmarks)  {
+               if(WidgetHome.items[item].id==WidgetHome.bookmarks[bookmark].data.itemIds){
+                WidgetHome.items[item].isBookmarked = true;
+              }
+            };
+          }
+          $scope.isFetchedAllData = true;
+        }
         WidgetHome.init();
 
         WidgetHome.safeHtml = function (html) {
@@ -140,6 +162,7 @@
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetHome.busy = false;
               }
+                WidgetHome.getBookmarks();
             },
             errorAll = function (error) {
               console.log("error", error)
@@ -157,6 +180,66 @@
             }
           });
         }
+
+        WidgetHome.currentLoggedInUser = null;
+
+        /**
+         * Method to open buildfire auth login pop up and allow user to login using credentials.
+         */
+        WidgetHome.openLogin = function () {
+          buildfire.auth.login({}, function () {
+
+          });
+
+          $scope.$apply();
+        };
+
+        var loginCallback = function () {
+          buildfire.auth.getCurrentUser(function (err, user) {
+            console.log("=========User", user);
+
+            $scope.$digest();
+            if (user) {
+              WidgetHome.currentLoggedInUser = user;
+              $scope.$apply();
+            }
+          });
+        };
+
+        buildfire.auth.onLogin(loginCallback);
+
+        /**
+         * Check for current logged in user, if not show ogin screen
+         */
+        buildfire.auth.getCurrentUser(function (err, user) {
+          console.log("===========LoggedInUser", user);
+          if (user) {
+            WidgetHome.currentLoggedInUser = user;
+          }
+          else
+            WidgetHome.openLogin();
+        });
+
+
+
+
+        WidgetHome.addToBookmark = function(itemId){
+          WidgetHome.bookmarkItem = {
+            data:{
+              itemIds: itemId
+            }
+          }
+          var successItem = function (result) {
+            console.log("Inserted", result);
+            $scope.isClicked = true;
+            WidgetHome.getBookmarks();
+          }, errorItem = function () {
+            return console.error('There was a problem saving your data');
+          };
+          console.log("===============",WidgetHome.currentLoggedInUser.username)
+          UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+        }
+
 
       }])
 })(window.angular, window.buildfire);
