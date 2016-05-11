@@ -154,6 +154,7 @@
           WidgetHome.busy = true;
           WidgetHome.getItems();
         };
+
         WidgetHome.getItems = function () {
           var successAll = function (resultAll) {
               WidgetHome.items = WidgetHome.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
@@ -231,13 +232,14 @@
           }
           var successItem = function (result) {
             console.log("Inserted", result);
-            $scope.isClicked = true;
+            $scope.isClicked = itemId;
             WidgetHome.getBookmarks();
           }, errorItem = function () {
             return console.error('There was a problem saving your data');
           };
           console.log("===============",WidgetHome.currentLoggedInUser.username)
           UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+          $scope.$apply();
         }
 
 

@@ -39,8 +39,8 @@
                                 </p>
                             </div>
 
-                            <fieldset class="bookmark-holder" ng-click="WidgetHome.addToBookmark(item.id)" ng-disabled="item.isBookmarked || isClicked">
-                                <span class="icon icon-bookmark2 " ng-class="item.isBookmarked || isClicked?'text-primary':''"></span>
+                            <fieldset class="bookmark-holder" ng-click="WidgetHome.addToBookmark(item.id)" ng-disabled="item.isBookmarked || isClicked==item.id">
+                                <span class="icon icon-bookmark2 " ng-class="item.isBookmarked || isClicked==item.id?'text-primary':''"></span>
                             </fieldset>
                         </div>
                     </div>
