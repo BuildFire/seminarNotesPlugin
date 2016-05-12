@@ -1,7 +1,7 @@
 'use strict';
 
 (function (angular) {
-  angular.module('seminarNotesPluginContent', ['ngRoute', 'ui.tinymce', 'ui.bootstrap', 'ui.sortable'])
+  angular.module('seminarNotesPluginContent', ['ngRoute', 'ui.tinymce', 'infinite-scroll', 'ui.bootstrap', 'ui.sortable'])
     //injected ngRoute for routing
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider

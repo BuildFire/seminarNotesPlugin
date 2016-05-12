@@ -127,8 +127,6 @@
               }
               ContentHome.itemSortableOptions.disabled = !(ContentHome.data.content.sortBy === SORT.MANUALLY);
               RankOfLastItem.setRank(ContentHome.data.content.rankOfLastItem || 0);
-              //Remove after implementing lazy loading
-              ContentHome.loadMore();
               updateMasterItem(ContentHome.data);
               if (tmrDelay)clearTimeout(tmrDelay);
             }
@@ -144,6 +142,9 @@
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
         };
 
+        /**
+         * ContentHome.loadMore() called by infiniteScroll to implement lazy loading
+         */
         ContentHome.noMore = false;
 
         ContentHome.loadMore = function (search) {
