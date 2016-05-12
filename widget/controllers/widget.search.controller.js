@@ -110,6 +110,30 @@
           WidgetSearch.items = [];
         };
 
+        WidgetSearch.showItemList = function (){
+          ViewStack.popAllViews();
+        };
+
+        WidgetSearch.showBookmarkList = function (){
+          ViewStack.push({
+            template: 'bookmarks',
+            params: {
+              controller: "WidgetBookmarkCtrl as WidgetBookmark",
+              shouldUpdateTemplate: true
+            }
+          });
+        };
+
+        WidgetSearch.showNotesList = function (){
+          ViewStack.push({
+            template: 'notes',
+            params: {
+              controller: "WidgetBookmarkCtrl as WidgetBookmark",
+              shouldUpdateTemplate: true
+            }
+          });
+        }
+
       }]);
 })(window.angular, window.buildfire, window);
 
