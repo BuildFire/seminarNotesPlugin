@@ -86,7 +86,7 @@
             $scope.toggleNoteAdd = 0
           }
           console.log("==============inTogglenotelist", $scope.toggleNoteList, $scope.toggleNoteAdd)
-        }
+        };
         WidgetItem.showHideAddNote = function(){
           if($scope.toggleNoteAdd && !$scope.toggleNoteList ){
             $scope.toggleNoteAdd = 0
@@ -100,7 +100,7 @@
             $scope.toggleNoteAdd = 0
           }
           console.log("==============inTogglenoteadd", $scope.toggleNoteAdd, $scope.toggleNoteList )
-        }
+        };
 
         WidgetItem.addNoteToItem = function(itemId){
           WidgetItem.itemNote = {
@@ -118,7 +118,7 @@
             return console.error('There was a problem saving your data');
           };
            UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES).then(successItem, errorItem);
-         }
+         };
 
         WidgetItem.getNoteList = function(){
           searchOptions.filter = {"$or": [{"$json.ItemID": {"$eq": WidgetItem.item.id}}]};
@@ -127,6 +127,19 @@
           },result = function(result){
             console.log("===========searchItem",result);
             WidgetItem.ItemNoteList = result;
+          }
+          UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+        };
+
+        WidgetItem.openLinks = function (actionItems) {
+          if (actionItems && actionItems.length) {
+            var options = {};
+            var callback = function (error, result) {
+              if (error) {
+                console.error('Error:', error);
+              }
+            };
+            buildfire.actionItems.list(actionItems, options, callback);
           }
           UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         }
