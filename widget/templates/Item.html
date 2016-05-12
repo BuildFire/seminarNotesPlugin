@@ -28,14 +28,16 @@
             <span class="icon icon-bookmark2 whiteTheme"></span>
         </a>
     </div>
-    <div class="col-xs-6 pull-left text-center">
-        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideMenu()">Open/Close Note List</a>
+    <div class="pull-left text-center" ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
+        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open Note List</a>
+        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideNoteList()" ng-show="toggleNoteList">Close Note List</a>
     </div>
-    <div class="col-xs-6 pull-left text-center">
-        <a class="whiteTheme stretch">Add New Note / Done</a>
+    <div class="pull-left text-center" ng-hide="toggleNoteList" ng-class="toggleNoteAdd?'col-xs-12':'col-xs-6'">
+        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideAddNote()" ng-hide="toggleNoteAdd">Add New Note</a>
+        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideAddNote()" ng-show="toggleNoteAdd"> Done</a>
     </div>
-    <div class="col-xs-12 hidden-content" ng-hide="toggle">
-        <div class="content note-list active clearfix">
+    <div class="col-xs-12 hidden-content" ng-show="toggleNoteList || toggleNoteAdd">
+        <div class="content note-list clearfix" ng-class="showNoteList?'active':''">
             <div class="seminar-notes layout3">
                 <div class="list-layout">
                     <div class="list-item">
@@ -153,11 +155,12 @@
                 </div>
             </div>
         </div>
-        <div class="content add-note activ clearfix">
+        <div class="content add-note clearfix" ng-class="showNoteAdd ?'active':''">
             <div class="form-holder">
-                <input type="text" name="note-title" placeholder="Note Title" class="form-control border-none padding-left-zero padding-right-zero">
+                <input type="text" name="note-title" placeholder="Note Title" class="form-control border-none padding-left-zero padding-right-zero" ng-model="WidgetItem.Note.noteTitle">
                 <hr class="margin-zero">
-                <textarea placeholder="Note Summary" class="form-control border-none padding-left-zero padding-right-zero"></textarea>
+                <textarea placeholder="Note Summary" class="form-control border-none padding-left-zero padding-right-zero" ng-model="WidgetItem.Note.noteDescription"></textarea>
+                <a class="btn btn-primary stretch" ng-click="WidgetItem.addNoteToItem(WidgetItem.item.id)">Add Note</a>
             </div>
         </div>
     </div>
