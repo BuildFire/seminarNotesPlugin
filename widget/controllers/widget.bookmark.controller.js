@@ -92,6 +92,10 @@
                         }
                     });
                 };
+
+                WidgetBookmark.goToItem = function () {
+                    ViewStack.popAllViews()
+                };
                 WidgetBookmark.loadMore = function () {
                     console.log("===============In loadmore");
                     if (WidgetBookmark.busy) return;

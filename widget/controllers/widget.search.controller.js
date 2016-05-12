@@ -10,6 +10,8 @@
 
         WidgetSearch.searchOptions = {};
 
+        WidgetSearch.bookmarks= [];
+
         var tmrDelay = null;
         /*
          * Call the datastore to save the data object
@@ -22,6 +24,7 @@
           var success = function (result) {
               console.info('Searched data result:=================== ', result);
               WidgetSearch.items = result;
+              WidgetSearch.getBookmarks();
             }
             , error = function (err) {
               console.error('Error while searching data : ', err);
@@ -67,8 +70,26 @@
             }
           }
           DataStore.search(WidgetSearch.searchOptions, tag).then(success, error);
+          DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
+          var err = function(error){
+            console.log("============ There is an error in getting data", error);
+          },result = function(result){
+            console.log("===========search",result);
+            WidgetSearch.bookmarks = result;
+          };
+          UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
         };
 
+        WidgetSearch.getBookmarks = function(){
+          for (var item = 0; item<  WidgetSearch.items.length; item++){
+            for (var bookmark in WidgetSearch.bookmarks)  {
+              if(WidgetSearch.items[item].id==WidgetSearch.bookmarks[bookmark].data.itemIds){
+                WidgetSearch.items[item].isBookmarked = true;
+              }
+            }
+          }
+          $scope.isFetchedAllData = true;
+        };
         var saveDataWithDelay = function (newObj) {
           if (newObj) {
             if (tmrDelay) {
