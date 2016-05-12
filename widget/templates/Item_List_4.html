@@ -1,6 +1,6 @@
 <div class="infinite-scroll-parent no-scroll holder padding-zero  has-bottom sticky-bottom-menu clearfix">
 	<div class="scrollable">
-		<div class="seminar-notes layout4" infinite-scroll="WidgetHome.loadMore()"
+		<div class="seminar-notes layout4" ng-if="WidgetHome.data.content" infinite-scroll="WidgetHome.loadMore()"
 			 infinite-scroll-distance="1"
 			 data-infinite-container=".infinite-scroll-parent"
 			 infinite-scroll-disabled="WidgetHome.busy">

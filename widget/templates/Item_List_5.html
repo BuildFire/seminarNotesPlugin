@@ -1,5 +1,5 @@
 <div class="infinite-scroll-parent no-scroll holder padding-zero  has-bottom sticky-bottom-menu clearfix">
-	<div class="scrollable" infinite-scroll="WidgetHome.loadMore()"
+	<div class="scrollable" ng-if="WidgetHome.data.content" infinite-scroll="WidgetHome.loadMore()"
 		 infinite-scroll-distance="1"
 		 data-infinite-container=".infinite-scroll-parent"
 		 infinite-scroll-disabled="WidgetHome.busy">
