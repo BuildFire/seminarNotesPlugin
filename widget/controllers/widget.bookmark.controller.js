@@ -69,7 +69,7 @@
             };
           }
           $scope.isFetchedAllData = true;
-        }
+        };
         WidgetBookmark.init();
 
         WidgetBookmark.openDetails = function (itemId) {
@@ -81,8 +81,16 @@
               itemId : itemId
             }
           });
-        }
-
+        };
+        WidgetBookmark.showItemNotes = function () {
+          ViewStack.push({
+            template: 'notes',
+            params: {
+              controller: "WidgetNotesCtrl as WidgetNotes",
+              shouldUpdateTemplate: true
+            }
+          });
+        };
         WidgetBookmark.loadMore = function () {
           console.log("===============In loadmore");
           if (WidgetBookmark.busy) return;

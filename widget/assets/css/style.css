@@ -525,7 +525,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	overflow-y: auto;
 }
 
-.events-plugin .event-list .event-item {
+.list-item {
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;

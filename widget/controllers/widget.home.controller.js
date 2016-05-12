@@ -102,11 +102,21 @@
             WidgetHome.view.loadItems([]);
           }
         });
-        WidgetHome.Items = function () {
+        WidgetHome.showBookmarkItems = function () {
           ViewStack.push({
             template: 'bookmarks',
             params: {
               controller: "WidgetBookmarkCtrl as WidgetBookmark",
+              shouldUpdateTemplate: true
+            }
+          });
+        };
+
+        WidgetHome.showItemNotes = function () {
+          ViewStack.push({
+            template: 'notes',
+            params: {
+              controller: "WidgetNotesCtrl as WidgetNotes",
               shouldUpdateTemplate: true
             }
           });

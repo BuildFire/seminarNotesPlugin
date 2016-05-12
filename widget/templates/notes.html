@@ -1,115 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-	<!-- CSS -->
-	<link href="../../../../styles/helper.css" rel="stylesheet">
-	<link href="assets/style.css" rel="stylesheet">
-	
-	<!-- JS -->
-	<script src="../../../scripts/buildfire.js"></script>
-   
- 	<!--
-    <script src="../../../../scripts/angular/angular.min.js"></script>
-    <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
 
-    <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
-    -->
-</head>
-<body class="no-scroll holder padding-zero has-bottom">
+<div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu">
 	<div class="scrollable">
 		<div class="seminar-notes layout3">
 	  		<div class="form-holder">
 			  	<input type="text" class="border-none form-control bodyTextTheme" placeholder="Search note titles and content">		       
 		     	<hr class="small margin-zero">
 			</div>
-			<div class="list-layout">
-				<div class="list-item">
-					<div class="list-item-media text-left">
+			<div class="list-layout" ng-if="WidgetNotes.Notes.length">
+				<div class="list-item" ng-repeat="note in WidgetNotes.Notes"   ng-swipe-left="WidgetNotes.swipeToDeleteNote($event, $index, true)"
+					 ng-swipe-right="WidgetNotes.swipeToDeleteNote($event, $index, false)">
+					<div class="list-item-media text-left" ng-class="{'edit' : WidgetNotes.swiped[$index]}">
 						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
 							<p class="ellipsis margin-zero margin-top-five clearfix">
-								<span class="pull-left ellipsis" style="max-width:65%;">Note Title Note Title Note Title Note Title</span>
-								<span class="pull-right small opacity-seventy"><i>June 7, 2016</i></span>
+								<span class="pull-left ellipsis" style="max-width:65%;">{{note.data.noteTitle}}</span>
+								<span class="pull-right small opacity-seventy"><i>{{note.data.DateAdded| date:'short'}}</i></span>
 							</p>
 							<p class="ellipsis margin-zero bodyTextTheme">
-								Item Title Item Title Item Title Item Title Item Title Item Title Item Title
+								{{note.data.ItemTitle}}
 							</p>
 							<p class="small ellipsis margin-zero bodyTextTheme">
-								Note Preview. Note Preview. Note Preview. Note Preview. Note Preview. Note Preview.
-							</p>
-						</div>
-						<div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-							<span>Delete</span>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left edit">
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero margin-top-five clearfix">
-								<span class="pull-left ellipsis" style="max-width:65%;">Note Title Note Title Note Title Note Title</span>
-								<span class="pull-right small opacity-seventy"><i>June 7, 2016</i></span>
-							</p>
-							<p class="ellipsis margin-zero bodyTextTheme">
-								Item Title Item Title Item Title Item Title Item Title Item Title Item Title
-							</p>
-							<p class="small ellipsis margin-zero bodyTextTheme">
-								Note Preview. Note Preview. Note Preview. Note Preview. Note Preview. Note Preview.
-							</p>
-						</div>
-						<div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-							<span>Delete</span>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left">
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero margin-top-five">
-								Note Title
-							</p>
-							<p class="ellipsis margin-zero bodyTextTheme">
-								Item Title
-							</p>
-							<p class="small ellipsis margin-zero bodyTextTheme">
-								Note Preview. Note Preview. Note Preview.
-							</p>
-						</div>
-						<div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-							<span>Delete</span>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left">
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero margin-top-five">
-								Note Title
-							</p>
-							<p class="ellipsis margin-zero bodyTextTheme">
-								Item Title
-							</p>
-							<p class="small ellipsis margin-zero bodyTextTheme">
-								Note Preview. Note Preview. Note Preview.
-							</p>
-						</div>
-						<div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-							<span>Delete</span>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left">
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero margin-top-five">
-								Note Title
-							</p>
-							<p class="ellipsis margin-zero bodyTextTheme">
-								Item Title
-							</p>
-							<p class="small ellipsis margin-zero bodyTextTheme">
-								Note Preview. Note Preview. Note Preview.
+								{{note.data.noteDescription}}
 							</p>
 						</div>
 						<div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
@@ -128,11 +38,10 @@
 			<a class="whiteTheme stretch active">Notes</a>
 		</div>
 		<div class="col-xs-3 pull-left text-center">
-			<a class="whiteTheme stretch">Bookmarks</a>
+			<a class="whiteTheme stretch" ng-click="WidgetNotes.showBookmarkItems()">Bookmarks</a>
 		</div>
 		<div class="col-xs-3 pull-left text-center">
 			<a class="whiteTheme stretch">Search</a>
 		</div>
 	</div>
-</body>
-</html>
+</div>
