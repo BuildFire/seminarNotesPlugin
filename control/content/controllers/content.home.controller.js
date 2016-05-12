@@ -95,6 +95,59 @@
           });
         };
 
+        /**
+         * ContentHome.searchListItem() used to search people list
+         */
+        ContentHome.searchListItem = function (value) {
+          var searchTerm = '';
+          ContentHome.searchOptions.skip = 0;
+          ContentHome.busy = false;
+          ContentHome.items = null;
+          if (value) {
+            value = value.trim();
+            if (value.indexOf(' ') !== -1) {
+              searchTerm = value.split(' ');
+              ContentHome.searchOptions.filter = {
+                "$or": [{
+                  "$json.title": {
+                    "$regex": searchTerm[0],
+                    "$options": "i"
+                  }
+                }, {
+                  "$json.summary": {
+                    "$regex": searchTerm[0],
+                    "$options": "i"
+                  }
+                }, {
+                  "$json.title": {
+                    "$regex": searchTerm[1],
+                    "$options": "i"
+                  }
+                }, {
+                  "$json.summary": {
+                    "$regex": searchTerm[1],
+                    "$options": "i"
+                  }
+                }
+                ]
+              };
+            } else {
+              searchTerm = value;
+              ContentHome.searchOptions.filter = {
+                "$or": [{
+                  "$json.title": {
+                    "$regex": searchTerm,
+                    "$options": "i"
+                  }
+                }, {"$json.summary": {"$regex": searchTerm, "$options": "i"}}]
+              };
+            }
+          } else {
+            ContentHome.searchOptions.filter = {"$json.title": {"$regex": '/*'}};
+          }
+          ContentHome.loadMore('search');
+        };
+
         /*
          * create an artificial delay so api isnt called on every character entered
          * */

@@ -38,10 +38,10 @@
     <div class="col-md-7 padding-zero pull-left row">
       <div class="col-md-9 pull-left">
         <input type="text" class="form-control"
-               placeholder="Search item name or summary">
+               placeholder="Search item name or summary" ng-model="search">
       </div>
       <div class="col-md-3 pull-right padding-zero">
-        <a class="btn btn-primary stretch">Search</a>
+        <a class="btn btn-primary stretch" ng-click="ContentHome.searchListItem(search)">Search</a>
       </div>
     </div>
   </div>
