@@ -10,7 +10,8 @@
             <div class="padded">
                 <p class="margin-zero" ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
             </div>
-            <div class="list-layout" infinite-scroll="WidgetHome.loadMore()"
+            <div class="list-layout" ng-if="WidgetHome.data.content"
+                 infinite-scroll="WidgetHome.loadMore()"
                  infinite-scroll-distance="1"
                  data-infinite-container=".infinite-scroll-parent"
                  infinite-scroll-disabled="WidgetHome.busy">

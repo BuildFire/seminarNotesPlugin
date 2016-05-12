@@ -2,10 +2,10 @@
 
 (function (angular, buildfire) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData',
-      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData) {
+    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData','SORT',
+      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData,SORT) {
         var WidgetHome = this;
-        var currentListLayout = null;
+        var currentListLayout,currentSortOrder = null;
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth;
         WidgetHome.busy = false;
@@ -18,6 +18,50 @@
           skip: 0,
           limit: PAGINATION.itemCount
         };
+
+        /**
+         * WidgetHome.sortingOptions are used to show options in Sort Items drop-down menu in home.html.
+         */
+        WidgetHome.sortingOptions = [
+          SORT.MANUALLY,
+          SORT.ITEM_TITLE_A_Z,
+          SORT.ITEM_TITLE_Z_A,
+          SORT.NEWEST_PUBLICATION_DATE,
+          SORT.OLDEST_PUBLICATION_DATE,
+          SORT.NEWEST_FIRST,
+          SORT.OLDEST_FIRST
+        ];
+
+        /**
+         * getSearchOptions(value) is used to get searchOptions with one more key sort which decide the order of sorting.
+         */
+        var getSearchOptions = function (value) {
+          switch (value) {
+            case SORT.ITEM_TITLE_A_Z:
+              searchOptions.sort = {"title": 1};
+              break;
+            case SORT.ITEM_TITLE_Z_A:
+              searchOptions.sort = {"title": -1};
+              break;
+            case SORT.NEWEST_PUBLICATION_DATE:
+              searchOptions.sort = {"publishedOn": 1};
+              break;
+            case SORT.OLDEST_PUBLICATION_DATE:
+              searchOptions.sort = {"publishedOn": -1};
+              break;
+            case SORT.NEWEST_FIRST:
+              searchOptions.sort = {"dateCreated": -1};
+              break;
+            case SORT.OLDEST_FIRST:
+              searchOptions.sort = {"dateCreated": 1};
+              break;
+            default :
+              searchOptions.sort = {"rank": 1};
+              break;
+          }
+          return searchOptions;
+        };
+        
         WidgetHome.data = {
           design: {
             itemListLayout: LAYOUTS.itemListLayout[0].name
@@ -25,7 +69,6 @@
         };
         WidgetHome.init = function () {
           var success = function (result) {
-
               if (result && result.data) {
                 WidgetHome.data = result.data;
               }
@@ -47,6 +90,11 @@
               if (!WidgetHome.data.design.itemListLayout) {
                 WidgetHome.data.design.itemListLayout = LAYOUTS.itemListLayout[0].name;
               }
+              if (!WidgetHome.data.content)
+                WidgetHome.data.content = {};
+              if (WidgetHome.data.content.sortBy) {
+                currentSortOrder = WidgetHome.data.content.sortBy;
+              }
               console.log("==============", WidgetHome.data.design.itemListLayout)
             }
             , error = function (err) {
@@ -59,7 +107,7 @@
           },result = function(result){
             console.log("===========search",result);
             WidgetHome.bookmarks = result;
-          }
+          };
           UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
 
         };
@@ -69,10 +117,10 @@
                if(WidgetHome.items[item].id==WidgetHome.bookmarks[bookmark].data.itemIds){
                 WidgetHome.items[item].isBookmarked = true;
               }
-            };
+            }
           }
           $scope.isFetchedAllData = true;
-        }
+        };
         WidgetHome.init();
 
         WidgetHome.safeHtml = function (html) {
@@ -121,10 +169,29 @@
                 WidgetHome.data.design = {};
               if (!WidgetHome.data.content)
                 WidgetHome.data.content = {};
+              if (event.data.content.sortBy && currentSortOrder != event.data.content.sortBy) {
+                WidgetHome.data.content.sortBy = event.data.content.sortBy;
+                WidgetHome.items = [];
+                searchOptions.skip = 0;
+                WidgetHome.busy = false;
+                WidgetHome.loadMore();
+              }
             }
             else if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {
               console.log("============items", event);
-              //WidgetHome.items.push(event.data);
+              var skip = searchOptions.skip || 0;
+              WidgetHome.busy = false;
+              WidgetHome.items = [];
+              if (searchOptions.skip && searchOptions.skip >= _limit) {
+                searchOptions.limit = _limit + 1;
+                var times = Math.floor(searchOptions.skip / _limit);
+                searchOptions.skip = 0;
+                WidgetHome.loadMore(true, Math.min(times - 1, 0));
+              } else {
+                searchOptions.limit = _limit + 1;
+                searchOptions.skip = 0;
+                WidgetHome.loadMore();
+              }
             }
 
             if (!WidgetHome.data.design.itemListLayout) {
@@ -158,7 +225,6 @@
         WidgetHome.getItems = function () {
           var successAll = function (resultAll) {
               WidgetHome.items = WidgetHome.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
-              console.log("==============", WidgetHome.items)
               searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetHome.busy = false;
@@ -168,6 +234,10 @@
             errorAll = function (error) {
               console.log("error", error)
             };
+          console.log("***********", WidgetHome.data.content);
+          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.sortBy) {
+            searchOptions = getSearchOptions(WidgetHome.data.content.sortBy);
+          }
           DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
         };
 
@@ -180,7 +250,7 @@
               itemId : itemId
             }
           });
-        }
+        };
 
         WidgetHome.currentLoggedInUser = null;
 
@@ -221,9 +291,6 @@
             WidgetHome.openLogin();
         });
 
-
-
-
         WidgetHome.addToBookmark = function(itemId){
           WidgetHome.bookmarkItem = {
             data:{
@@ -241,7 +308,5 @@
           UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
           $scope.$apply();
         }
-
-
       }])
 })(window.angular, window.buildfire);

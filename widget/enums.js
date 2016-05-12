@@ -26,7 +26,7 @@
       ITEM_ARRAY_FOUND: 'Array of Items provided'
     })
     .constant('LAYOUTS', {
-        itemListLayout: [
+      itemListLayout: [
         {name: "Item_List_1"},
         {name: "Item_List_2"},
         {name: "Item_List_3"},
@@ -36,5 +36,17 @@
     })
     .constant('PAGINATION', {
       itemCount: 10
+    })
+    .constant('SORT', {
+      MANUALLY: 'Manually',
+      ITEM_TITLE_A_Z: 'Item title A-Z',
+      ITEM_TITLE_Z_A: 'Item title Z-A',
+      NEWEST_PUBLICATION_DATE: 'Newest publication date',
+      OLDEST_PUBLICATION_DATE: 'Oldest publication date',
+      NEWEST_FIRST: 'Newest entry first',
+      OLDEST_FIRST: 'Oldest entry first',
+      _limit: 10,
+      _maxLimit: 19,
+      _skip: 0
     });
 })(window.angular);
