@@ -19,7 +19,7 @@
                     },result = function(result){
                         console.log("===========searchItem",result);
                         WidgetNotes.Notes = result;
-                    }
+                    };
                     UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
                 };
                 WidgetNotes.getNoteList();
@@ -42,6 +42,20 @@
                         }
                     });
                 };
+
+              WidgetNotes.showSearchPage = function(){
+                ViewStack.push({
+                  template: 'Search',
+                  params: {
+                    controller: "WidgetSearchCtrl as WidgetSearch",
+                    shouldUpdateTemplate: true
+                  }
+                });
+              };
+
+              WidgetNotes.showItemList = function(){
+                ViewStack.popAllViews();
+              };
 
             }]);
 })(window.angular, window.buildfire, window);
