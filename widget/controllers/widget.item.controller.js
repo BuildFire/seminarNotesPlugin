@@ -5,7 +5,7 @@
     .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack',
       function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack) {
         var WidgetItem = this;
-
+        $scope.toggle = 1;
         var currentView = ViewStack.getCurrentView();
 
         WidgetItem.safeHtml = function (html) {
@@ -47,6 +47,15 @@
         };
 
         init();
+
+        WidgetItem.showHideMenu = function(){
+
+          if($scope.toggle){
+            $scope.toggle = 0
+          }else{
+            $scope.toggle = 1
+          }
+        }
 
       }]);
 })(window.angular, window.buildfire, window);

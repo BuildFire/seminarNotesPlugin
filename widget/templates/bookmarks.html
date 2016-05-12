@@ -6,7 +6,7 @@
 			 data-infinite-container=".infinite-scroll-parent"
 			 infinite-scroll-disabled="WidgetBookmark.busy">
 			<div class="list-layout" ng-repeat="item in WidgetBookmark.items">
-				<div class="list-item" >
+				<div class="list-item" ng-if="item.isBookmarked">
 					<div class="list-item-media text-left overflow-hidden"  ng-if="isFetchedAllData">
 						<div class="square-icon list-media-holder pull-left">
 							<img ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
