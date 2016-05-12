@@ -42,15 +42,17 @@
         <div class="content note-list clearfix" ng-class="showNoteList?'active':''">
             <div class="seminar-notes layout3">
                 <div class="list-layout">
-                    <div class="list-item">
-                        <div class="list-item-media text-left">
-                            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
+                    <div class="list-item" ng-repeat="note in WidgetItem.ItemNoteList"
+                         ng-swipe-left="WidgetItem.swipeToDeleteNote($event, $index, true)"
+                         ng-swipe-right="WidgetItem.swipeToDeleteNote($event, $index, false)">
+                        <div class="list-item-media text-left" ng-class="{'edit' : WidgetItem.swiped[$index]}">
+                            <div class="list-item-copy text-left padding-left-ten padding-right-ten" >
                                 <p class="ellipsis margin-zero margin-top-five clearfix">
-                                    <span class="pull-left ellipsis" style="max-width:65%;">Supernoves</span>
-                                    <span class="pull-right small opacity-seventy"><i>June 7, 2016</i></span>
+                                    <span class="pull-left ellipsis" style="max-width:65%;">{{note.data.noteTitle}}</span>
+                                    <span class="pull-right small opacity-seventy"><i>{{note.data.DateAdded | date:'short'}}</i></span>
                                 </p>
                                 <p class="small ellipsis margin-zero bodyTextTheme">
-                                    Item Title Item Title Item Title Item Title Item Title Item Title Item Title
+                                    {{note.data.ItemTitle}}
                                 </p>
                             </div>
                             <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
@@ -58,102 +60,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="list-item">
-                        <div class="list-item-media text-left edit">
-                            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                <p class="ellipsis margin-zero margin-top-five clearfix">
-                                    <span class="pull-left ellipsis" style="max-width:65%;">Supernoves</span>
-                                    <span class="pull-right small opacity-seventy"><i>June 7, 2016</i></span>
-                                </p>
-                                <p class="small ellipsis margin-zero bodyTextTheme">
-                                    Item Title Item Title Item Title Item Title Item Title Item Title Item Title
-                                </p>
-                            </div>
-                            <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-                                <span>Delete</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-item-media text-left">
-                            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                <p class="ellipsis margin-zero margin-top-five clearfix">
-                                    <span class="pull-left ellipsis" style="max-width:65%;">Supernoves</span>
-                                    <span class="pull-right small opacity-seventy"><i>June 7, 2016</i></span>
-                                </p>
-                                <p class="small ellipsis margin-zero bodyTextTheme">
-                                    Item Title Item Title Item Title Item Title Item Title Item Title Item Title
-                                </p>
-                            </div>
-                            <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-                                <span>Delete</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-item-media text-left">
-                            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                <p class="ellipsis margin-zero margin-top-five clearfix">
-                                    <span class="pull-left ellipsis" style="max-width:65%;">Supernoves</span>
-                                    <span class="pull-right small opacity-seventy"><i>June 7, 2016</i></span>
-                                </p>
-                                <p class="small ellipsis margin-zero bodyTextTheme">
-                                    Item Title Item Title Item Title Item Title Item Title Item Title Item Title
-                                </p>
-                            </div>
-                            <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-                                <span>Delete</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-item-media text-left">
-                            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                <p class="ellipsis margin-zero margin-top-five clearfix">
-                                    <span class="pull-left ellipsis" style="max-width:65%;">Supernoves</span>
-                                    <span class="pull-right small opacity-seventy"><i>June 7, 2016</i></span>
-                                </p>
-                                <p class="small ellipsis margin-zero bodyTextTheme">
-                                    Item Title Item Title Item Title Item Title Item Title Item Title Item Title
-                                </p>
-                            </div>
-                            <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-                                <span>Delete</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-item-media text-left">
-                            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                <p class="ellipsis margin-zero margin-top-five clearfix">
-                                    <span class="pull-left ellipsis" style="max-width:65%;">Supernoves</span>
-                                    <span class="pull-right small opacity-seventy"><i>June 7, 2016</i></span>
-                                </p>
-                                <p class="small ellipsis margin-zero bodyTextTheme">
-                                    Item Title Item Title Item Title Item Title Item Title Item Title Item Title
-                                </p>
-                            </div>
-                            <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-                                <span>Delete</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-item-media text-left">
-                            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                <p class="ellipsis margin-zero margin-top-five clearfix">
-                                    <span class="pull-left ellipsis" style="max-width:65%;">Supernoves</span>
-                                    <span class="pull-right small opacity-seventy"><i>June 7, 2016</i></span>
-                                </p>
-                                <p class="small ellipsis margin-zero bodyTextTheme">
-                                    Item Title Item Title Item Title Item Title Item Title Item Title Item Title
-                                </p>
-                            </div>
-                            <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-                                <span>Delete</span>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>

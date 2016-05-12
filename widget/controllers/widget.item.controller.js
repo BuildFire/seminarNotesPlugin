@@ -9,6 +9,8 @@
         $scope.toggleNoteAdd = 0;
         $scope.showNoteList = 1;
         $scope.showNoteAdd = 1;
+        WidgetItem.swiped = [];
+        var searchOptions = {};
         WidgetItem.itemNote = {
           noteTitle : "",
           noteDescription: "",
@@ -22,6 +24,11 @@
           noteDescription:""
         };
         WidgetItem.ItemNoteList = {};
+
+        WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
+          console.log("=============i Am in swipe")
+          toggle ? WidgetItem.swiped[i] = true : WidgetItem.swiped[i] = false;
+        };
         var currentView = ViewStack.getCurrentView();
 
         WidgetItem.safeHtml = function (html) {
@@ -106,7 +113,7 @@
           var successItem = function (result) {
             console.log("Inserted Item Note", result);
             $scope.isClicked = itemId;
-            WidgetItem.getBookmarks();
+            $scope.toggleNoteAdd = 0;
           }, errorItem = function () {
             return console.error('There was a problem saving your data');
           };
@@ -114,6 +121,7 @@
          };
 
         WidgetItem.getNoteList = function(){
+          searchOptions.filter = {"$or": [{"$json.ItemID": {"$eq": WidgetItem.item.id}}]};
           var err = function(error){
             console.log("============ There is an error in getting data", error);
           },result = function(result){
@@ -133,6 +141,7 @@
             };
             buildfire.actionItems.list(actionItems, options, callback);
           }
+          UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         }
       }]);
 })(window.angular, window.buildfire, window);
