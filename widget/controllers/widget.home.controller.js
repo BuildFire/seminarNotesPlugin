@@ -317,6 +317,16 @@
           console.log("===============",WidgetHome.currentLoggedInUser.username)
           UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
           $scope.$apply();
+        };
+
+        WidgetHome.showSearchPage = function(){
+          ViewStack.push({
+            template: 'Search',
+            params: {
+              controller: "WidgetSearchCtrl as WidgetSearch",
+              shouldUpdateTemplate: true
+            }
+          });
         }
       }])
 })(window.angular, window.buildfire);
