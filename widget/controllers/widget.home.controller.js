@@ -173,7 +173,7 @@
 
         WidgetHome.openDetails = function (itemId) {
           ViewStack.push({
-            template: 'item_detail',
+            template: 'Item',
             params: {
               controller: "WidgetItemCtrl as WidgetItem",
               shouldUpdateTemplate: true,
