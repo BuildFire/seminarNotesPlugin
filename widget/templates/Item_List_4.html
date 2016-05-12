@@ -14,7 +14,7 @@
 				<p class="margin-zero" ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
 			</div>
 			<div class="plugin-banner hasBackground" >
-				<div class="plugin-slide" ng-repeat="item in WidgetHome.items">
+				<div class="plugin-slide" ng-repeat="item in WidgetHome.items" ng-if="isFetchedAllData">
 					<img  ng-hide="item.data.listImage" src="../../../styles/media/holder-16x9.png">
 					<img ng-show="item.data.listImage" class="border-radius-three" ng-if="item.data.listImage"
 						 load-image="1x1" data-final-src="{{item.data.listImage |
@@ -27,9 +27,9 @@
 						<p class="ellipsis item-date margin-zero whiteTheme text-center">{{item.data.publishDate | date}}</p>
 					</div>
 					<!-- Use these theme classes when inactive/not selected -->
-					<div class="bookmark-icon primaryBackgroundTheme">
-						<span class="icon icon-bookmark2 whiteTheme"></span>
-					</div>
+					<fieldset class="bookmark-icon" ng-class="item.isBookmarked || isClicked==item.id?'whiteBackgroundTheme':'primaryBackgroundTheme'" ng-click="WidgetHome.addToBookmark(item.id)" ng-disabled="item.isBookmarked || isClicked==item.id">
+						<span class="icon icon-bookmark2  " ng-class="item.isBookmarked || isClicked==item.id?'text-primary':'whiteTheme'"></span>
+					</fieldset>
 				</div>
 			</div>
 		</div>
@@ -42,7 +42,7 @@
 			<a class="whiteTheme stretch">Notes</a>
 		</div>
 		<div class="col-xs-3 pull-left text-center">
-			<a class="whiteTheme stretch">Bookmarks</a>
+			<a class="whiteTheme stretch" ng-click="WidgetHome.Items()">Bookmarks</a>
 		</div>
 		<div class="col-xs-3 pull-left text-center">
 			<a class="whiteTheme stretch">Search</a>

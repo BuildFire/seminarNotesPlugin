@@ -14,7 +14,7 @@
 				<p class="margin-zero" ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
 			</div>
 			<div class="notes" >
-				<div class="plugin-banner col-xs-6 pull-left overflow-hidden padding-zero" ng-repeat="item in WidgetHome.items">
+				<div class="plugin-banner col-xs-6 pull-left overflow-hidden padding-zero" ng-repeat="item in WidgetHome.items" ng-if="isFetchedAllData">
 					<div class="plugin-slide">
 						<img  ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
 						<img ng-show="item.data.listImage" ng-if="item.data.listImage"
@@ -27,8 +27,8 @@
 							<p class="item-date margin-zero whiteTheme text-center">{{item.data.publishDate | date}}</p>
 						</div>
 						<!-- Use these theme classes when inactive/not selected -->
-						<div class="bookmark-icon primaryBackgroundTheme">
-							<span class="icon icon-bookmark2 whiteTheme"></span>
+						<div class="bookmark-icon" ng-class="item.isBookmarked || isClicked==item.id?'whiteBackgroundTheme':'primaryBackgroundTheme'" ng-click="WidgetHome.addToBookmark(item.id)" ng-disabled="item.isBookmarked || isClicked==item.id">
+							<span class="icon icon-bookmark2" ng-class="item.isBookmarked || isClicked==item.id?'text-primary':'whiteTheme'"></span>
 						</div>
 					</div>
 				</div>
