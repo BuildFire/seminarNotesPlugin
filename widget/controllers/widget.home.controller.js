@@ -2,8 +2,8 @@
 
 (function (angular, buildfire) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData', 'SORT',
-      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData, SORT) {
+    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData', 'SORT', '$modal',
+      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData, SORT, $modal) {
         var WidgetHome = this;
         var currentListLayout, currentSortOrder = null;
         $rootScope.deviceHeight = window.innerHeight;
@@ -201,19 +201,6 @@
             }
             else if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {
               console.log("============items", event);
-              var skip = searchOptions.skip || 0;
-              WidgetHome.busy = false;
-              WidgetHome.items = [];
-              if (searchOptions.skip && searchOptions.skip >= _limit) {
-                searchOptions.limit = _limit + 1;
-                var times = Math.floor(searchOptions.skip / _limit);
-                searchOptions.skip = 0;
-                WidgetHome.loadMore(true, Math.min(times - 1, 0));
-              } else {
-                searchOptions.limit = _limit + 1;
-                searchOptions.skip = 0;
-                WidgetHome.loadMore();
-              }
             }
 
             if (!WidgetHome.data.design.itemListLayout) {
@@ -320,6 +307,10 @@
             console.log("Inserted", result);
             $scope.isClicked = itemId;
             WidgetHome.setBookmarks();
+            $modal.open({
+              templateUrl: 'templates/Bookmark_Confirm.html',
+              size: 'sm'
+            });
           }, errorItem = function () {
             return console.error('There was a problem saving your data');
           };
