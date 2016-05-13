@@ -12,16 +12,16 @@
         WidgetItem.swiped = [];
         var searchOptions = {};
         WidgetItem.itemNote = {
-          noteTitle : "",
+          noteTitle: "",
           noteDescription: "",
-          ItemID : "",
+          ItemID: "",
           ItemTitle: "",
           DateAdded: ""
         };
-
+        WidgetItem.currentLoggedInUser = null;
         WidgetItem.Note = {
-          noteTitle:"",
-          noteDescription:""
+          noteTitle: "",
+          noteDescription: ""
         };
         WidgetItem.ItemNoteList = {};
 
@@ -52,6 +52,36 @@
           }
         };
 
+        /**
+         * Check for current logged in user, if not show ogin screen
+         */
+        buildfire.auth.getCurrentUser(function (err, user) {
+          console.log("===========LoggedInUser", user);
+          if (user) {
+            WidgetItem.currentLoggedInUser = user;
+          }
+        });
+
+        /**
+         * Method to open buildfire auth login pop up and allow user to login using credentials.
+         */
+        WidgetItem.openLogin = function () {
+          buildfire.auth.login({}, function () {
+
+          });
+        };
+
+        var loginCallback = function () {
+          buildfire.auth.getCurrentUser(function (err, user) {
+            console.log("=========User", user);
+            if (user) {
+              WidgetItem.currentLoggedInUser = user;
+              $scope.$apply();
+            }
+          });
+        };
+
+        buildfire.auth.onLogin(loginCallback);
 
         /*
          * Fetch user's data from datastore
@@ -71,44 +101,51 @@
 
         init();
 
-        WidgetItem.showHideNoteList = function(){
-          WidgetItem.getNoteList();
-          if($scope.toggleNoteList && !$scope.toggleNoteAdd){
-            $scope.toggleNoteList = 0;
+        WidgetItem.showHideNoteList = function () {
+          if (WidgetItem.currentLoggedInUser) {
+            WidgetItem.getNoteList();
+            if ($scope.toggleNoteList && !$scope.toggleNoteAdd) {
+              $scope.toggleNoteList = 0;
+            } else {
+              $scope.toggleNoteList = 1;
+              $scope.showNoteList = 1;
+              $scope.showNoteAdd = 0;
+            }
+            if ($scope.toggleNoteList && $scope.toggleNoteAdd) {
+              $scope.toggleNoteList = 0;
+              $scope.toggleNoteAdd = 0
+            }
+          }
+          else{
+            WidgetItem.openLogin();
+          }
+        };
+        WidgetItem.showHideAddNote = function () {
+          if (WidgetItem.currentLoggedInUser) {
+            if ($scope.toggleNoteAdd && !$scope.toggleNoteList) {
+              $scope.toggleNoteAdd = 0
+            } else {
+              $scope.toggleNoteAdd = 1;
+              $scope.showNoteAdd = 1;
+              $scope.showNoteList = 0;
+            }
+            if ($scope.toggleNoteList && $scope.toggleNoteAdd) {
+              $scope.toggleNoteList = 0;
+              $scope.toggleNoteAdd = 0
+            }
           }else{
-            $scope.toggleNoteList = 1;
-            $scope.showNoteList = 1;
-            $scope.showNoteAdd = 0;
-           }
+            WidgetItem.openLogin();
+          }
 
-          if($scope.toggleNoteList && $scope.toggleNoteAdd){
-            $scope.toggleNoteList = 0;
-            $scope.toggleNoteAdd = 0
-          }
-          console.log("==============inTogglenotelist", $scope.toggleNoteList, $scope.toggleNoteAdd)
-        };
-        WidgetItem.showHideAddNote = function(){
-          if($scope.toggleNoteAdd && !$scope.toggleNoteList ){
-            $scope.toggleNoteAdd = 0
-           }else{
-            $scope.toggleNoteAdd = 1
-            $scope.showNoteAdd = 1;
-            $scope.showNoteList = 0;
-           }
-          if($scope.toggleNoteList && $scope.toggleNoteAdd){
-            $scope.toggleNoteList = 0;
-            $scope.toggleNoteAdd = 0
-          }
-          console.log("==============inTogglenoteadd", $scope.toggleNoteAdd, $scope.toggleNoteList )
         };
 
-        WidgetItem.addNoteToItem = function(itemId){
+        WidgetItem.addNoteToItem = function (itemId) {
           WidgetItem.itemNote = {
-            noteTitle : WidgetItem.Note.noteTitle,
+            noteTitle: WidgetItem.Note.noteTitle,
             noteDescription: WidgetItem.Note.noteDescription,
-            ItemID : itemId,
-            ItemTitle : WidgetItem.item.data.title,
-            DateAdded : new Date()
+            ItemID: itemId,
+            ItemTitle: WidgetItem.item.data.title,
+            DateAdded: new Date()
           };
           var successItem = function (result) {
             console.log("Inserted Item Note", result);
@@ -117,14 +154,14 @@
           }, errorItem = function () {
             return console.error('There was a problem saving your data');
           };
-           UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES).then(successItem, errorItem);
-         };
+          UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES).then(successItem, errorItem);
+        };
 
         /**
          * This event listener is bound for "Carousel:LOADED" event broadcast
          */
         $rootScope.$on("Carousel2:LOADED", function () {
-        //  WidgetItem.view = null;
+          //  WidgetItem.view = null;
           if (!WidgetItem.view) {
             WidgetItem.view = new Buildfire.components.carousel.view("#carousel2", []);
           }
@@ -135,13 +172,13 @@
           }
         });
 
-        WidgetItem.getNoteList = function(){
-          console.log("============itemIDDDD",WidgetItem.item.id)
+        WidgetItem.getNoteList = function () {
+          console.log("============itemIDDDD", WidgetItem.item.id)
           searchOptions.filter = {"$or": [{"$json.ItemID": {"$eq": WidgetItem.item.id}}]};
-          var err = function(error){
+          var err = function (error) {
             console.log("============ There is an error in getting data", error);
-          },result = function(result){
-            console.log("===========searchItem",result);
+          }, result = function (result) {
+            console.log("===========searchItem", result);
             WidgetItem.ItemNoteList = result;
           }
           UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);

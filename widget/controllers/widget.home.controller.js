@@ -286,8 +286,6 @@
         var loginCallback = function () {
           buildfire.auth.getCurrentUser(function (err, user) {
             console.log("=========User", user);
-
-            $scope.$digest();
             if (user) {
               WidgetHome.currentLoggedInUser = user;
               $scope.$apply();
