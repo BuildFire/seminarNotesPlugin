@@ -40,7 +40,7 @@
         var getEventDetails = function () {
           var success = function (result) {
               WidgetItem.item = result;
-              console.log(">>>>>>>>>>", WidgetItem.item);
+              console.log("========ingeteventdetails", WidgetItem.item);
             }
             , error = function (err) {
               console.error('Error In Fetching Event', err);
@@ -92,6 +92,7 @@
               if (!WidgetItem.data.design)
                 WidgetItem.data.design = {};
               getEventDetails();
+                WidgetItem.getBookmarkedItems();
             }
             , error = function (err) {
               console.error('Error while getting data', err);
@@ -194,7 +195,43 @@
             };
             buildfire.actionItems.list(actionItems, options, callback);
           }
-          UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
-        }
+        };
+
+        WidgetItem.getBookmarkedItems = function () {
+          var err = function(error){
+            console.log("============ There is an error in getting data", error);
+          },result = function(result){
+            console.log("===========searchinItem",result);
+            WidgetItem.bookmarks = result;
+            WidgetItem.getBookmarks();
+          };
+          UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+        };
+
+        WidgetItem.addToBookmark = function(itemId){
+          WidgetItem.bookmarkItem = {
+            data:{
+              itemIds: itemId
+            }
+          }
+          var successItem = function (result) {
+            console.log("Inserted", result);
+            $scope.isClicked = itemId;
+            WidgetItem.getBookmarks();
+          }, errorItem = function () {
+            return console.error('There was a problem saving your data');
+          };
+          UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+        };
+        WidgetItem.getBookmarks = function(){
+            for (var bookmark in WidgetItem.bookmarks)  {
+              if(WidgetItem.bookmarks[bookmark].data.itemIds==WidgetItem.item.id){
+                WidgetItem.item.isBookmarked = true;
+              }
+           }
+          console.log("============initemGetBookmarks", WidgetItem.item)
+          $scope.isFetchedAllData = true;
+        };
+
       }]);
 })(window.angular, window.buildfire, window);
