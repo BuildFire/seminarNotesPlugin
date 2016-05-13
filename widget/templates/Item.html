@@ -30,8 +30,8 @@
 <div class="bottom fixed-bottom primaryBackgroundTheme has-content open transition-third"  >
     <div class="extra-links" ng-if="WidgetItem.currentLoggedInUser">
         <!-- When Inactive, use these theme classes -->
-        <a class="bg-primary">
-            <span class="icon icon-bookmark2 whiteTheme"></span>
+        <a class="bg-primary"  ng-click="WidgetItem.addToBookmark(WidgetItem.item.id)" ng-disabled="WidgetItem.item.isBookmarked" >
+            <span class="icon whiteTheme" ng-class="WidgetItem.item.isBookmarked?'':'icon-bookmark2'"></span>
         </a>
     </div>
     <div class="pull-left text-center" ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
