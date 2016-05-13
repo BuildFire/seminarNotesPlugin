@@ -120,6 +120,21 @@
            UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES).then(successItem, errorItem);
          };
 
+        /**
+         * This event listener is bound for "Carousel:LOADED" event broadcast
+         */
+        $rootScope.$on("Carousel2:LOADED", function () {
+        //  WidgetItem.view = null;
+          if (!WidgetItem.view) {
+            WidgetItem.view = new Buildfire.components.carousel.view("#carousel2", []);
+          }
+          if (WidgetItem.item.data && WidgetItem.item.data.carouselImages) {
+            WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
+          } else {
+            WidgetItem.view.loadItems([]);
+          }
+        });
+
         WidgetItem.getNoteList = function(){
           console.log("============itemIDDDD",WidgetItem.item.id)
           searchOptions.filter = {"$or": [{"$json.ItemID": {"$eq": WidgetItem.item.id}}]};
