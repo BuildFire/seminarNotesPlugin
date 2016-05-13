@@ -102,16 +102,19 @@
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
+        };
+
+        WidgetHome.getBookMarkData = function () {
           var err = function (error) {
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
-            console.log("===========search", result);
+            console.log("===========Bookmarks", result);
             WidgetHome.bookmarks = result;
           };
           UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
-
         };
-        WidgetHome.getBookmarks = function () {
+
+        WidgetHome.setBookmarks = function () {
           for (var item = 0; item < WidgetHome.items.length; item++) {
             for (var bookmark in WidgetHome.bookmarks) {
               if (WidgetHome.items[item].id == WidgetHome.bookmarks[bookmark].data.itemIds) {
@@ -177,7 +180,6 @@
           else {
             WidgetHome.openLogin();
           }
-
         };
         var onUpdateCallback = function (event) {
           console.log(event);
@@ -249,7 +251,7 @@
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetHome.busy = false;
               }
-              WidgetHome.getBookmarks();
+              WidgetHome.setBookmarks();
             },
             errorAll = function (error) {
               console.log("error", error)
@@ -289,6 +291,7 @@
             if (user) {
               WidgetHome.currentLoggedInUser = user;
               $scope.$apply();
+              WidgetHome.getBookMarkData();
             }
           });
         };
@@ -302,6 +305,8 @@
           console.log("===========LoggedInUser", user);
           if (user) {
             WidgetHome.currentLoggedInUser = user;
+            $scope.$apply();
+            WidgetHome.getBookMarkData();
           }
         });
 
@@ -314,7 +319,7 @@
           var successItem = function (result) {
             console.log("Inserted", result);
             $scope.isClicked = itemId;
-            WidgetHome.getBookmarks();
+            WidgetHome.setBookmarks();
           }, errorItem = function () {
             return console.error('There was a problem saving your data');
           };
