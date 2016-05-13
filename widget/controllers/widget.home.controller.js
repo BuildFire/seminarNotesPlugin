@@ -2,10 +2,10 @@
 
 (function (angular, buildfire) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData','SORT',
-      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData,SORT) {
+    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData', 'SORT', '$modal',
+      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData, SORT, $modal) {
         var WidgetHome = this;
-        var currentListLayout,currentSortOrder = null;
+        var currentListLayout, currentSortOrder = null;
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth;
         WidgetHome.busy = false;
@@ -61,7 +61,7 @@
           }
           return searchOptions;
         };
-        
+
         WidgetHome.data = {
           design: {
             itemListLayout: LAYOUTS.itemListLayout[0].name
@@ -102,19 +102,22 @@
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
-          var err = function(error){
+        };
+
+        WidgetHome.getBookMarkData = function () {
+          var err = function (error) {
             console.log("============ There is an error in getting data", error);
-          },result = function(result){
-            console.log("===========search",result);
+          }, result = function (result) {
+            console.log("===========Bookmarks", result);
             WidgetHome.bookmarks = result;
           };
           UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
-
         };
-        WidgetHome.getBookmarks = function(){
-          for (var item = 0; item<  WidgetHome.items.length; item++){
-            for (var bookmark in WidgetHome.bookmarks)  {
-               if(WidgetHome.items[item].id==WidgetHome.bookmarks[bookmark].data.itemIds){
+
+        WidgetHome.setBookmarks = function () {
+          for (var item = 0; item < WidgetHome.items.length; item++) {
+            for (var bookmark in WidgetHome.bookmarks) {
+              if (WidgetHome.items[item].id == WidgetHome.bookmarks[bookmark].data.itemIds) {
                 WidgetHome.items[item].isBookmarked = true;
               }
             }
@@ -151,23 +154,32 @@
           }
         });
         WidgetHome.showBookmarkItems = function () {
-          ViewStack.push({
-            template: 'Bookmarks',
-            params: {
-              controller: "WidgetBookmarkCtrl as WidgetBookmark",
-              shouldUpdateTemplate: true
-            }
-          });
+          if (WidgetHome.currentLoggedInUser) {
+            ViewStack.push({
+              template: 'Bookmarks',
+              params: {
+                controller: "WidgetBookmarkCtrl as WidgetBookmark",
+                shouldUpdateTemplate: true
+              }
+            });
+          } else {
+            WidgetHome.openLogin();
+          }
         };
 
         WidgetHome.showItemNotes = function () {
-          ViewStack.push({
-            template: 'Notes',
-            params: {
-              controller: "WidgetNotesCtrl as WidgetNotes",
-              shouldUpdateTemplate: true
-            }
-          });
+          if (WidgetHome.currentLoggedInUser) {
+            ViewStack.push({
+              template: 'Notes',
+              params: {
+                controller: "WidgetNotesCtrl as WidgetNotes",
+                shouldUpdateTemplate: true
+              }
+            });
+          }
+          else {
+            WidgetHome.openLogin();
+          }
         };
         var onUpdateCallback = function (event) {
           console.log(event);
@@ -189,19 +201,6 @@
             }
             else if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {
               console.log("============items", event);
-              var skip = searchOptions.skip || 0;
-              WidgetHome.busy = false;
-              WidgetHome.items = [];
-              if (searchOptions.skip && searchOptions.skip >= _limit) {
-                searchOptions.limit = _limit + 1;
-                var times = Math.floor(searchOptions.skip / _limit);
-                searchOptions.skip = 0;
-                WidgetHome.loadMore(true, Math.min(times - 1, 0));
-              } else {
-                searchOptions.limit = _limit + 1;
-                searchOptions.skip = 0;
-                WidgetHome.loadMore();
-              }
             }
 
             if (!WidgetHome.data.design.itemListLayout) {
@@ -239,7 +238,7 @@
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetHome.busy = false;
               }
-                WidgetHome.getBookmarks();
+              WidgetHome.setBookmarks();
             },
             errorAll = function (error) {
               console.log("error", error)
@@ -257,7 +256,7 @@
             params: {
               controller: "WidgetItemCtrl as WidgetItem",
               shouldUpdateTemplate: true,
-              itemId : itemId
+              itemId: itemId
             }
           });
         };
@@ -271,18 +270,15 @@
           buildfire.auth.login({}, function () {
 
           });
-
-          $scope.$apply();
         };
 
         var loginCallback = function () {
           buildfire.auth.getCurrentUser(function (err, user) {
             console.log("=========User", user);
-
-            $scope.$digest();
             if (user) {
               WidgetHome.currentLoggedInUser = user;
               $scope.$apply();
+              WidgetHome.getBookMarkData();
             }
           });
         };
@@ -296,37 +292,44 @@
           console.log("===========LoggedInUser", user);
           if (user) {
             WidgetHome.currentLoggedInUser = user;
+            $scope.$apply();
+            WidgetHome.getBookMarkData();
           }
-          else
-            WidgetHome.openLogin();
         });
 
-        WidgetHome.addToBookmark = function(itemId){
+        WidgetHome.addToBookmark = function (itemId) {
           WidgetHome.bookmarkItem = {
-            data:{
+            data: {
               itemIds: itemId
             }
-          }
+          };
           var successItem = function (result) {
             console.log("Inserted", result);
             $scope.isClicked = itemId;
-            WidgetHome.getBookmarks();
+            WidgetHome.setBookmarks();
+            $modal.open({
+              templateUrl: 'templates/Bookmark_Confirm.html',
+              size: 'sm'
+            });
           }, errorItem = function () {
             return console.error('There was a problem saving your data');
           };
-          console.log("===============",WidgetHome.currentLoggedInUser.username)
+          console.log("===============", WidgetHome.currentLoggedInUser.username);
           UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
-          $scope.$apply();
         };
 
-        WidgetHome.showSearchPage = function(){
-          ViewStack.push({
-            template: 'Search',
-            params: {
-              controller: "WidgetSearchCtrl as WidgetSearch",
-              shouldUpdateTemplate: true
-            }
-          });
+        WidgetHome.showSearchPage = function () {
+          if (WidgetHome.currentLoggedInUser) {
+            ViewStack.push({
+              template: 'Search',
+              params: {
+                controller: "WidgetSearchCtrl as WidgetSearch",
+                shouldUpdateTemplate: true
+              }
+            });
+          } else {
+            WidgetHome.openLogin();
+          }
         }
       }])
 })(window.angular, window.buildfire);

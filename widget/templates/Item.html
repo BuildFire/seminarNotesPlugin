@@ -2,9 +2,13 @@
 <div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu">
 <div class="scrollable">
     <div class="seminar-notes layout3" style="padding-bottom:45px;">
-        <div class="plugin-slide">
-            <img src="../../../styles/media/holder-16x9.png">
-        </div>
+        <!--<div class="plugin-slide">-->
+            <!--<img src="../../../styles/media/holder-16x9.png">-->
+        <!--</div>-->
+        <div id="carousel2" ng-if="WidgetItem.item.data.carouselImages.length"
+             build-fire-carousel2=""
+             ng-style="WidgetItem.item.data.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
+
         <div class="padded">
             <p class="margin-zero" style="font-size:15px;">{{WidgetItem.item.data
                 .title}}</p>
@@ -24,10 +28,10 @@
     </div>
 </div>
 <div class="bottom fixed-bottom primaryBackgroundTheme has-content open transition-third"  >
-    <div class="extra-links">
+    <div class="extra-links" ng-if="WidgetItem.currentLoggedInUser">
         <!-- When Inactive, use these theme classes -->
-        <a class="bg-primary">
-            <span class="icon icon-bookmark2 whiteTheme"></span>
+        <a class="bg-primary"  ng-click="WidgetItem.addToBookmark(WidgetItem.item.id)" ng-disabled="WidgetItem.item.isBookmarked" >
+            <span class="icon whiteTheme" ng-class="WidgetItem.item.isBookmarked?'':'icon-bookmark2'"></span>
         </a>
     </div>
     <div class="pull-left text-center" ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">

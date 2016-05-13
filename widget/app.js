@@ -93,6 +93,13 @@
                     $rootScope.$broadcast("Carousel:LOADED");
                 }
             };
+        }]).directive("buildFireCarousel2", ["$rootScope", function ($rootScope) {
+            return {
+                restrict: 'A',
+                link: function (scope, elem, attrs) {
+                    $rootScope.$broadcast("Carousel2:LOADED");
+                }
+            };
         }])
 
         .directive("loadImage", [function () {
