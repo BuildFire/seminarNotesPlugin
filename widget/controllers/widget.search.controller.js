@@ -10,7 +10,7 @@
 
         WidgetSearch.searchOptions = {};
 
-        WidgetSearch.bookmarks= [];
+        WidgetSearch.bookmarks = [];
 
         var tmrDelay = null;
         /*
@@ -71,19 +71,19 @@
           }
           DataStore.search(WidgetSearch.searchOptions, tag).then(success, error);
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
-          var err = function(error){
+          var err = function (error) {
             console.log("============ There is an error in getting data", error);
-          },result = function(result){
-            console.log("===========search",result);
+          }, result = function (result) {
+            console.log("===========search", result);
             WidgetSearch.bookmarks = result;
           };
           UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
         };
 
-        WidgetSearch.getBookmarks = function(){
-          for (var item = 0; item<  WidgetSearch.items.length; item++){
-            for (var bookmark in WidgetSearch.bookmarks)  {
-              if(WidgetSearch.items[item].id==WidgetSearch.bookmarks[bookmark].data.itemIds){
+        WidgetSearch.getBookmarks = function () {
+          for (var item = 0; item < WidgetSearch.items.length; item++) {
+            for (var bookmark in WidgetSearch.bookmarks) {
+              if (WidgetSearch.items[item].id == WidgetSearch.bookmarks[bookmark].data.itemIds) {
                 WidgetSearch.items[item].isBookmarked = true;
               }
             }
@@ -91,13 +91,18 @@
           $scope.isFetchedAllData = true;
         };
         var saveDataWithDelay = function (newObj) {
+          console.log("******************", newObj);
           if (newObj) {
             if (tmrDelay) {
               clearTimeout(tmrDelay);
             }
             tmrDelay = setTimeout(function () {
-              searchData(newObj, TAG_NAMES.SEMINAR_ITEMS);
+              if (newObj)
+                searchData(newObj, TAG_NAMES.SEMINAR_ITEMS);
             }, 500);
+          }
+          else {
+            WidgetSearch.items = [];
           }
         };
 
@@ -110,11 +115,11 @@
           WidgetSearch.items = [];
         };
 
-        WidgetSearch.showItemList = function (){
+        WidgetSearch.showItemList = function () {
           ViewStack.popAllViews();
         };
 
-        WidgetSearch.showBookmarkList = function (){
+        WidgetSearch.showBookmarkList = function () {
           ViewStack.push({
             template: 'Bookmarks',
             params: {
@@ -124,7 +129,7 @@
           });
         };
 
-        WidgetSearch.showNotesList = function (){
+        WidgetSearch.showNotesList = function () {
           ViewStack.push({
             template: 'Notes',
             params: {
