@@ -25,7 +25,7 @@
                 WidgetNotes.getNoteList();
                 WidgetNotes.showBookmarkItems = function () {
                     ViewStack.push({
-                        template: 'bookmarks',
+                        template: 'Bookmarks',
                         params: {
                             controller: "WidgetBookmarkCtrl as WidgetBookmark",
                             shouldUpdateTemplate: true
@@ -35,7 +35,7 @@
 
                 WidgetNotes.showItemNotes = function () {
                     ViewStack.push({
-                        template: 'notes',
+                        template: 'Notes',
                         params: {
                             controller: "WidgetNotesCtrl as WidgetNotes",
                             shouldUpdateTemplate: true

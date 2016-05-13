@@ -75,7 +75,7 @@
 
                 WidgetBookmark.openDetails = function (itemId) {
                     ViewStack.push({
-                        template: 'item_detail',
+                        template: 'Item',
                         params: {
                             controller: "WidgetItemCtrl as WidgetItem",
                             shouldUpdateTemplate: true,
@@ -85,7 +85,7 @@
                 };
                 WidgetBookmark.showItemNotes = function () {
                     ViewStack.push({
-                        template: 'notes',
+                        template: 'Notes',
                         params: {
                             controller: "WidgetNotesCtrl as WidgetNotes",
                             shouldUpdateTemplate: true

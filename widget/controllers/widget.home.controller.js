@@ -152,7 +152,7 @@
         });
         WidgetHome.showBookmarkItems = function () {
           ViewStack.push({
-            template: 'bookmarks',
+            template: 'Bookmarks',
             params: {
               controller: "WidgetBookmarkCtrl as WidgetBookmark",
               shouldUpdateTemplate: true
@@ -162,7 +162,7 @@
 
         WidgetHome.showItemNotes = function () {
           ViewStack.push({
-            template: 'notes',
+            template: 'Notes',
             params: {
               controller: "WidgetNotesCtrl as WidgetNotes",
               shouldUpdateTemplate: true

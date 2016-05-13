@@ -121,6 +121,7 @@
          };
 
         WidgetItem.getNoteList = function(){
+          console.log("============itemIDDDD",WidgetItem.item.id)
           searchOptions.filter = {"$or": [{"$json.ItemID": {"$eq": WidgetItem.item.id}}]};
           var err = function(error){
             console.log("============ There is an error in getting data", error);
@@ -128,7 +129,7 @@
             console.log("===========searchItem",result);
             WidgetItem.ItemNoteList = result;
           }
-          UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+          UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };
 
         WidgetItem.openLinks = function (actionItems) {

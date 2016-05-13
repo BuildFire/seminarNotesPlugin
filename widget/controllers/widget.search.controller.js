@@ -116,7 +116,7 @@
 
         WidgetSearch.showBookmarkList = function (){
           ViewStack.push({
-            template: 'bookmarks',
+            template: 'Bookmarks',
             params: {
               controller: "WidgetBookmarkCtrl as WidgetBookmark",
               shouldUpdateTemplate: true
@@ -126,7 +126,7 @@
 
         WidgetSearch.showNotesList = function (){
           ViewStack.push({
-            template: 'notes',
+            template: 'Notes',
             params: {
               controller: "WidgetBookmarkCtrl as WidgetBookmark",
               shouldUpdateTemplate: true
