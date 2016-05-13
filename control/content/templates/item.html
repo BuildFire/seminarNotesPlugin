@@ -1,19 +1,22 @@
-<!-- Remove Start-->
-<br><br><br>
-<hr>
-<br><br>
-<h4 class="margin-top-zero">Add New Item UI</h4>
-<br>
-<!-- Remove End -->
 
 <tabset justified="true">
   <tab heading="Item Content">
     <div class="item clearfix row">
       <div class="col-md-3 labels pull-left">
-        <span>Item Title</span>
+        <span>Item Title *</span>
       </div>
       <div class="col-md-9 main pull-right">
-        <input type="text" class="form-control" placeholder="Item Title">
+        <input type="text" class="form-control" placeholder="Item Title"
+               ng-model="ContentItem.item.data.title">
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="labels col-md-3 padding-right-zero pull-left">
+        <span>Deep Link URL</span>
+      </div>
+      <div class="main col-md-9 pull-right">
+        <span>{{ContentItem.item.data.deepLinkUrl}}</span>
       </div>
     </div>
     <hr class="none">
@@ -22,7 +25,8 @@
         <span>Item Summary</span>
       </div>
       <div class="col-md-9 main pull-right">
-        <input type="text" class="form-control" placeholder="Item Summary">
+        <input type="text" class="form-control" placeholder="Item Summary"
+               ng-model="ContentItem.item.data.summary">
       </div>
     </div>
     <hr class="none">
@@ -31,40 +35,64 @@
         <span>Publication Date</span>
       </div>
       <div class="col-md-9 main pull-right">
-        <input type="text" class="form-control" placeholder="Publication Date">
+        <input type="date" class="form-control" date-time=""
+               placeholder="Publication Date"
+               ng-model="ContentItem.item.data.publishDate">
       </div>
     </div>
     <hr class="none">
+    <div id="listImage"></div>
+    <hr class="none">
+    <div class="carousel-padding-botton" id="carousel2"></div>
+    <div class="well text-center margin-bottom-zero border-none carousel-list-noImage-margin"
+         ng-hide="ContentItem.item.data.carouselImages.length">
+      <p class="margin-zero">No images found.</p>
+    </div>
+    <hr class="none">
     <div class="item clearfix row">
-      <div class="col-md-3 labels pull-left">
-        <span>List Image</span>
+      <div class="labels col-md-3 padding-right-zero pull-left">
+        <span>Links</span>
       </div>
-      <div class="col-md-9 main pull-right">
-        <div class="screens clearfix">
-          <div class="screen logoicon pull-left text-center">
-            <a class="border-radius-three default-background-hover">
-              <span class="add-icon">+</span>
-              <img ng-src="{{ tools.resizeImage(info.logoUrl,{width:300}) }}">
-            </a>
-            <label class="secondary">600x280</label>
-          </div>
+      <div class="main col-md-9 pull-right">
+        <div class="col-md-4 row" style="margin-left: 15%;">
+          <a class="btn btn-success pull-left stretch"
+             ng-click="ContentItem.addLink()">Add Link</a>
         </div>
       </div>
     </div>
     <hr class="none">
     <div class="item clearfix row">
-      <div class="col-md-3">
-        carousel
-      </div>
-    </div>
-    <hr class="none">
-    <div class="item clearfix row">
-      <div class="col-md-3 labels pull-left">
-        <span>Links/Actions</span>
-      </div>
-      <div class="col-md-9 main pull-right">
-        <textarea placeholder="standard link/action list"
-                  class="form-control"></textarea>
+      <div class="main col-md-12 pull-right">
+        <div class="draggable-list-view wide-list has-btn links-list"
+             ui-sortable="ContentItem.linksSortableOptions"
+             ng-model="ContentItem.item.data.links">
+          <div class=" ui-sortable d-item double-line square-icon clearfix"
+               ng-repeat="_link in ContentItem.item.data.links">
+            <span class="icon icon-menu cursor-grab pull-left"></span>
+
+            <div class="media-holder pull-left">
+              <img src="../../../../../../sdk/styles/media/holder-1x1.png">
+            </div>
+            <div class="copy pull-right">
+              <div class=" col-md-4 padding-zero pull-left">
+                <a class="text-primary"
+                   ng-click="ContentItem.editLink(_link,$index)"><span
+                    class="title ellipsis pull-left">{{_link.title}}</span></a>
+              <span class="title ellipsis pull-left">{{_link.url ||
+                _link.phoneNumber}}</span>
+              </div>
+          <span
+              class="btn-icon btn-delete-icon btn-danger transition-th  ird pull-right"
+              ng-click="ContentItem.removeLink($index)"></span>
+            </div>
+          </div>
+
+          <!-- Show If No Links -->
+          <div class="well text-center margin-bottom-zero border-none"
+               ng-hide="ContentItem.item.data.links.length">
+            <p class="margin-zero">No links found.</p>
+          </div>
+        </div>
       </div>
     </div>
     <hr class="none">
@@ -75,74 +103,22 @@
     </div>
     <div class="item clearfix row margin-top-ten">
       <div class="col-md-12 main pull-left">
-        <textarea placeholder="WYSIWYG" class="form-control"></textarea>
+        <textarea rows="5" width="100%"
+                  class="form-control" placeholder="WYSIWYG"
+                  ui-tinymce="ContentItem.descriptionWYSIWYGOptions"
+                  ng-model="ContentItem.item.data.description"></textarea>
       </div>
     </div>
     <hr class="none">
     <div class="item clearfix row">
       <div class="col-md-3 main pull-right">
-        <a class="btn btn-primary stretch">Done</a>
+        <a class="btn btn-primary stretch"  ng-click="ContentItem.gotToHome()"
+           ng-disabled="!ContentItem.isValidItem(ContentItem.item.data)">Done
+        </a>
       </div>
     </div>
   </tab>
   <tab heading="Item Design">
-    <div class="item clearfix row margin-top-thirty">
-      <div class="labels col-xs-3 pull-left">
-        <span>List Layout</span>
-      </div>
-      <div class="main col-xs-9 pull-right">
-        <div class="screens clearfix">
-          <div class="screen layouticon pull-left">
-            <a class="border-grey border-radius-three default-background-hover text-center">
-              <span class="add-icon">+</span>
-              <img src="http://www.placehold.it/60x100">
-            </a>
-          </div>
-          <div
-              class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
-            <a data-number="{{$index + 1}}"
-               class="layouticon border-grey border-radius-three default-background-hover text-center"
-               ng-click="DesignHome.changeLayout(layout.name)">
-              <img src="http://www.placehold.it/60x100">
-            </a>
-            <a data-number="{{$index + 1}}"
-               class="layouticon border-grey border-radius-three default-background-hover text-center"
-               ng-click="DesignHome.changeLayout(layout.name)">
-              <img src="http://www.placehold.it/60x100">
-            </a>
-            <a data-number="{{$index + 1}}"
-               class="layouticon border-grey border-radius-three default-background-hover text-center"
-               ng-click="DesignHome.changeLayout(layout.name)">
-              <img src="http://www.placehold.it/60x100">
-            </a>
-            <a data-number="{{$index + 1}}"
-               class="layouticon border-grey border-radius-three default-background-hover text-center"
-               ng-click="DesignHome.changeLayout(layout.name)">
-              <img src="http://www.placehold.it/60x100">
-            </a>
-            <a data-number="{{$index + 1}}"
-               class="layouticon border-grey border-radius-three default-background-hover text-center"
-               ng-click="DesignHome.changeLayout(layout.name)">
-              <img src="http://www.placehold.it/60x100">
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr class="none">
-    <div class="item clearfix row margin-top-thirty">
-      <div class="labels col-xs-3 pull-left">
-        <span>Background Image</span>
-      </div>
-      <div class="main col-xs-9 pull-right">
-        <div class="screens clearfix">
-          <div class="screen layouticon pull-left">
-            <a class="border-grey border-radius-three default-background-hover text-center">
-              <span class="add-icon">+</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div id="background"></div>
   </tab>
 </tabset>

@@ -4,25 +4,20 @@
     <img src="../../../styles/media/holder-16x9.png">
   </div>
   <div class="padded">
-    <p class="margin-zero text-primary ellipsis">Item title goes here. Item
-      title goes here.</p>
+    <p class="margin-zero text-primary ellipsis">{{WidgetItem.item.data
+      .title}}</p>
 
-    <p class="margin-zero ellipsis">Item summary. Item summary. Item summary.
-      Item summary. Item summary.</p>
+    <p class="margin-zero ellipsis">{{WidgetItem.item.data
+      .summary}}</p>
 
-    <p class="margin-zero small"><i>June 27, 2016</i></p>
+    <p class="margin-zero small"><i>{{WidgetItem.item.data
+      .publishDate | date}}</i></p>
     <hr class="small">
     <div class="text-center">
       <a class="text-primary">Open Menu Options</a>
     </div>
     <hr class="small">
-    <p class="margin-zero">Lorem ipsum dolor sit amet, consectetur adipisicing
-      elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-      aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-      voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-      sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-      mollit anim id est laborum.</p>
+    <p class="margin-zero"  ng-bind-html="WidgetItem.safeHtml(WidgetItem.item.data.description)"></p>
   </div>
   <div class="bottom fixed-bottom titleBarBackgroundTheme">
     <div class="extra-links">

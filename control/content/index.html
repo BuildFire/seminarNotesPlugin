@@ -14,16 +14,28 @@
   <script src="../../../../scripts/buildfire/components/carousel/carousel.js"></script>
   <script src="../../../../scripts/angular/angular.min.js"></script>
   <script src="../../../../scripts/angular/angular-route.min.js"></script>
+
   <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
   <script src="../../../../scripts/tinymce/tinymce.min.js"></script>
   <script src="../../../../scripts/tinymce/ui-tinymce.js"></script>
+  <script src="../../../../scripts/buildfire/components/images/thumbnail.js"></script>
+  <script src="assets/js/jquery-ui.min.js"></script>
+  <script src="assets/js/sortable.js"></script>
+  <script src="assets/js/ng-infinite-scroll.custom.js"></script>
   <script src="app.js"></script>
   <script src="enums.js"></script>
   <script src="app.services.js"></script>
   <script src="controllers/content.home.controller.js"></script>
   <script src="controllers/content.item.controller.js"></script>
+  <script src="controllers/modal.remove.controller.js"></script>
+  <link rel="stylesheet" href="../../../../styles/transitionAnimation.css">
+  <style>
+    .padding-content-top {
+      padding-top: 20px;
+    }
+  </style>
 </head>
 <body>
-<div class="content" ng-view=""></div>
+<div class="content slide padding-content-top" ng-view=""></div>
 </body>
 </html>

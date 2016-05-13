@@ -187,7 +187,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	bottom:0;
 	left:0;
 	width:100%;
-	z-index:9999;
+	z-index:11;
 	background:#09a3ee;
 }
 .holder .bottom.fixed-bottom.has-content{
@@ -241,7 +241,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	background:#fff;
 }
 .holder .bottom div a.active{
-	font-weight:500;
+	font-weight:bold;
 }
 .holder .bottom .extra-links a{
 	position:absolute;
@@ -518,8 +518,15 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	bottom:7px;
 	left:32px;
 }
+.sticky-bottom-menu {
+	position: absolute;
+	width: 100% ;
+	height: 100%;
+	overflow-y: auto;
+}
 
-
-
-
-
+.list-item {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}

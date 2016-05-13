@@ -1,0 +1,57 @@
+
+<div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu">
+	<div class="scrollable">
+		<div class="seminar-notes layout3" infinite-scroll="WidgetBookmark.loadMore()"
+			 infinite-scroll-distance="1"
+			 data-infinite-container=".infinite-scroll-parent"
+			 infinite-scroll-disabled="WidgetBookmark.busy">
+			<div class="list-layout" ng-repeat="item in WidgetBookmark.items">
+				<div class="list-item" ng-if="item.isBookmarked">
+					<div class="list-item-media text-left overflow-hidden"  ng-if="isFetchedAllData">
+						<div class="square-icon list-media-holder pull-left">
+							<img ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
+							<img  ng-show="item.data.listImage" class="border-radius-three" ng-if="item.data.listImage"
+								  load-image="1x1" data-final-src="{{item.data.listImage |
+                       getImageUrl : 60:60}}">
+						</div>
+						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
+							<div class="copy-holder">
+								<p
+										class="ellipsis margin-zero text-primary margin-top-five">
+									<a
+											ng-click="WidgetBookmark.openDetails(item.id)">{{item.data.title}}</a>
+								</p>
+
+								<p class="ellipsis margin-zero bodyTextTheme">
+									{{item.data.summary}}
+								</p>
+
+								<p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
+									<i>{{item.data.publishDate | date}}</i>
+								</p>
+							</div>
+
+							<fieldset class="bookmark-holder" ng-click="WidgetBookmark.addToBookmark(item.id)" ng-disabled="item.isBookmarked || isClicked==item.id">
+								<span class="icon icon-bookmark2 " ng-class="item.isBookmarked || isClicked==item.id?'text-primary':''"></span>
+							</fieldset>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="bottom fixed-bottom primaryBackgroundTheme">
+		<div class="col-xs-3 pull-left text-center">
+			<a class="whiteTheme stretch" ng-click="WidgetBookmark.goToItem()">Items</a>
+		</div>
+		<div class="col-xs-3 pull-left text-center">
+			<a class="whiteTheme stretch" ng-click="WidgetBookmark.showItemNotes()">Notes</a>
+		</div>
+		<div class="col-xs-3 pull-left text-center">
+			<a class="whiteTheme stretch active">Bookmarks</a>
+		</div>
+		<div class="col-xs-3 pull-left text-center">
+			<a class="whiteTheme stretch">Search</a>
+		</div>
+	</div>
+</div>

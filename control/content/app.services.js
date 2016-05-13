@@ -30,7 +30,7 @@
               message: STATUS_MESSAGES.UNDEFINED_ID
             }));
           }
-          Buildfire.datastore.getById(_id,_tagName, function (err, result) {
+          Buildfire.datastore.getById(_id, _tagName, function (err, result) {
             if (err) {
               return deferred.reject(err);
             } else if (result) {
@@ -120,7 +120,7 @@
           });
           return deferred.promise;
         },
-        search: function(options, _tagName){
+        search: function (options, _tagName) {
           var deferred = $q.defer();
           if (typeof options == 'undefined') {
             return deferred.reject(new Error({
@@ -128,7 +128,7 @@
               message: STATUS_MESSAGES.UNDEFINED_OPTIONS
             }));
           }
-          Buildfire.datastore.search(options,_tagName, function (err, result) {
+          Buildfire.datastore.search(options, _tagName, function (err, result) {
             if (err) {
               return deferred.reject(err);
             } else if (result) {
@@ -147,6 +147,17 @@
         },
         goToHome: function () {
           _location.href = _location.href.substr(0, _location.href.indexOf('#'));
+        }
+      };
+    }])
+    .factory('RankOfLastItem', [function () {
+      var _rankOfLastItem;
+      return {
+        getRank: function () {
+          return _rankOfLastItem;
+        },
+        setRank: function (value) {
+          _rankOfLastItem = value;
         }
       };
     }]);

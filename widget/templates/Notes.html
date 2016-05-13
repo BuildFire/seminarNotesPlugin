@@ -1,0 +1,51 @@
+<div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu">
+    <div class="scrollable">
+        <div class="seminar-notes layout3">
+            <div class="form-holder">
+                <input type="text" class="border-none form-control bodyTextTheme"
+                       placeholder="Search note titles and content" ng-model="WidgetNotes.search">
+                <hr class="small margin-zero">
+            </div>
+            <div class="list-layout" ng-if="WidgetNotes.Notes.length">
+                <div class="list-item" ng-repeat="note in WidgetNotes.Notes | filter:WidgetNotes.search"
+                     ng-swipe-left="WidgetNotes.swipeToDeleteNote($event, $index, true)"
+                     ng-swipe-right="WidgetNotes.swipeToDeleteNote($event, $index, false)">
+                    <div class="list-item-media text-left" ng-class="{'edit' : WidgetNotes.swiped[$index]}">
+                        <div class="list-item-copy text-left padding-left-ten padding-right-ten">
+                            <p class="ellipsis margin-zero margin-top-five clearfix">
+                                <span class="pull-left ellipsis" style="max-width:65%;">{{note.data.noteTitle}}</span>
+                                <span class="pull-right small opacity-seventy"><i>{{note.data.DateAdded|
+                                    date:'short'}}</i></span>
+                            </p>
+
+                            <p class="ellipsis margin-zero bodyTextTheme">
+                                {{note.data.ItemTitle}}
+                            </p>
+
+                            <p class="small ellipsis margin-zero bodyTextTheme">
+                                {{note.data.noteDescription}}
+                            </p>
+                        </div>
+                        <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
+                            <span>Delete</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottom fixed-bottom primaryBackgroundTheme">
+        <div class="col-xs-3 pull-left text-center">
+            <a class="whiteTheme stretch" ng-click="WidgetNotes.showItemList()">Items</a>
+        </div>
+        <div class="col-xs-3 pull-left text-center">
+            <a class="whiteTheme stretch active">Notes</a>
+        </div>
+        <div class="col-xs-3 pull-left text-center">
+            <a class="whiteTheme stretch" ng-click="WidgetNotes.showBookmarkItems()">Bookmarks</a>
+        </div>
+        <div class="col-xs-3 pull-left text-center">
+            <a class="whiteTheme stretch" ng-click="WidgetNotes.showSearchPage()">Search</a>
+        </div>
+    </div>
+</div>
