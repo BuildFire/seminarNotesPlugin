@@ -37,7 +37,8 @@
                                     <i>{{item.data.publishDate | date}}</i>
                                 </p>
                             </div>
-                            <fieldset class="bookmark-holder" ng-click="WidgetHome.addToBookmark(item.id)" ng-disabled="item.isBookmarked || isClicked==item.id">
+                            <fieldset ng-if="WidgetHome.currentLoggedInUser" class="bookmark-holder"
+                                       ng-click="WidgetHome.addToBookmark(item.id)" ng-disabled="item.isBookmarked || isClicked==item.id">
                                 <span class="icon icon-bookmark2 " ng-class="item.isBookmarked || isClicked==item.id?'text-primary':''"></span>
                             </fieldset>
                         </div>

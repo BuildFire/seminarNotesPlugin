@@ -2,10 +2,10 @@
 
 (function (angular, buildfire) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData','SORT',
-      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData,SORT) {
+    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData', 'SORT',
+      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData, SORT) {
         var WidgetHome = this;
-        var currentListLayout,currentSortOrder = null;
+        var currentListLayout, currentSortOrder = null;
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth;
         WidgetHome.busy = false;
@@ -61,7 +61,7 @@
           }
           return searchOptions;
         };
-        
+
         WidgetHome.data = {
           design: {
             itemListLayout: LAYOUTS.itemListLayout[0].name
@@ -102,19 +102,19 @@
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
-          var err = function(error){
+          var err = function (error) {
             console.log("============ There is an error in getting data", error);
-          },result = function(result){
-            console.log("===========search",result);
+          }, result = function (result) {
+            console.log("===========search", result);
             WidgetHome.bookmarks = result;
           };
           UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
 
         };
-        WidgetHome.getBookmarks = function(){
-          for (var item = 0; item<  WidgetHome.items.length; item++){
-            for (var bookmark in WidgetHome.bookmarks)  {
-               if(WidgetHome.items[item].id==WidgetHome.bookmarks[bookmark].data.itemIds){
+        WidgetHome.getBookmarks = function () {
+          for (var item = 0; item < WidgetHome.items.length; item++) {
+            for (var bookmark in WidgetHome.bookmarks) {
+              if (WidgetHome.items[item].id == WidgetHome.bookmarks[bookmark].data.itemIds) {
                 WidgetHome.items[item].isBookmarked = true;
               }
             }
@@ -151,23 +151,33 @@
           }
         });
         WidgetHome.showBookmarkItems = function () {
-          ViewStack.push({
-            template: 'Bookmarks',
-            params: {
-              controller: "WidgetBookmarkCtrl as WidgetBookmark",
-              shouldUpdateTemplate: true
-            }
-          });
+          if (WidgetHome.currentLoggedInUser) {
+            ViewStack.push({
+              template: 'Bookmarks',
+              params: {
+                controller: "WidgetBookmarkCtrl as WidgetBookmark",
+                shouldUpdateTemplate: true
+              }
+            });
+          } else {
+            WidgetHome.openLogin();
+          }
         };
 
         WidgetHome.showItemNotes = function () {
-          ViewStack.push({
-            template: 'Notes',
-            params: {
-              controller: "WidgetNotesCtrl as WidgetNotes",
-              shouldUpdateTemplate: true
-            }
-          });
+          if (WidgetHome.currentLoggedInUser) {
+            ViewStack.push({
+              template: 'Notes',
+              params: {
+                controller: "WidgetNotesCtrl as WidgetNotes",
+                shouldUpdateTemplate: true
+              }
+            });
+          }
+          else {
+            WidgetHome.openLogin();
+          }
+
         };
         var onUpdateCallback = function (event) {
           console.log(event);
@@ -239,7 +249,7 @@
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetHome.busy = false;
               }
-                WidgetHome.getBookmarks();
+              WidgetHome.getBookmarks();
             },
             errorAll = function (error) {
               console.log("error", error)
@@ -257,7 +267,7 @@
             params: {
               controller: "WidgetItemCtrl as WidgetItem",
               shouldUpdateTemplate: true,
-              itemId : itemId
+              itemId: itemId
             }
           });
         };
@@ -271,8 +281,6 @@
           buildfire.auth.login({}, function () {
 
           });
-
-          $scope.$apply();
         };
 
         var loginCallback = function () {
@@ -297,16 +305,14 @@
           if (user) {
             WidgetHome.currentLoggedInUser = user;
           }
-          else
-            WidgetHome.openLogin();
         });
 
-        WidgetHome.addToBookmark = function(itemId){
+        WidgetHome.addToBookmark = function (itemId) {
           WidgetHome.bookmarkItem = {
-            data:{
+            data: {
               itemIds: itemId
             }
-          }
+          };
           var successItem = function (result) {
             console.log("Inserted", result);
             $scope.isClicked = itemId;
@@ -314,19 +320,22 @@
           }, errorItem = function () {
             return console.error('There was a problem saving your data');
           };
-          console.log("===============",WidgetHome.currentLoggedInUser.username)
+          console.log("===============", WidgetHome.currentLoggedInUser.username);
           UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
-          $scope.$apply();
         };
 
-        WidgetHome.showSearchPage = function(){
-          ViewStack.push({
-            template: 'Search',
-            params: {
-              controller: "WidgetSearchCtrl as WidgetSearch",
-              shouldUpdateTemplate: true
-            }
-          });
+        WidgetHome.showSearchPage = function () {
+          if (WidgetHome.currentLoggedInUser) {
+            ViewStack.push({
+              template: 'Search',
+              params: {
+                controller: "WidgetSearchCtrl as WidgetSearch",
+                shouldUpdateTemplate: true
+              }
+            });
+          } else {
+            WidgetHome.openLogin();
+          }
         }
       }])
 })(window.angular, window.buildfire);
