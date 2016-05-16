@@ -58,9 +58,9 @@
                     WidgetNotes.itemNote = {
                         noteTitle: "test title kmt",
                         noteDescription: "test description kmt",
-                        ItemID: "5735f33cc5b761cb2ced21e5",
-                        ItemTitle: "I Am item title",
-                        DateAdded: new Date()
+                        itemID: "5735f33cc5b761cb2ced21e5",
+                        itemTitle: "I Am item title",
+                        dateAdded: new Date()
                     };
                     buildfire.userData.delete(noteId,TAG_NAMES.SEMINAR_NOTES,function(err, status){
                         if(err)
