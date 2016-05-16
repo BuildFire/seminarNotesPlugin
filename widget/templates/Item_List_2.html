@@ -16,9 +16,8 @@
                  infinite-scroll-disabled="WidgetHome.busy">
                 <div class="list-item" ng-repeat="item in WidgetHome.items" ng-if="isFetchedAllData">
                     <div class="list-item-media text-left overflow-hidden">
-                        <div class="list-media-holder pull-left">
-                            <img ng-hide="item.data.listImage" src="../../../styles/media/holder-16x9.png">
-                            <img  ng-show="item.data.listImage" class="border-radius-three" ng-if="item.data.listImage"
+                        <div class="list-media-holder pull-left"  ng-if="item.data.listImage">
+                            <img class="border-radius-three"
                                   load-image="16x9" data-final-src="{{item.data.listImage |
                        getImageUrl : 120:70}}">
                         </div>
