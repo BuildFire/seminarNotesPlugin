@@ -95,7 +95,13 @@
               if (WidgetHome.data.content.sortBy) {
                 currentSortOrder = WidgetHome.data.content.sortBy;
               }
-              console.log("==============", WidgetHome.data.design.itemListLayout)
+
+              if (!WidgetHome.data.design.itemListBgImage) {
+                $rootScope.itemListbackgroundImage = "";
+              } else {
+                $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
+              }
+              console.log("==============", WidgetHome.data.design)
             }
             , error = function (err) {
               WidgetHome.data = {design: {itemListLayout: LAYOUTS.itemListLayout[0].name}};
@@ -195,6 +201,11 @@
                 searchOptions.skip = 0;
                 WidgetHome.busy = false;
                 WidgetHome.loadMore();
+              }
+              if (!WidgetHome.data.design.itemListBgImage) {
+                $rootScope.itemListbackgroundImage = "";
+              } else {
+                $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
               }
             }
             else if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {

@@ -39,7 +39,13 @@
         var getEventDetails = function () {
           var success = function (result) {
               WidgetItem.item = result;
-              console.log("========ingeteventdetails", WidgetItem.item);
+              console.log("========ingeteventdetails", result);
+
+              if (!WidgetItem.item.data.itemListBgImage) {
+                $rootScope.itemDetailbackgroundImage = "";
+              } else {
+                $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
+              }
             }
             , error = function (err) {
               console.error('Error In Fetching Event', err);
@@ -88,6 +94,7 @@
         var init = function () {
           var success = function (result) {
               WidgetItem.data = result.data;
+              console.log("==============in2detail",result)
               if (!WidgetItem.data.design)
                 WidgetItem.data.design = {};
               getEventDetails();
@@ -162,6 +169,8 @@
          */
         $rootScope.$on("Carousel2:LOADED", function () {
           //  WidgetItem.view = null;
+          if( WidgetItem.view)
+          WidgetItem.view._destroySlider();
           if (!WidgetItem.view) {
             WidgetItem.view = new Buildfire.components.carousel.view("#carousel2", []);
           }
@@ -233,6 +242,37 @@
             $scope.isFetchedAllData = true;
           }
         };
+        var onUpdateCallback = function (event) {
+          console.log(event);
+          setTimeout(function () {
+            $scope.$digest();
+            if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {
+              WidgetItem.item = event;
 
+              if (!WidgetItem.item.data.itemListBgImage) {
+                $rootScope.itemDetailbackgroundImage = "";
+              } else {
+                $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
+              }
+
+              if (WidgetItem.data.content.carouselImages) {
+                WidgetItem.view._destroySlider();
+                WidgetItem.view = null;
+              }
+              else {
+                if (WidgetItem.view) {
+                  WidgetItem.view.loadItems(WidgetHome.data.content.carouselImages);
+                 }
+              }
+            }
+            $rootScope.$apply();
+          }, 0);
+        };
+        DataStore.onUpdate().then(null, null, onUpdateCallback);
+
+        $scope.$on("$destroy", function () {
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
+
+        });
       }]);
 })(window.angular, window.buildfire, window);
