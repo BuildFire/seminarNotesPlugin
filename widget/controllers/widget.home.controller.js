@@ -256,6 +256,11 @@
               itemId: itemId
             }
           });
+
+          buildfire.messaging.sendMessageToControl({
+            type: 'OpenItem',
+            data: {"id": itemId}
+          });
         };
 
         WidgetHome.currentLoggedInUser = null;

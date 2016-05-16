@@ -271,8 +271,8 @@
           });
         };
 
-        ContentItem.gotToHome = function () {
-            buildfire.messaging.sendMessageToWidget({})
+        ContentItem.goToHome = function () {
+            buildfire.messaging.sendMessageToWidget({});
           $location.path('#/');
         };
 

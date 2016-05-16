@@ -113,6 +113,11 @@
     .run(['ViewStack', '$rootScope', function (ViewStack, $rootScope) {
       buildfire.navigation.onBackButtonClick = function () {
         if (ViewStack.hasViews()) {
+          if (ViewStack.getCurrentView().template == 'Item') {
+            buildfire.messaging.sendMessageToControl({
+              type: 'BackToHome'
+            });
+          }
           ViewStack.pop();
         } else {
           buildfire.navigation._goBackOne();
@@ -144,7 +149,7 @@
               $rootScope.$apply();
             }
             break;
-          default:
+          default: ViewStack.popAllViews(true);
 
         }
       };
