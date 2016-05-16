@@ -31,7 +31,7 @@
                 $(elem).append(parTpl);
                 views++;
 
-              }else if (type === 'POP') {
+              } else if (type === 'POP') {
 
                 var _elToRemove = $(elem).find('#' + view.template),
                   _child = _elToRemove.children("div").eq(0);
@@ -110,7 +110,7 @@
         }
       };
     }])
-    .run(['ViewStack', function (ViewStack) {
+    .run(['ViewStack', '$rootScope', function (ViewStack, $rootScope) {
       buildfire.navigation.onBackButtonClick = function () {
         if (ViewStack.hasViews()) {
           ViewStack.pop();
@@ -122,19 +122,27 @@
       buildfire.messaging.onReceivedMessage = function (msg) {
         switch (msg.type) {
           case 'AddNewItem':
-
-            break;
-          case 'OpenItem':
-            console.log(">>>>>>>>>>>>>>>>>", msg);
+            ViewStack.popAllViews(true);
             ViewStack.push({
               template: 'Item',
               params: {
-                controller: "WidgetItemCtrl as WidgetItem",
-                shouldUpdateTemplate: true,
                 itemId: msg.id
               }
             });
+            $rootScope.$apply();
 
+            break;
+          case 'OpenItem':
+            if (ViewStack.getCurrentView()) {
+              ViewStack.popAllViews(true);
+              ViewStack.push({
+                template: 'Item',
+                params: {
+                  itemId: msg.id
+                }
+              });
+              $rootScope.$apply();
+            }
             break;
           default:
 

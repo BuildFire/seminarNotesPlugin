@@ -37,7 +37,7 @@
           }, result = function (result) {
             console.log("===========search", result);
             WidgetBookmark.bookmarks = result;
-          }
+          };
           UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
 
         };
@@ -45,7 +45,7 @@
         WidgetBookmark.getItems = function () {
           var successAll = function (resultAll) {
               WidgetBookmark.items = WidgetBookmark.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
-              console.log("==============", WidgetBookmark.items)
+              console.log("==============", WidgetBookmark.items);
               searchOptions.skip = searchOptions.skip + WidgetBookmark.itemCount;
               if (resultAll.length == WidgetBookmark.itemCount) {
                 WidgetBookmark.busy = false;
@@ -59,7 +59,7 @@
         };
 
         WidgetBookmark.getBookmarks = function () {
-          console.log("====================2222", WidgetBookmark.items, WidgetBookmark.items)
+          console.log("====================2222", WidgetBookmark.items, WidgetBookmark.items);
           for (var item = 0; item < WidgetBookmark.items.length; item++) {
             for (var bookmark in WidgetBookmark.bookmarks) {
               console.log("====================", WidgetBookmark.items[item].id, WidgetBookmark.bookmarks[bookmark].data.itemIds)
@@ -67,7 +67,6 @@
                 WidgetBookmark.items[item].isBookmarked = true;
               }
             }
-            ;
           }
           $scope.isFetchedAllData = true;
         };
@@ -78,7 +77,6 @@
             template: 'Item',
             params: {
               controller: "WidgetItemCtrl as WidgetItem",
-              shouldUpdateTemplate: true,
               itemId: itemId
             }
           });
@@ -87,8 +85,7 @@
           ViewStack.push({
             template: 'Notes',
             params: {
-              controller: "WidgetNotesCtrl as WidgetNotes",
-              shouldUpdateTemplate: true
+              controller: "WidgetNotesCtrl as WidgetNotes"
             }
           });
         };
@@ -97,8 +94,7 @@
           ViewStack.push({
             template: 'Search',
             params: {
-              controller: "WidgetSearchCtrl as WidgetSearch",
-              shouldUpdateTemplate: true
+              controller: "WidgetSearchCtrl as WidgetSearch"
             }
           });
         };
