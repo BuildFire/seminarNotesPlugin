@@ -46,8 +46,8 @@
               console.error('Error In Fetching Event', err);
             };
 
-          console.log(">>>>>>>>>>", currentView.params.itemId);
-          if (currentView.params.itemId) {
+          console.log(">>>>>>>>>>", currentView);
+          if (currentView.params && currentView.params.itemId) {
             DataStore.getById(currentView.params.itemId, TAG_NAMES.SEMINAR_ITEMS).then(success, error);
           }
         };
@@ -224,13 +224,15 @@
           UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
         };
         WidgetItem.getBookmarks = function(){
+          if(WidgetItem.item){
             for (var bookmark in WidgetItem.bookmarks)  {
-              if(WidgetItem.bookmarks[bookmark].data.itemIds==WidgetItem.item.id){
+              if(WidgetItem.bookmarks[bookmark].data.itemIds == WidgetItem.item.id){
                 WidgetItem.item.isBookmarked = true;
               }
-           }
-          console.log("============initemGetBookmarks", WidgetItem.item)
-          $scope.isFetchedAllData = true;
+            }
+            console.log("============initemGetBookmarks", WidgetItem.item);
+            $scope.isFetchedAllData = true;
+          }
         };
 
       }]);
