@@ -31,6 +31,18 @@
                 $(elem).append(parTpl);
                 views++;
 
+              }else if (type === 'POP') {
+
+                var _elToRemove = $(elem).find('#' + view.template),
+                  _child = _elToRemove.children("div").eq(0);
+
+                _child.addClass("ng-leave ng-leave-active");
+                _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
+                  _elToRemove.remove();
+                  views--;
+                });
+
+                currentView = ViewStack.getCurrentView();
               }
               else if (type === 'POPALL') {
                 console.log(view);
