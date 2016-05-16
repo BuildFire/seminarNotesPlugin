@@ -6,6 +6,10 @@
                        placeholder="Search note titles and content" ng-model="WidgetNotes.search">
                 <hr class="small margin-zero">
             </div>
+          <div
+              class="well well-sm text-center margin-top-twenty margin-left-ten margin-right-ten hidde" ng-if="WidgetNotes.Notes.length < 1">
+            <p class="margin-top-ten">No notes added yet.</p>
+          </div>
             <div class="list-layout" ng-if="WidgetNotes.Notes.length">
                 <div class="list-item" ng-repeat="note in WidgetNotes.Notes | filter:WidgetNotes.search"
                      ng-swipe-left="WidgetNotes.swipeToDeleteNote($event, $index, true)"
