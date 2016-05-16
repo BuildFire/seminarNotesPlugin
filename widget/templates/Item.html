@@ -2,7 +2,8 @@
 <div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu"
      ng-controller="WidgetItemCtrl as WidgetItem">
 <div class="scrollable">
-    <div class="seminar-notes layout3" style="padding-bottom:45px;">
+
+    <div class="seminar-notes layout3" style="padding-bottom:45px;" ng-if="WidgetItem.item.data">
         <!--<div class="plugin-slide">-->
             <!--<img src="../../../styles/media/holder-16x9.png">-->
         <!--</div>-->

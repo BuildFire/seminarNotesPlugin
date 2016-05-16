@@ -7,7 +7,7 @@
         var WidgetHome = this;
         var currentListLayout, currentSortOrder = null;
         $rootScope.deviceHeight = window.innerHeight;
-        $rootScope.deviceWidth = window.innerWidth;
+        $rootScope.deviceWidth = window.innerWidth || 320;
         WidgetHome.busy = false;
         WidgetHome.items = [];
         $scope.isClicked = false;
