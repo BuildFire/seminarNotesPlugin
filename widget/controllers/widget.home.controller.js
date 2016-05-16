@@ -7,7 +7,7 @@
         var WidgetHome = this;
         var currentListLayout, currentSortOrder = null;
         $rootScope.deviceHeight = window.innerHeight;
-        $rootScope.deviceWidth = window.innerWidth;
+        $rootScope.deviceWidth = window.innerWidth || 320;
         WidgetHome.busy = false;
         WidgetHome.items = [];
         $scope.isClicked = false;
@@ -95,7 +95,13 @@
               if (WidgetHome.data.content.sortBy) {
                 currentSortOrder = WidgetHome.data.content.sortBy;
               }
-              console.log("==============", WidgetHome.data.design.itemListLayout)
+
+              if (!WidgetHome.data.design.itemListBgImage) {
+                $rootScope.itemListbackgroundImage = "";
+              } else {
+                $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
+              }
+              console.log("==============", WidgetHome.data.design)
             }
             , error = function (err) {
               WidgetHome.data = {design: {itemListLayout: LAYOUTS.itemListLayout[0].name}};
@@ -158,8 +164,7 @@
             ViewStack.push({
               template: 'Bookmarks',
               params: {
-                controller: "WidgetBookmarkCtrl as WidgetBookmark",
-                shouldUpdateTemplate: true
+                controller: "WidgetBookmarkCtrl as WidgetBookmark"
               }
             });
           } else {
@@ -172,8 +177,7 @@
             ViewStack.push({
               template: 'Notes',
               params: {
-                controller: "WidgetNotesCtrl as WidgetNotes",
-                shouldUpdateTemplate: true
+                controller: "WidgetNotesCtrl as WidgetNotes"
               }
             });
           }
@@ -197,6 +201,11 @@
                 searchOptions.skip = 0;
                 WidgetHome.busy = false;
                 WidgetHome.loadMore();
+              }
+              if (!WidgetHome.data.design.itemListBgImage) {
+                $rootScope.itemListbackgroundImage = "";
+              } else {
+                $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
               }
             }
             else if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {
@@ -255,10 +264,14 @@
             template: 'Item',
             params: {
               controller: "WidgetItemCtrl as WidgetItem",
-              shouldUpdateTemplate: true,
               itemId: itemId
             }
           });
+
+          //buildfire.messaging.sendMessageToControl({
+          //  type: 'OpenItem',
+          //  data: {"id": itemId}
+          //});
         };
 
         WidgetHome.currentLoggedInUser = null;
@@ -323,13 +336,16 @@
             ViewStack.push({
               template: 'Search',
               params: {
-                controller: "WidgetSearchCtrl as WidgetSearch",
-                shouldUpdateTemplate: true
+                controller: "WidgetSearchCtrl as WidgetSearch"
               }
             });
           } else {
             WidgetHome.openLogin();
           }
-        }
+        };
+
+        WidgetHome.showDescription = function (description) {
+          return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>') || (description == ''));
+        };
       }])
 })(window.angular, window.buildfire);

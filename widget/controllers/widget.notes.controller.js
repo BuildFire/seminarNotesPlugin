@@ -27,8 +27,7 @@
                     ViewStack.push({
                         template: 'Bookmarks',
                         params: {
-                            controller: "WidgetBookmarkCtrl as WidgetBookmark",
-                            shouldUpdateTemplate: true
+                            controller: "WidgetBookmarkCtrl as WidgetBookmark"
                         }
                     });
                 };
@@ -37,8 +36,7 @@
                     ViewStack.push({
                         template: 'Notes',
                         params: {
-                            controller: "WidgetNotesCtrl as WidgetNotes",
-                            shouldUpdateTemplate: true
+                            controller: "WidgetNotesCtrl as WidgetNotes"
                         }
                     });
                 };
@@ -47,11 +45,33 @@
                 ViewStack.push({
                   template: 'Search',
                   params: {
-                    controller: "WidgetSearchCtrl as WidgetSearch",
-                    shouldUpdateTemplate: true
+                    controller: "WidgetSearchCtrl as WidgetSearch"
                   }
                 });
               };
+
+                WidgetNotes.deleteNote = function(noteId){
+                   console.log('================I Am in delete notes',noteId);
+                    WidgetNotes.itemNote = {
+                        noteTitle: "test title kmt",
+                        noteDescription: "test description kmt",
+                        itemID: "5735f33cc5b761cb2ced21e5",
+                        itemTitle: "I Am item title",
+                        dateAdded: new Date()
+                    };
+                    buildfire.userData.delete(noteId,TAG_NAMES.SEMINAR_NOTES,function(err, status){
+                        if(err)
+                            console.log('================there was a problem deleteing your data',err);
+                        else
+                            console.log( '================record deleted',status);
+                    })
+                    //buildfire.userData.update(noteId,WidgetNotes.itemNote, TAG_NAMES.SEMINAR_NOTES,function(err, status){
+                    //    if(err)
+                    //        console.log('=============there was a problem saving your data',err);
+                    //    else
+                    //        console.log( '================updated tel',status);
+                    //})
+                }
 
               WidgetNotes.showItemList = function(){
                 ViewStack.popAllViews();

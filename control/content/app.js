@@ -1,7 +1,7 @@
 'use strict';
 
 (function (angular) {
-  angular.module('seminarNotesPluginContent', ['ngRoute', 'ui.tinymce', 'infinite-scroll', 'ui.bootstrap', 'ui.sortable'])
+  angular.module('seminarNotesPluginContent', ['ngRoute', 'ui.tinymce', 'infinite-scroll', 'ui.bootstrap', 'ui.sortable','ngAnimate'])
     //injected ngRoute for routing
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider
@@ -51,5 +51,19 @@
           });
         }
       };
-    });
+    })
+    .run(['$location', '$rootScope',function ($location, $rootScope) {
+      buildfire.messaging.onReceivedMessage = function (msg) {
+        switch (msg.type) {
+          case 'OpenItem':
+            $location.path('/item/' + msg.data.id);
+            $rootScope.$apply();
+            break;
+          case 'BackToHome':
+            $location.path('/');
+            $rootScope.$apply();
+            break;
+        }
+      };
+    }]);
 })(window.angular);

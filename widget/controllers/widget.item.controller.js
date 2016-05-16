@@ -14,9 +14,9 @@
         WidgetItem.itemNote = {
           noteTitle: "",
           noteDescription: "",
-          ItemID: "",
-          ItemTitle: "",
-          DateAdded: ""
+          itemID: "",
+          itemTitle: "",
+          dateAdded: ""
         };
         WidgetItem.currentLoggedInUser = null;
         WidgetItem.Note = {
@@ -26,7 +26,6 @@
         WidgetItem.ItemNoteList = {};
 
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
-          console.log("=============i Am in swipe")
           toggle ? WidgetItem.swiped[i] = true : WidgetItem.swiped[i] = false;
         };
         var currentView = ViewStack.getCurrentView();
@@ -40,14 +39,20 @@
         var getEventDetails = function () {
           var success = function (result) {
               WidgetItem.item = result;
-              console.log("========ingeteventdetails", WidgetItem.item);
+              console.log("========ingeteventdetails", result);
+
+              if (!WidgetItem.item.data.itemListBgImage) {
+                $rootScope.itemDetailbackgroundImage = "";
+              } else {
+                $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
+              }
             }
             , error = function (err) {
               console.error('Error In Fetching Event', err);
             };
 
-          console.log(">>>>>>>>>>", currentView.params.itemId);
-          if (currentView.params.itemId) {
+          console.log(">>>>>>>>>>", currentView);
+          if (currentView.params && currentView.params.itemId) {
             DataStore.getById(currentView.params.itemId, TAG_NAMES.SEMINAR_ITEMS).then(success, error);
           }
         };
@@ -144,9 +149,9 @@
           WidgetItem.itemNote = {
             noteTitle: WidgetItem.Note.noteTitle,
             noteDescription: WidgetItem.Note.noteDescription,
-            ItemID: itemId,
-            ItemTitle: WidgetItem.item.data.title,
-            DateAdded: new Date()
+            itemID: itemId,
+            itemTitle: WidgetItem.item.data.title,
+            dateAdded: new Date()
           };
           var successItem = function (result) {
             console.log("Inserted Item Note", result);
@@ -163,6 +168,8 @@
          */
         $rootScope.$on("Carousel2:LOADED", function () {
           //  WidgetItem.view = null;
+          if( WidgetItem.view)
+          WidgetItem.view._destroySlider();
           if (!WidgetItem.view) {
             WidgetItem.view = new Buildfire.components.carousel.view("#carousel2", []);
           }
@@ -175,7 +182,7 @@
 
         WidgetItem.getNoteList = function () {
           console.log("============itemIDDDD", WidgetItem.item.id)
-          searchOptions.filter = {"$or": [{"$json.ItemID": {"$eq": WidgetItem.item.id}}]};
+          searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
           var err = function (error) {
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
@@ -224,14 +231,46 @@
           UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
         };
         WidgetItem.getBookmarks = function(){
+          if(WidgetItem.item){
             for (var bookmark in WidgetItem.bookmarks)  {
-              if(WidgetItem.bookmarks[bookmark].data.itemIds==WidgetItem.item.id){
+              if(WidgetItem.bookmarks[bookmark].data.itemIds == WidgetItem.item.id){
                 WidgetItem.item.isBookmarked = true;
               }
-           }
-          console.log("============initemGetBookmarks", WidgetItem.item)
-          $scope.isFetchedAllData = true;
+            }
+            console.log("============initemGetBookmarks", WidgetItem.item);
+            $scope.isFetchedAllData = true;
+          }
         };
+        var onUpdateCallback = function (event) {
+          setTimeout(function () {
+            $scope.$digest();
+            if (event && event.tag) {
+              console.log("_____________________________", event);
+              switch (event.tag) {
+                case TAG_NAMES.SEMINAR_INFO:
+                  WidgetItem.data = event.data;
+                  if (!WidgetItem.data.design)
+                    WidgetItem.data.design = {};
+                  break;
+                case TAG_NAMES.SEMINAR_ITEMS:
+                  WidgetItem.item.data = event.data;
+                  if (WidgetItem.view) {
+                    WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
+                  }
+
+                  if (!WidgetItem.item.data.itemListBgImage) {
+                    $rootScope.itemDetailbackgroundImage = "";
+                  } else {
+                    $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
+                  }
+                  break;
+              }
+              $scope.$digest();
+              $rootScope.$apply();
+            }
+          }, 0);
+        };
+        DataStore.onUpdate().then(null, null, onUpdateCallback);
 
       }]);
 })(window.angular, window.buildfire, window);

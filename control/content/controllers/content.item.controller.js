@@ -41,6 +41,16 @@
           theme: 'modern'
         };
 
+        /*
+         Send message to widget that this page has been opened
+         */
+        if ($routeParams.id) {
+          buildfire.messaging.sendMessageToWidget({
+            id: $routeParams.id,
+            type: 'OpenItem'
+          });
+        }
+
         $scope.$on('$viewContentLoaded', function () {
           $timeout(function () {
             // create a new instance of the buildfire carousel editor
@@ -187,6 +197,7 @@
         ContentItem.getItem = function (id) {
           var successItem = function (result) {
             ContentItem.item = result;
+            Buildfire.spinner.hide();
             if (ContentItem.item.data.listImage) {
               listImage.loadbackground(ContentItem.item.data.listImage);
             }
@@ -204,8 +215,10 @@
             }
             updateMasterItem(ContentItem.item);
           }, errorItem = function () {
+            Buildfire.spinner.hide();
             throw console.error('There was a problem fetching your data', err);
           };
+          Buildfire.spinner.show();
           DataStore.getById(id, TAG_NAMES.SEMINAR_ITEMS).then(successItem, errorItem);
         };
 
@@ -258,8 +271,8 @@
           });
         };
 
-        ContentItem.gotToHome = function () {
-            buildfire.messaging.sendMessageToWidget({})
+        ContentItem.goToHome = function () {
+            buildfire.messaging.sendMessageToWidget({});
           $location.path('#/');
         };
 
