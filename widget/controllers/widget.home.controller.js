@@ -158,8 +158,7 @@
             ViewStack.push({
               template: 'Bookmarks',
               params: {
-                controller: "WidgetBookmarkCtrl as WidgetBookmark",
-                shouldUpdateTemplate: true
+                controller: "WidgetBookmarkCtrl as WidgetBookmark"
               }
             });
           } else {
@@ -172,8 +171,7 @@
             ViewStack.push({
               template: 'Notes',
               params: {
-                controller: "WidgetNotesCtrl as WidgetNotes",
-                shouldUpdateTemplate: true
+                controller: "WidgetNotesCtrl as WidgetNotes"
               }
             });
           }
@@ -255,7 +253,6 @@
             template: 'Item',
             params: {
               controller: "WidgetItemCtrl as WidgetItem",
-              shouldUpdateTemplate: true,
               itemId: itemId
             }
           });
@@ -323,8 +320,7 @@
             ViewStack.push({
               template: 'Search',
               params: {
-                controller: "WidgetSearchCtrl as WidgetSearch",
-                shouldUpdateTemplate: true
+                controller: "WidgetSearchCtrl as WidgetSearch"
               }
             });
           } else {

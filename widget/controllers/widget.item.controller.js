@@ -26,7 +26,6 @@
         WidgetItem.ItemNoteList = {};
 
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
-          console.log("=============i Am in swipe")
           toggle ? WidgetItem.swiped[i] = true : WidgetItem.swiped[i] = false;
         };
         var currentView = ViewStack.getCurrentView();

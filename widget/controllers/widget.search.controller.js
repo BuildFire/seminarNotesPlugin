@@ -123,8 +123,7 @@
           ViewStack.push({
             template: 'Bookmarks',
             params: {
-              controller: "WidgetBookmarkCtrl as WidgetBookmark",
-              shouldUpdateTemplate: true
+              controller: "WidgetBookmarkCtrl as WidgetBookmark"
             }
           });
         };
@@ -133,8 +132,7 @@
           ViewStack.push({
             template: 'Notes',
             params: {
-              controller: "WidgetBookmarkCtrl as WidgetBookmark",
-              shouldUpdateTemplate: true
+              controller: "WidgetBookmarkCtrl as WidgetBookmark"
             }
           });
         }

@@ -27,8 +27,7 @@
                     ViewStack.push({
                         template: 'Bookmarks',
                         params: {
-                            controller: "WidgetBookmarkCtrl as WidgetBookmark",
-                            shouldUpdateTemplate: true
+                            controller: "WidgetBookmarkCtrl as WidgetBookmark"
                         }
                     });
                 };
@@ -37,8 +36,7 @@
                     ViewStack.push({
                         template: 'Notes',
                         params: {
-                            controller: "WidgetNotesCtrl as WidgetNotes",
-                            shouldUpdateTemplate: true
+                            controller: "WidgetNotesCtrl as WidgetNotes"
                         }
                     });
                 };
@@ -47,8 +45,7 @@
                 ViewStack.push({
                   template: 'Search',
                   params: {
-                    controller: "WidgetSearchCtrl as WidgetSearch",
-                    shouldUpdateTemplate: true
+                    controller: "WidgetSearchCtrl as WidgetSearch"
                   }
                 });
               };
