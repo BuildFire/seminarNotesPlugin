@@ -53,6 +53,29 @@
                 });
               };
 
+                WidgetNotes.deleteNote = function(noteId){
+                   console.log('================I Am in delete notes',noteId);
+                    WidgetNotes.itemNote = {
+                        noteTitle: "test title kmt",
+                        noteDescription: "test description kmt",
+                        ItemID: "5735f33cc5b761cb2ced21e5",
+                        ItemTitle: "I Am item title",
+                        DateAdded: new Date()
+                    };
+                    buildfire.userData.delete(noteId,TAG_NAMES.SEMINAR_NOTES,function(err, status){
+                        if(err)
+                            console.log('================there was a problem deleteing your data',err);
+                        else
+                            console.log( '================record deleted',status);
+                    })
+                    //buildfire.userData.update(noteId,WidgetNotes.itemNote, TAG_NAMES.SEMINAR_NOTES,function(err, status){
+                    //    if(err)
+                    //        console.log('=============there was a problem saving your data',err);
+                    //    else
+                    //        console.log( '================updated tel',status);
+                    //})
+                }
+
               WidgetNotes.showItemList = function(){
                 ViewStack.popAllViews();
               };
