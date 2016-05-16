@@ -41,6 +41,16 @@
           theme: 'modern'
         };
 
+        /*
+         Send message to widget that this page has been opened
+         */
+        if ($routeParams.id) {
+          buildfire.messaging.sendMessageToWidget({
+            id: $routeParams.id,
+            type: 'OpenItem'
+          });
+        }
+
         $scope.$on('$viewContentLoaded', function () {
           $timeout(function () {
             // create a new instance of the buildfire carousel editor
