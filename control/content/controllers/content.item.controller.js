@@ -197,6 +197,7 @@
         ContentItem.getItem = function (id) {
           var successItem = function (result) {
             ContentItem.item = result;
+            Buildfire.spinner.hide();
             if (ContentItem.item.data.listImage) {
               listImage.loadbackground(ContentItem.item.data.listImage);
             }
@@ -214,8 +215,10 @@
             }
             updateMasterItem(ContentItem.item);
           }, errorItem = function () {
+            Buildfire.spinner.hide();
             throw console.error('There was a problem fetching your data', err);
           };
+          Buildfire.spinner.show();
           DataStore.getById(id, TAG_NAMES.SEMINAR_ITEMS).then(successItem, errorItem);
         };
 
