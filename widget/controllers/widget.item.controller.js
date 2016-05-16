@@ -14,9 +14,9 @@
         WidgetItem.itemNote = {
           noteTitle: "",
           noteDescription: "",
-          ItemID: "",
-          ItemTitle: "",
-          DateAdded: ""
+          itemID: "",
+          itemTitle: "",
+          dateAdded: ""
         };
         WidgetItem.currentLoggedInUser = null;
         WidgetItem.Note = {
@@ -144,9 +144,9 @@
           WidgetItem.itemNote = {
             noteTitle: WidgetItem.Note.noteTitle,
             noteDescription: WidgetItem.Note.noteDescription,
-            ItemID: itemId,
-            ItemTitle: WidgetItem.item.data.title,
-            DateAdded: new Date()
+            itemID: itemId,
+            itemTitle: WidgetItem.item.data.title,
+            dateAdded: new Date()
           };
           var successItem = function (result) {
             console.log("Inserted Item Note", result);
@@ -175,7 +175,7 @@
 
         WidgetItem.getNoteList = function () {
           console.log("============itemIDDDD", WidgetItem.item.id)
-          searchOptions.filter = {"$or": [{"$json.ItemID": {"$eq": WidgetItem.item.id}}]};
+          searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
           var err = function (error) {
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
