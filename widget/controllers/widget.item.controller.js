@@ -37,7 +37,9 @@
         };
 
         var getEventDetails = function () {
+          Buildfire.spinner.show();
           var success = function (result) {
+              Buildfire.spinner.hide();
               WidgetItem.item = result;
               console.log("========ingeteventdetails", result);
 
@@ -48,6 +50,7 @@
               }
             }
             , error = function (err) {
+              Buildfire.spinner.hide();
               console.error('Error In Fetching Event', err);
             };
 
@@ -92,7 +95,9 @@
          * Fetch user's data from datastore
          */
         var init = function () {
+          Buildfire.spinner.show();
           var success = function (result) {
+              Buildfire.spinner.hide();
               WidgetItem.data = result.data;
               if (!WidgetItem.data.design)
                 WidgetItem.data.design = {};
@@ -100,6 +105,7 @@
                 WidgetItem.getBookmarkedItems();
             }
             , error = function (err) {
+              Buildfire.spinner.hide();
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
@@ -146,6 +152,7 @@
         };
 
         WidgetItem.addNoteToItem = function (itemId) {
+          Buildfire.spinner.show();
           WidgetItem.itemNote = {
             noteTitle: WidgetItem.Note.noteTitle,
             noteDescription: WidgetItem.Note.noteDescription,
@@ -154,10 +161,12 @@
             dateAdded: new Date()
           };
           var successItem = function (result) {
+            Buildfire.spinner.hide();
             console.log("Inserted Item Note", result);
             $scope.isClicked = itemId;
             $scope.toggleNoteAdd = 0;
           }, errorItem = function () {
+            Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
           UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES).then(successItem, errorItem);
@@ -181,11 +190,14 @@
         });
 
         WidgetItem.getNoteList = function () {
+          Buildfire.spinner.show();
           console.log("============itemIDDDD", WidgetItem.item.id)
           searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
           var err = function (error) {
+            Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
+            Buildfire.spinner.hide();
             console.log("===========searchItem", result);
             WidgetItem.ItemNoteList = result;
           }
@@ -205,9 +217,12 @@
         };
 
         WidgetItem.getBookmarkedItems = function () {
+          Buildfire.spinner.show();
           var err = function(error){
+            Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
           },result = function(result){
+            Buildfire.spinner.hide();
             console.log("===========searchinItem",result);
             WidgetItem.bookmarks = result;
             WidgetItem.getBookmarks();
@@ -216,16 +231,19 @@
         };
 
         WidgetItem.addToBookmark = function(itemId){
+          Buildfire.spinner.show();
           WidgetItem.bookmarkItem = {
             data:{
               itemIds: itemId
             }
           }
           var successItem = function (result) {
+            Buildfire.spinner.hide();
             console.log("Inserted", result);
             $scope.isClicked = itemId;
             WidgetItem.getBookmarks();
           }, errorItem = function () {
+            Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
           UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);

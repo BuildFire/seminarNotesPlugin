@@ -21,7 +21,9 @@
           }
         };
         WidgetBookmark.init = function () {
+          Buildfire.spinner.show();
           var success = function (result) {
+              Buildfire.spinner.hide();
 
               if (result && result.data) {
                 WidgetBookmark.data = result.data;
@@ -29,12 +31,15 @@
 
             }
             , error = function (err) {
+              Buildfire.spinner.hide();
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
           var err = function (error) {
+            Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
+            Buildfire.spinner.hide();
             console.log("===========search", result);
             WidgetBookmark.bookmarks = result;
           };
@@ -43,7 +48,9 @@
         };
 
         WidgetBookmark.getItems = function () {
+          Buildfire.spinner.show();
           var successAll = function (resultAll) {
+              Buildfire.spinner.hide();
               WidgetBookmark.items = WidgetBookmark.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
               console.log("==============", WidgetBookmark.items);
               searchOptions.skip = searchOptions.skip + WidgetBookmark.itemCount;
@@ -53,6 +60,7 @@
               WidgetBookmark.getBookmarks();
             },
             errorAll = function (error) {
+              Buildfire.spinner.hide();
               console.log("error", error)
             };
           DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);

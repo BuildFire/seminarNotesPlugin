@@ -17,16 +17,19 @@
          * Call the datastore to save the data object
          */
         var searchData = function (newValue, tag) {
+          Buildfire.spinner.show();
           var searchTerm = '';
           if (typeof newValue === 'undefined') {
             return;
           }
           var success = function (result) {
+              Buildfire.spinner.hide();
               console.info('Searched data result:=================== ', result);
               WidgetSearch.items = result;
               WidgetSearch.getBookmarks();
             }
             , error = function (err) {
+              Buildfire.spinner.hide();
               console.error('Error while searching data : ', err);
             };
           if (newValue) {
@@ -72,8 +75,10 @@
           DataStore.search(WidgetSearch.searchOptions, tag).then(success, error);
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
           var err = function (error) {
+            Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
+            Buildfire.spinner.hide();
             console.log("===========search", result);
             WidgetSearch.bookmarks = result;
           };
