@@ -234,5 +234,29 @@
           }
         };
 
+        var onUpdateCallback = function (event) {
+          setTimeout(function () {
+            $scope.$digest();
+            if (event && event.tag) {
+              console.log("_____________________________", event);
+              switch (event.tag) {
+                case TAG_NAMES.SEMINAR_INFO:
+                  WidgetItem.data = event.data;
+                  if (!WidgetItem.data.design)
+                    WidgetItem.data.design = {};
+                  break;
+                case TAG_NAMES.SEMINAR_ITEMS:
+                  WidgetItem.item.data = event.data;
+                  if (WidgetItem.view) {
+                    WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
+                  }
+                  break;
+              }
+              $scope.$digest();
+            }
+          }, 0);
+        };
+        DataStore.onUpdate().then(null, null, onUpdateCallback);
+
       }]);
 })(window.angular, window.buildfire, window);
