@@ -254,8 +254,13 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	height:35px;
 	width:35px;
 	/*z-index:13;*/
-	opacity:0.8;
+	opacity:0.5;
 }
+
+.holder .bottom .extra-links a.bookmarked{
+	opacity:1 !important;
+}
+
 .holder .bottom .extra-links a .icon{
 	color:#09a3ee;
 }
