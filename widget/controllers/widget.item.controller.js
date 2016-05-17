@@ -41,6 +41,7 @@
         var getEventDetails = function () {
           Buildfire.spinner.show();
           var success = function (result) {
+
               Buildfire.spinner.hide();
               WidgetItem.item = result;
               console.log("========ingeteventdetails", result);
@@ -208,6 +209,16 @@
             Buildfire.spinner.hide();
             console.log("===========searchItem", result);
             WidgetItem.ItemNoteList = result;
+
+            if (currentView.params && currentView.params.noteId) {
+              //
+              //console.log("============>>",currentView.params.noteId)
+              //WidgetItem.getNoteDetail(currentView.params.noteId);
+              //$scope.toggleNoteList = true;
+              //$scope.showNoteDescription=true;
+              //$scope.showNoteList = true;
+            }
+          //  currentView.params.noteId = null;
           }
           UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };

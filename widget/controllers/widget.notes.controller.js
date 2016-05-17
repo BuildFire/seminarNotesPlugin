@@ -53,6 +53,17 @@
                 });
               };
 
+              WidgetNotes.openDetails = function (itemId, noteId) {
+                ViewStack.push({
+                  template: 'Item',
+                  params: {
+                    controller: "WidgetItemCtrl as WidgetItem",
+                    itemId: itemId,
+                    noteId: noteId
+                  }
+                });
+              };
+
                 WidgetNotes.deleteNote = function(noteId){
                    console.log('================I Am in delete notes',noteId);
                     WidgetNotes.itemNote = {
