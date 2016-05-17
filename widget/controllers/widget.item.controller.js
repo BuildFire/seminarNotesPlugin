@@ -239,6 +239,7 @@
           }
           var successItem = function (result) {
             Buildfire.spinner.hide();
+            WidgetItem.item.isBookmarked = true;
             console.log("Inserted", result);
             $scope.isClicked = itemId;
             WidgetItem.getBookmarks();

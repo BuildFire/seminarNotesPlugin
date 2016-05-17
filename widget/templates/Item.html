@@ -36,13 +36,13 @@
             <span class="icon icon-bookmark2 whiteTheme" ></span>
         </a>
     </div>
-    <div class="pull-left text-center" ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
-        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open Note List</a>
-        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideNoteList()" ng-show="toggleNoteList">Close Note List</a>
+    <div class="pull-left text-center" disable-animate ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
+        <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open Note List</a>
+        <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-show="toggleNoteList">Close Note List</a>
     </div>
-    <div class="pull-left text-center" ng-hide="toggleNoteList" ng-class="toggleNoteAdd?'col-xs-12':'col-xs-6'">
-        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideAddNote()" ng-hide="toggleNoteAdd">Add New Note</a>
-        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideAddNote()" ng-show="toggleNoteAdd"> Done</a>
+    <div class="pull-left text-center" disable-animate ng-hide="toggleNoteList" ng-class="toggleNoteAdd?'col-xs-12':'col-xs-6'">
+        <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()" ng-hide="toggleNoteAdd">Add New Note</a>
+        <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()" ng-show="toggleNoteAdd"> Done</a>
     </div>
     <div class="col-xs-12 hidden-content" ng-show="toggleNoteList || toggleNoteAdd">
         <div class="content note-list clearfix" ng-class="showNoteList?'active':''">

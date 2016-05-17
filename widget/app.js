@@ -1,7 +1,7 @@
 'use strict';
 
 (function (angular, buildfire, window) {
-  angular.module('seminarNotesPluginWidget', ['infinite-scroll', 'ngRoute', 'ui.bootstrap', 'ngTouch'])
+  angular.module('seminarNotesPluginWidget', ['infinite-scroll', 'ngRoute', 'ui.bootstrap', 'ngTouch', 'ngAnimate'])
     .config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
 
       /**
@@ -185,7 +185,11 @@
           }
         });
       };
-    }]);
+    }]).directive("disableAnimate", function ($animate) {
+      return function (scope, element) {
+        $animate.enabled(false, element);
+      };
+    });;
 
 
 })(window.angular, window.buildfire, window);
