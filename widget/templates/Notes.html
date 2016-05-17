@@ -14,10 +14,11 @@
                 <div class="list-item" ng-repeat="note in WidgetNotes.Notes | filter:WidgetNotes.search"
                      ng-swipe-left="WidgetNotes.swipeToDeleteNote($event, $index, true)"
                      ng-swipe-right="WidgetNotes.swipeToDeleteNote($event, $index, false)">
-                    <div class="list-item-media text-left" ng-class="{'edit' : WidgetNotes.swiped[$index]}">
+                    <div class="list-item-media text-left" ng-class="{'edit' : WidgetNotes.swiped[$index]}" >
                         <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                             <p class="ellipsis margin-zero margin-top-five clearfix">
-                                <span class="pull-left ellipsis" style="max-width:65%;">{{note.data.noteTitle}}</span>
+
+                                <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" ng-click="WidgetNotes.openDetails(note.data.itemID, note.id)">{{note.data.noteTitle}}</span>
                                 <span class="pull-right small opacity-seventy"><i>{{note.data.dateAdded|
                                     date:'short'}}</i></span>
                             </p>
