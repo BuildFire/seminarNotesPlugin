@@ -11,8 +11,6 @@ describe('Unit : seminarNotesPlugin design services', function () {
       expect(typeof Buildfire).toEqual('object');
     });
   });
-
-
   describe('Unit : DataStore Factory', function () {
     var DataStore, Buildfire, $rootScope, TAG_NAMES, STATUS_MESSAGES, STATUS_CODE, q;
     beforeEach(module('seminarNotesPluginDesign', function ($provide) {
@@ -73,6 +71,30 @@ describe('Unit : seminarNotesPlugin design services', function () {
           result = err;
         };
       DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
+      $rootScope.$digest();
+      expect(result).toEqual('Success');
+    });
+    it('DataStore.save should return error', function () {
+      var result = ''
+        , success = function (response) {
+          result = response;
+        }
+        , error = function (err) {
+          result = err;
+        };
+      DataStore.save( null,null, null).then(success, error);
+      $rootScope.$digest();
+      expect(result).toEqual('Error');
+    });
+    it('DataStore.save should return success', function () {
+      var result = ''
+        , success = function (response) {
+          result = response;
+        }
+        , error = function (err) {
+          result = err;
+        };
+      DataStore.save( 123, TAG_NAMES.SEMINAR_INFO, null).then(success, error);
       $rootScope.$digest();
       expect(result).toEqual('Success');
     });
