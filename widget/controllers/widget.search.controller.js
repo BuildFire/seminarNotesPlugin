@@ -151,7 +151,24 @@
             }
           });
         };
-
+        WidgetSearch.addToBookmark= function(itemId){
+          Buildfire.spinner.show();
+          WidgetSearch.bookmarkItem = {
+            data:{
+              itemIds: itemId
+            }
+          }
+          var successItem = function (result) {
+            Buildfire.spinner.hide();
+            console.log("Inserted", result);
+            $scope.isClicked = itemId;
+            WidgetSearch.getBookmarks();
+          }, errorItem = function () {
+            Buildfire.spinner.hide();
+            return console.error('There was a problem saving your data');
+          };
+          UserData.insert(WidgetSearch.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+        }
       }]);
 })(window.angular, window.buildfire, window);
 
