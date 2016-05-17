@@ -9,8 +9,10 @@
         $scope.toggleNoteAdd = 0;
         $scope.showNoteList = 1;
         $scope.showNoteAdd = 1;
+        $scope.showNoteDescription=false;
         WidgetItem.swiped = [];
         var searchOptions = {};
+        var noteSearchOptions = {};
         WidgetItem.itemNote = {
           noteTitle: "",
           noteDescription: "",
@@ -114,6 +116,7 @@
         init();
 
         WidgetItem.showHideNoteList = function () {
+          $scope.showNoteDescription=false;
           if (WidgetItem.currentLoggedInUser) {
             WidgetItem.getNoteList();
             if ($scope.toggleNoteList && !$scope.toggleNoteAdd) {
@@ -132,7 +135,12 @@
             WidgetItem.openLogin();
           }
         };
+
+        WidgetItem.showNoteList = function(){
+          $scope.showNoteDescription=false;
+        }
         WidgetItem.showHideAddNote = function () {
+          $scope.showNoteDescription=false;
           if (WidgetItem.currentLoggedInUser) {
             if ($scope.toggleNoteAdd && !$scope.toggleNoteList) {
               $scope.toggleNoteAdd = 0
@@ -228,6 +236,18 @@
             WidgetItem.getBookmarks();
           };
           UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+        };
+
+        WidgetItem.getNoteDetail = function (noteId) {
+          $scope.showNoteDescription=true;
+          WidgetItem.ItemNoteList.map(function(obj){
+            var rObj = {};
+            if(obj.id==noteId){
+              rObj = obj;
+              WidgetItem.noteDetail = rObj;
+            }
+          });
+          console.log("==================...",WidgetItem.noteDetail)
         };
 
         WidgetItem.addToBookmark = function(itemId){
