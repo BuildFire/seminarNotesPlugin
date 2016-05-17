@@ -9,8 +9,10 @@
         $scope.toggleNoteAdd = 0;
         $scope.showNoteList = 1;
         $scope.showNoteAdd = 1;
+        $scope.showNoteDescription=false;
         WidgetItem.swiped = [];
         var searchOptions = {};
+        var noteSearchOptions = {};
         WidgetItem.itemNote = {
           noteTitle: "",
           noteDescription: "",
@@ -37,7 +39,10 @@
         };
 
         var getEventDetails = function () {
+          Buildfire.spinner.show();
           var success = function (result) {
+
+              Buildfire.spinner.hide();
               WidgetItem.item = result;
               console.log("========ingeteventdetails", result);
 
@@ -48,6 +53,7 @@
               }
             }
             , error = function (err) {
+              Buildfire.spinner.hide();
               console.error('Error In Fetching Event', err);
             };
 
@@ -92,7 +98,9 @@
          * Fetch user's data from datastore
          */
         var init = function () {
+          Buildfire.spinner.show();
           var success = function (result) {
+              Buildfire.spinner.hide();
               WidgetItem.data = result.data;
               if (!WidgetItem.data.design)
                 WidgetItem.data.design = {};
@@ -100,6 +108,7 @@
                 WidgetItem.getBookmarkedItems();
             }
             , error = function (err) {
+              Buildfire.spinner.hide();
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
@@ -108,6 +117,7 @@
         init();
 
         WidgetItem.showHideNoteList = function () {
+          $scope.showNoteDescription=false;
           if (WidgetItem.currentLoggedInUser) {
             WidgetItem.getNoteList();
             if ($scope.toggleNoteList && !$scope.toggleNoteAdd) {
@@ -126,7 +136,12 @@
             WidgetItem.openLogin();
           }
         };
+
+        WidgetItem.showNoteList = function(){
+          $scope.showNoteDescription=false;
+        }
         WidgetItem.showHideAddNote = function () {
+          $scope.showNoteDescription=false;
           if (WidgetItem.currentLoggedInUser) {
             if ($scope.toggleNoteAdd && !$scope.toggleNoteList) {
               $scope.toggleNoteAdd = 0
@@ -146,6 +161,7 @@
         };
 
         WidgetItem.addNoteToItem = function (itemId) {
+          Buildfire.spinner.show();
           WidgetItem.itemNote = {
             noteTitle: WidgetItem.Note.noteTitle,
             noteDescription: WidgetItem.Note.noteDescription,
@@ -154,10 +170,12 @@
             dateAdded: new Date()
           };
           var successItem = function (result) {
+            Buildfire.spinner.hide();
             console.log("Inserted Item Note", result);
             $scope.isClicked = itemId;
             $scope.toggleNoteAdd = 0;
           }, errorItem = function () {
+            Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
           UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES).then(successItem, errorItem);
@@ -181,13 +199,26 @@
         });
 
         WidgetItem.getNoteList = function () {
+          Buildfire.spinner.show();
           console.log("============itemIDDDD", WidgetItem.item.id)
           searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
           var err = function (error) {
+            Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
+            Buildfire.spinner.hide();
             console.log("===========searchItem", result);
             WidgetItem.ItemNoteList = result;
+
+            if (currentView.params && currentView.params.noteId) {
+              //
+              //console.log("============>>",currentView.params.noteId)
+              //WidgetItem.getNoteDetail(currentView.params.noteId);
+              //$scope.toggleNoteList = true;
+              //$scope.showNoteDescription=true;
+              //$scope.showNoteList = true;
+            }
+          //  currentView.params.noteId = null;
           }
           UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };
@@ -205,9 +236,12 @@
         };
 
         WidgetItem.getBookmarkedItems = function () {
+          Buildfire.spinner.show();
           var err = function(error){
+            Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
           },result = function(result){
+            Buildfire.spinner.hide();
             console.log("===========searchinItem",result);
             WidgetItem.bookmarks = result;
             WidgetItem.getBookmarks();
@@ -215,17 +249,33 @@
           UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
         };
 
+        WidgetItem.getNoteDetail = function (noteId) {
+          $scope.showNoteDescription=true;
+          WidgetItem.ItemNoteList.map(function(obj){
+            var rObj = {};
+            if(obj.id==noteId){
+              rObj = obj;
+              WidgetItem.noteDetail = rObj;
+            }
+          });
+          console.log("==================...",WidgetItem.noteDetail)
+        };
+
         WidgetItem.addToBookmark = function(itemId){
+          Buildfire.spinner.show();
           WidgetItem.bookmarkItem = {
             data:{
               itemIds: itemId
             }
           }
           var successItem = function (result) {
+            Buildfire.spinner.hide();
+            WidgetItem.item.isBookmarked = true;
             console.log("Inserted", result);
             $scope.isClicked = itemId;
             WidgetItem.getBookmarks();
           }, errorItem = function () {
+            Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
           UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);

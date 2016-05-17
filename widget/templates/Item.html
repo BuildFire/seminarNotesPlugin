@@ -1,83 +1,108 @@
-
 <div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu"
      ng-controller="WidgetItemCtrl as WidgetItem">
-<div class="scrollable">
+  <div class="scrollable">
 
     <div class="seminar-notes layout3" style="padding-bottom:45px;" ng-if="WidgetItem.item.data">
-        <!--<div class="plugin-slide">-->
-            <!--<img src="../../../styles/media/holder-16x9.png">-->
-        <!--</div>-->
-        <div id="carousel2" ng-if="WidgetItem.item.data.carouselImages.length"
-             build-fire-carousel2=""
-             ng-style="WidgetItem.item.data.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
+      <!--<div class="plugin-slide">-->
+      <!--<img src="../../../styles/media/holder-16x9.png">-->
+      <!--</div>-->
+      <div id="carousel2" ng-if="WidgetItem.item.data.carouselImages.length"
+           build-fire-carousel2=""
+           ng-style="WidgetItem.item.data.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
 
-        <div class="padded">
-            <p class="margin-zero" style="font-size:15px;">{{WidgetItem.item.data
-                .title}}</p>
-            <p class="margin-zero">{{WidgetItem.item.data
-                .summary}}</p>
-            <p class="margin-zero small"><i>{{WidgetItem.item.data
-                .publishDate | date}}</i></p>
-            <hr class="small">
-            <div class="text-center">
-                <a class="text-primary"
-                   ng-click="WidgetItem.openLinks(WidgetItem.item.data.links)">Open
-                  Menu Options</a>
-            </div>
-            <hr class="small">
-            <p class="margin-zero"ng-bind-html="WidgetItem.safeHtml(WidgetItem.item.data.description)"></p>
+      <div class="padded">
+        <p class="margin-zero" style="font-size:15px;">{{WidgetItem.item.data
+          .title}}</p>
+
+        <p class="margin-zero">{{WidgetItem.item.data
+          .summary}}</p>
+
+        <p class="margin-zero small"><i>{{WidgetItem.item.data
+          .publishDate | date}}</i></p>
+        <hr class="small">
+        <div class="text-center">
+          <a class="text-primary"
+             ng-click="WidgetItem.openLinks(WidgetItem.item.data.links)">Open
+            Menu Options</a>
         </div>
+        <hr class="small">
+        <p class="margin-zero" ng-bind-html="WidgetItem.safeHtml(WidgetItem.item.data.description)"></p>
+      </div>
     </div>
-</div>
-<div class="bottom fixed-bottom primaryBackgroundTheme has-content open transition-third"  >
+  </div>
+  <div class="bottom fixed-bottom primaryBackgroundTheme has-content open transition-third">
     <div class="extra-links" ng-if="WidgetItem.currentLoggedInUser">
-        <!-- When Inactive, use these theme classes -->
-        <a class="bg-primary"  ng-click="WidgetItem.addToBookmark(WidgetItem.item.id)" ng-disabled="WidgetItem.item.isBookmarked" ng-class="WidgetItem.item.isBookmarked?'bookmarked':''">
-            <span class="icon icon-bookmark2 whiteTheme" ></span>
-        </a>
+      <!-- When Inactive, use these theme classes -->
+      <a class="bg-primary" ng-click="WidgetItem.addToBookmark(WidgetItem.item.id)"
+         ng-disabled="WidgetItem.item.isBookmarked" ng-class="WidgetItem.item.isBookmarked?'bookmarked':''">
+        <span class="icon icon-bookmark2 whiteTheme"></span>
+      </a>
     </div>
-    <div class="pull-left text-center" ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
-        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open Note List</a>
-        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideNoteList()" ng-show="toggleNoteList">Close Note List</a>
+    <div class="pull-left text-center" disable-animate ng-hide="toggleNoteAdd"
+         ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open
+        Note List</a>
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-show="toggleNoteList && !showNoteDescription">Close Note List </a>
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showNoteList()" ng-show="showNoteDescription">Back to
+        Note List</a>
     </div>
-    <div class="pull-left text-center" ng-hide="toggleNoteList" ng-class="toggleNoteAdd?'col-xs-12':'col-xs-6'">
-        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideAddNote()" ng-hide="toggleNoteAdd">Add New Note</a>
-        <a class="whiteTheme stretch" ng-click="WidgetItem.showHideAddNote()" ng-show="toggleNoteAdd"> Done</a>
+    <div class="pull-left text-center" disable-animate ng-hide="toggleNoteList"
+         ng-class="toggleNoteAdd?'col-xs-12':'col-xs-6'">
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()" ng-hide="toggleNoteAdd">Add
+        New Note</a>
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()" ng-show="toggleNoteAdd">
+        Done</a>
     </div>
-    <div class="col-xs-12 hidden-content" ng-show="toggleNoteList || toggleNoteAdd">
-        <div class="content note-list clearfix" ng-class="showNoteList?'active':''">
-            <div class="seminar-notes layout3">
-                <div class="list-layout">
-                    <div class="list-item" ng-repeat="note in WidgetItem.ItemNoteList"
-                         ng-swipe-left="WidgetItem.swipeToDeleteNote($event, $index, true)"
-                         ng-swipe-right="WidgetItem.swipeToDeleteNote($event, $index, false)">
-                        <div class="list-item-media text-left" ng-class="{'edit' : WidgetItem.swiped[$index]}">
-                            <div class="list-item-copy text-left padding-left-ten padding-right-ten" >
-                                <p class="ellipsis margin-zero margin-top-five clearfix">
-                                    <span class="pull-left ellipsis" style="max-width:65%;">{{note.data.noteTitle}}</span>
-                                    <span class="pull-right small opacity-seventy"><i>{{note.data.dateAdded | date:'short'}}</i></span>
-                                </p>
-                                <p class="small ellipsis margin-zero bodyTextTheme">
-                                    {{note.data.itemTitle}}
-                                </p>
-                            </div>
-                            <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
-                                <span>Delete</span>
-                            </div>
-                        </div>
-                    </div>
 
+
+    <div class="col-xs-12 hidden-content" ng-show="toggleNoteList || toggleNoteAdd">
+      <div class="content note-list clearfix" ng-class="showNoteList?'active':''">
+        <div class="seminar-notes layout3">
+          <div class="list-layout">
+            <div class="list-item" ng-repeat="note in WidgetItem.ItemNoteList"
+                 ng-swipe-left="WidgetItem.swipeToDeleteNote($event, $index, true)"
+                 ng-swipe-right="WidgetItem.swipeToDeleteNote($event, $index, false)" ng-if="!showNoteDescription">
+              <div class="list-item-media text-left" ng-class="{'edit' : WidgetItem.swiped[$index]}">
+                <div class="list-item-copy text-left padding-left-ten padding-right-ten" >
+                  <p class="ellipsis margin-zero margin-top-five clearfix">
+                    <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" ng-click=" WidgetItem.getNoteDetail(note.id)">{{note.data.noteTitle}}</span>
+                    <span class="pull-right small opacity-seventy"><i>{{note.data.dateAdded | date:'short'}}</i></span>
+                  </p>
+
+                  <p class="small ellipsis margin-zero bodyTextTheme">
+                    {{note.data.itemTitle}}
+                  </p>
                 </div>
+                <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;">
+                  <span>Delete</span>
+                </div>
+              </div>
             </div>
-        </div>
-        <div class="content add-note clearfix" ng-class="showNoteAdd ?'active':''">
-            <div class="form-holder">
-                <input type="text" name="note-title" placeholder="Note Title" class="form-control border-none padding-left-zero padding-right-zero" ng-model="WidgetItem.Note.noteTitle">
-                <hr class="margin-zero">
-                <textarea placeholder="Note Summary" class="form-control border-none padding-left-zero padding-right-zero" ng-model="WidgetItem.Note.noteDescription"></textarea>
-                <a class="btn btn-primary stretch" ng-click="WidgetItem.addNoteToItem(WidgetItem.item.id)">Add Note</a>
+            <div class="pull-left" ng-if="showNoteDescription">
+              <p class="ellipsis margin-zero margin-top-five clearfix">
+                <span class="pull-left" style="max-width:65%;">{{WidgetItem.noteDetail.data.noteTitle}}</span>
+              </p>
+              <hr class="margin-zero">
+              <p class="small margin-zero bodyTextTheme">
+                {{WidgetItem.noteDetail.data.noteDescription}}
+              </p>
             </div>
+          </div>
+
         </div>
+      </div>
+
+      <div class="content add-note clearfix" ng-class="showNoteAdd ?'active':''">
+        <div class="form-holder">
+          <input type="text" name="note-title" placeholder="Note Title"
+                 class="form-control border-none padding-left-zero padding-right-zero"
+                 ng-model="WidgetItem.Note.noteTitle">
+          <hr class="margin-zero">
+          <textarea placeholder="Note Summary" class="form-control border-none padding-left-zero padding-right-zero"
+                    ng-model="WidgetItem.Note.noteDescription"></textarea>
+          <a class="btn btn-primary stretch" ng-click="WidgetItem.addNoteToItem(WidgetItem.item.id)">Add Note</a>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 </div>

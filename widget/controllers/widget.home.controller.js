@@ -68,7 +68,9 @@
           }
         };
         WidgetHome.init = function () {
+          Buildfire.spinner.show();
           var success = function (result) {
+              Buildfire.spinner.hide();
               if (result && result.data) {
                 WidgetHome.data = result.data;
               }
@@ -104,6 +106,7 @@
               console.log("==============", WidgetHome.data.design)
             }
             , error = function (err) {
+              Buildfire.spinner.hide();
               WidgetHome.data = {design: {itemListLayout: LAYOUTS.itemListLayout[0].name}};
               console.error('Error while getting data', err);
             };
@@ -111,9 +114,12 @@
         };
 
         WidgetHome.getBookMarkData = function () {
+          Buildfire.spinner.show();
           var err = function (error) {
+            Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
+            Buildfire.spinner.hide();
             console.log("===========Bookmarks", result);
             WidgetHome.bookmarks = result;
           };
@@ -241,7 +247,9 @@
         };
 
         WidgetHome.getItems = function () {
+          Buildfire.spinner.show();
           var successAll = function (resultAll) {
+              Buildfire.spinner.hide();
               WidgetHome.items = WidgetHome.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
               searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
               if (resultAll.length == PAGINATION.itemCount) {
@@ -250,6 +258,7 @@
               WidgetHome.setBookmarks();
             },
             errorAll = function (error) {
+              Buildfire.spinner.hide();
               console.log("error", error)
             };
           console.log("***********", WidgetHome.data.content);
@@ -311,12 +320,14 @@
         });
 
         WidgetHome.addToBookmark = function (itemId) {
+          Buildfire.spinner.show();
           WidgetHome.bookmarkItem = {
             data: {
               itemIds: itemId
             }
           };
           var successItem = function (result) {
+            Buildfire.spinner.hide();
             console.log("Inserted", result);
             $scope.isClicked = itemId;
             WidgetHome.setBookmarks();
@@ -325,6 +336,7 @@
               size: 'sm'
             });
           }, errorItem = function () {
+            Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
           console.log("===============", WidgetHome.currentLoggedInUser.username);

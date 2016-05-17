@@ -13,10 +13,13 @@
                     toggle ? WidgetNotes.swiped[i] = true : WidgetNotes.swiped[i] = false;
                 };
                 WidgetNotes.getNoteList = function(){
+                  Buildfire.spinner.show();
                   //  searchOptions.filter = {"$or": [{"$json.ItemID": {"$eq": WidgetItem.item.id}}]};
                     var err = function(error){
+                      Buildfire.spinner.hide();
                         console.log("============ There is an error in getting data", error);
                     },result = function(result){
+                      Buildfire.spinner.hide();
                         console.log("===========searchItem",result);
                         WidgetNotes.Notes = result;
                     };
@@ -46,6 +49,17 @@
                   template: 'Search',
                   params: {
                     controller: "WidgetSearchCtrl as WidgetSearch"
+                  }
+                });
+              };
+
+              WidgetNotes.openDetails = function (itemId, noteId) {
+                ViewStack.push({
+                  template: 'Item',
+                  params: {
+                    controller: "WidgetItemCtrl as WidgetItem",
+                    itemId: itemId,
+                    noteId: noteId
                   }
                 });
               };
