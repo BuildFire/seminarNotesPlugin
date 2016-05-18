@@ -2,16 +2,19 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData) {
+    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData','PAGINATION',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION) {
         var WidgetItem = this;
         $scope.toggleNoteList = 0;
         $scope.toggleNoteAdd = 0;
         $scope.showNoteList = 1;
         $scope.showNoteAdd = 1;
         $scope.showNoteDescription=false;
+        WidgetItem.busy = false;
         WidgetItem.swiped = [];
-        var searchOptions = {};
+        var searchOptions = { skip:0,
+          limit:PAGINATION.noteCount
+        };
         var noteSearchOptions = {};
         WidgetItem.itemNote = {
           noteTitle: "",
@@ -119,17 +122,21 @@
         WidgetItem.showHideNoteList = function () {
           $scope.showNoteDescription=false;
           if (WidgetItem.currentLoggedInUser) {
-            WidgetItem.getNoteList();
             if ($scope.toggleNoteList && !$scope.toggleNoteAdd) {
               $scope.toggleNoteList = 0;
+              WidgetItem.ItemNoteList = [];
             } else {
               $scope.toggleNoteList = 1;
               $scope.showNoteList = 1;
               $scope.showNoteAdd = 0;
+              WidgetItem.busy=false;
+              searchOptions.skip=0;
+              WidgetItem.loadMore();
             }
             if ($scope.toggleNoteList && $scope.toggleNoteAdd) {
               $scope.toggleNoteList = 0;
-              $scope.toggleNoteAdd = 0
+              $scope.toggleNoteAdd = 0;
+              WidgetItem.ItemNoteList = [];
             }
           }
           else{
@@ -207,8 +214,12 @@
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
             Buildfire.spinner.hide();
-            console.log("===========searchItem", result);
-            WidgetItem.ItemNoteList = result;
+            console.log("===========searchItem5", result, searchOptions);
+            WidgetItem.ItemNoteList = WidgetItem.ItemNoteList.length ? WidgetItem.ItemNoteList.concat(result) : result;
+            searchOptions.skip = searchOptions.skip + PAGINATION.noteCount;
+            if (result.length == PAGINATION.noteCount) {
+              WidgetItem.busy = false;
+            }
 
             if (currentView.params && currentView.params.noteId) {
               //
@@ -322,5 +333,11 @@
         };
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
+        WidgetItem.loadMore = function () {
+          console.log("===============In loadmore Note");
+          if (WidgetItem.busy) return;
+          WidgetItem.busy = true;
+          WidgetItem.getNoteList();
+        };
       }]);
 })(window.angular, window.buildfire, window);
