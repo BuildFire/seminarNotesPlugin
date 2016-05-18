@@ -535,3 +535,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	-moz-user-select: none;
 	user-select: none;
 }
+
+.bottom-zero {
+	bottom: 0px !important;
+}
