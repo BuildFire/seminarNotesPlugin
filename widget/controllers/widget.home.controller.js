@@ -368,5 +368,9 @@
           WidgetHome.busy = false;
           WidgetHome.loadMore();
         });
+
+        $rootScope.$on('ITEM_BOOKMARKED', function (e) {
+          WidgetHome.getBookMarkData(true);
+        });
       }])
 })(window.angular, window.buildfire);

@@ -281,13 +281,14 @@
             data:{
               itemIds: itemId
             }
-          }
+          };
           var successItem = function (result) {
             Buildfire.spinner.hide();
             WidgetItem.item.isBookmarked = true;
             console.log("Inserted", result);
             $scope.isClicked = itemId;
             WidgetItem.getBookmarks();
+            $rootScope.$broadcast("ITEM_BOOKMARKED");
           }, errorItem = function () {
             Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
