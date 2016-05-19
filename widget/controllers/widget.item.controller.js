@@ -103,7 +103,25 @@
         /*
          * Fetch user's data from datastore
          */
+        WidgetItem.getNoteDetailFromItem = function(noteId){
+
+          var result = function (res) {
+            WidgetItem.ItemNoteList = res;
+            WidgetItem.getNoteDetail(noteId)
+            },err = function(err){
+            console.log("error in fetching data")
+          }
+          UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+        }
         var init = function () {
+          if (currentView.params && currentView.params.noteId) {
+            WidgetItem.getNoteDetailFromItem(currentView.params.noteId)
+            $scope.toggleNoteList = true;
+            $scope.showNoteDescription = true;
+            $scope.showNoteList = true;
+            $scope.toggleNoteAdd = 0;
+            $scope.showNoteAdd = false;
+          }
           Buildfire.spinner.show();
           var success = function (result) {
               Buildfire.spinner.hide();
@@ -147,8 +165,12 @@
           }
         };
 
-        WidgetItem.showNoteList = function () {
-          $scope.showNoteDescription = false;
+        WidgetItem.showNoteList = function(){
+          WidgetItem.ItemNoteList = [];
+          WidgetItem.busy=false;
+          searchOptions.skip=0;
+          WidgetItem.loadMore();
+          $scope.showNoteDescription=false;
         };
 
         WidgetItem.showHideAddNote = function () {
@@ -224,16 +246,6 @@
             if (result.length == PAGINATION.noteCount) {
               WidgetItem.busy = false;
             }
-
-            if (currentView.params && currentView.params.noteId) {
-              //
-              //console.log("============>>",currentView.params.noteId)
-              //WidgetItem.getNoteDetail(currentView.params.noteId);
-              //$scope.toggleNoteList = true;
-              //$scope.showNoteDescription=true;
-              //$scope.showNoteList = true;
-            }
-            //  currentView.params.noteId = null;
           };
           UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };
