@@ -48,7 +48,7 @@
 
               Buildfire.spinner.hide();
               WidgetItem.item = result;
-              $rootScope.$broadcast("NEW_ITEM_ADDED");
+              $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
               console.log("========ingeteventdetails", result);
 
               if (!WidgetItem.item.data.itemListBgImage) {
@@ -320,6 +320,7 @@
                   break;
                 case TAG_NAMES.SEMINAR_ITEMS:
                   WidgetItem.item.data = event.data;
+                  $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
                   if (WidgetItem.view) {
                     WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
                   }
