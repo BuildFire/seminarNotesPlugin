@@ -24,6 +24,7 @@
                         console.log("============ There is an error in getting data", error);
                     },result = function(result){
                       Buildfire.spinner.hide();
+                      console.log("=============i Am in of getNoteList",result)
                       WidgetNotes.Notes = WidgetNotes.Notes.length ? WidgetNotes.Notes.concat(result) : result;
                       searchOptions.skip = searchOptions.skip + PAGINATION.noteCount;
                       if (result.length == PAGINATION.noteCount) {
@@ -72,28 +73,61 @@
                 });
               };
 
-                WidgetNotes.deleteNote = function(noteId){
-                   console.log('================I Am in delete notes',noteId);
+                WidgetNotes.deleteNote = function(noteId, itemId){
+                   console.log('================I Am in delete notes',noteId, itemId);
                     WidgetNotes.itemNote = {
                         noteTitle: "test title kmt",
                         noteDescription: "test description kmt",
-                        itemID: "5735f33cc5b761cb2ced21e5",
+                        itemID: itemId,
                         itemTitle: "I Am item title",
                         dateAdded: new Date()
                     };
-                    buildfire.userData.delete(noteId,TAG_NAMES.SEMINAR_NOTES,function(err, status){
-                        if(err)
-                            console.log('================there was a problem deleteing your data',err);
-                        else
-                            console.log( '================record deleted',status);
-                    })
-                    //buildfire.userData.update(noteId,WidgetNotes.itemNote, TAG_NAMES.SEMINAR_NOTES,function(err, status){
+                    //buildfire.userData.delete(noteId,TAG_NAMES.SEMINAR_NOTES,function(err, status){
                     //    if(err)
-                    //        console.log('=============there was a problem saving your data',err);
+                    //        console.log('================there was a problem deleteing your data',err);
                     //    else
-                    //        console.log( '================updated tel',status);
+                    //        console.log( '================record deleted',status);
                     //})
+                    buildfire.userData.update(noteId,WidgetNotes.itemNote, TAG_NAMES.SEMINAR_NOTES,WidgetNotes.currentLoggedInUser.userToken, function(err, status){
+                        if(err)
+                            console.log('=============there was a problem saving your data',err);
+                        else
+                            console.log( '================updated tel',status);
+                    })
                 }
+
+
+              /**
+               * Check for current logged in user, if not show ogin screen
+               */
+              buildfire.auth.getCurrentUser(function (err, user) {
+                console.log("===========LoggedInUser2", user);
+                if (user) {
+                  WidgetNotes.currentLoggedInUser = user;
+                }
+              });
+
+              /**
+               * Method to open buildfire auth login pop up and allow user to login using credentials.
+               */
+              WidgetNotes.openLogin = function () {
+                buildfire.auth.login({}, function () {
+
+                });
+              };
+
+              var loginCallback = function () {
+                buildfire.auth.getCurrentUser(function (err, user) {
+                  console.log("=========User", user);
+                  if (user) {
+                    WidgetNotes.currentLoggedInUser = user;
+                    $scope.$apply();
+                  }
+                });
+              };
+
+              buildfire.auth.onLogin(loginCallback);
+
 
               WidgetNotes.loadMore = function () {
                 console.log("===============In loadmore Note");

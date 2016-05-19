@@ -211,7 +211,7 @@
             Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
-          UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES).then(successItem, errorItem);
+          UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser.userToken).then(successItem, errorItem);
         };
 
         /**
@@ -233,8 +233,7 @@
 
         WidgetItem.getNoteList = function () {
           Buildfire.spinner.show();
-          console.log("============itemIDDDD", WidgetItem.item);
-          searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
+         searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
           var err = function (error) {
             Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);

@@ -35,7 +35,7 @@
         /**
          * getSearchOptions(value) is used to get searchOptions with one more key sort which decide the order of sorting.
          */
-        var getSearchOptions = function (value) {
+        WidgetHome.getSearchOptions = function (value) {
           switch (value) {
             case SORT.ITEM_TITLE_A_Z:
               searchOptions.sort = {"title": 1};
@@ -265,7 +265,7 @@
             };
           console.log("***********", WidgetHome.data.content);
           if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.sortBy) {
-            searchOptions = getSearchOptions(WidgetHome.data.content.sortBy);
+            searchOptions = WidgetHome.getSearchOptions(WidgetHome.data.content.sortBy);
           }
           DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
         };

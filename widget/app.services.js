@@ -99,7 +99,7 @@
     }])
     .factory("UserData", ['Buildfire', '$q', 'STATUS_CODE', 'STATUS_MESSAGES', function (Buildfire, $q, STATUS_CODE, STATUS_MESSAGES) {
       return {
-        insert: function (_item, _tagName) {
+        insert: function (_item, _tagName, _userToken) {
           var deferred = $q.defer();
           if (typeof _item == 'undefined') {
             return deferred.reject(new Error({
@@ -113,7 +113,7 @@
               message: STATUS_MESSAGES.ITEM_ARRAY_FOUND
             }));
           } else {
-            Buildfire.userData.insert(_item, _tagName, false, function (err, result) {
+            Buildfire.userData.insert(_item, _tagName, _userToken, false, function (err, result) {
               if (err) {
                 return deferred.reject(err);
               } else if (result) {
@@ -124,6 +124,7 @@
           return deferred.promise;
         },
         search: function (options, _tagName) {
+
           var deferred = $q.defer();
           if (typeof options == 'undefined') {
             return deferred.reject(new Error({
@@ -131,13 +132,16 @@
               message: STATUS_MESSAGES.UNDEFINED_OPTIONS
             }));
           }
+
           Buildfire.userData.search(options, _tagName, function (err, result) {
+
             if (err) {
               return deferred.reject(err);
             } else if (result) {
               return deferred.resolve(result);
             }
           });
+          console.log("========================",options, _tagName)
           return deferred.promise;
         }
       }
