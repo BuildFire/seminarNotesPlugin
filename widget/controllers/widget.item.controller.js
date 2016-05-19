@@ -33,6 +33,7 @@
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
           toggle ? WidgetItem.swiped[i] = true : WidgetItem.swiped[i] = false;
         };
+
         var currentView = ViewStack.getCurrentView();
 
         WidgetItem.safeHtml = function (html) {
@@ -47,6 +48,7 @@
 
               Buildfire.spinner.hide();
               WidgetItem.item = result;
+              $rootScope.$broadcast("NEW_ITEM_ADDED");
               console.log("========ingeteventdetails", result);
 
               if (!WidgetItem.item.data.itemListBgImage) {
@@ -146,7 +148,8 @@
 
         WidgetItem.showNoteList = function(){
           $scope.showNoteDescription=false;
-        }
+        };
+
         WidgetItem.showHideAddNote = function () {
           $scope.showNoteDescription=false;
           if (WidgetItem.currentLoggedInUser) {
@@ -291,6 +294,7 @@
           };
           UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
         };
+
         WidgetItem.getBookmarks = function(){
           if(WidgetItem.item){
             for (var bookmark in WidgetItem.bookmarks)  {
@@ -302,6 +306,7 @@
             $scope.isFetchedAllData = true;
           }
         };
+
         var onUpdateCallback = function (event) {
           setTimeout(function () {
             $scope.$digest();
@@ -318,7 +323,6 @@
                   if (WidgetItem.view) {
                     WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
                   }
-
                   if (!WidgetItem.item.data.itemListBgImage) {
                     $rootScope.itemDetailbackgroundImage = "";
                   } else {
@@ -331,6 +335,7 @@
             }
           }, 0);
         };
+
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
         WidgetItem.loadMore = function () {

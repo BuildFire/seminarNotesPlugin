@@ -361,5 +361,12 @@
         WidgetHome.showDescription = function (description) {
           return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>') || (description == ''));
         };
+
+        $rootScope.$on('NEW_ITEM_ADDED', function (e) {
+          WidgetHome.items = [];
+          searchOptions.skip = 0;
+          WidgetHome.busy = false;
+          WidgetHome.loadMore();
+        });
       }])
 })(window.angular, window.buildfire);
