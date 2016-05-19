@@ -362,7 +362,7 @@
           return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>') || (description == ''));
         };
 
-        $rootScope.$on('NEW_ITEM_ADDED', function (e) {
+        $rootScope.$on('NEW_ITEM_ADDED_UPDATED', function (e) {
           WidgetHome.items = [];
           searchOptions.skip = 0;
           WidgetHome.busy = false;
