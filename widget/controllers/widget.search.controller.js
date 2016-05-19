@@ -2,8 +2,8 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetSearchCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION) {
+    .controller('WidgetSearchCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION','$modal',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION,$modal) {
         var WidgetSearch = this;
 
         WidgetSearch.items = [];
@@ -157,12 +157,17 @@
             data:{
               itemIds: itemId
             }
-          }
+          };
           var successItem = function (result) {
             Buildfire.spinner.hide();
             console.log("Inserted", result);
             $scope.isClicked = itemId;
             WidgetSearch.getBookmarks();
+            $modal.open({
+              templateUrl: 'templates/Bookmark_Confirm.html',
+              size: 'sm'
+            });
+            $rootScope.$broadcast("ITEM_BOOKMARKED");
           }, errorItem = function () {
             Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');

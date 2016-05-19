@@ -86,7 +86,8 @@
           $rootScope.$broadcast("Carousel:LOADED");
         }
       };
-    }]).directive("buildFireCarousel2", ["$rootScope", function ($rootScope) {
+    }])
+    .directive("buildFireCarousel2", ["$rootScope", function ($rootScope) {
       return {
         restrict: 'A',
         link: function (scope, elem, attrs) {
@@ -94,7 +95,6 @@
         }
       };
     }])
-
     .directive("loadImage", [function () {
       return {
         restrict: 'A',
@@ -149,12 +149,14 @@
               $rootScope.$apply();
             }
             break;
-          default: ViewStack.popAllViews(true);
+          default:
+            ViewStack.popAllViews(true);
 
         }
       };
 
-    }]).filter('cropImage', [function () {
+    }])
+    .filter('cropImage', [function () {
       return function (url, width, height, noDefault) {
         if (noDefault) {
           if (!url)
@@ -165,7 +167,8 @@
           height: height
         });
       };
-    }])    .directive('backImg', ["$filter", "$rootScope", function ($filter, $rootScope) {
+    }])
+    .directive('backImg', ["$filter", "$rootScope", function ($filter, $rootScope) {
       return function (scope, element, attrs) {
         attrs.$observe('backImg', function (value) {
           var img = '';
@@ -185,11 +188,10 @@
           }
         });
       };
-    }]).directive("disableAnimate", function ($animate) {
+    }])
+    .directive("disableAnimate", function ($animate) {
       return function (scope, element) {
         $animate.enabled(false, element);
       };
-    });;
-
-
+    });
 })(window.angular, window.buildfire, window);

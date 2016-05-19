@@ -2,16 +2,20 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData) {
+    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal) {
         var WidgetItem = this;
         $scope.toggleNoteList = 0;
         $scope.toggleNoteAdd = 0;
         $scope.showNoteList = 1;
         $scope.showNoteAdd = 1;
-        $scope.showNoteDescription=false;
+        $scope.showNoteDescription = false;
+        WidgetItem.busy = false;
         WidgetItem.swiped = [];
-        var searchOptions = {};
+        var searchOptions = {
+          skip: 0,
+          limit: PAGINATION.noteCount
+        };
         var noteSearchOptions = {};
         WidgetItem.itemNote = {
           noteTitle: "",
@@ -30,6 +34,7 @@
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
           toggle ? WidgetItem.swiped[i] = true : WidgetItem.swiped[i] = false;
         };
+
         var currentView = ViewStack.getCurrentView();
 
         WidgetItem.safeHtml = function (html) {
@@ -44,6 +49,7 @@
 
               Buildfire.spinner.hide();
               WidgetItem.item = result;
+              $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
               console.log("========ingeteventdetails", result);
 
               if (!WidgetItem.item.data.itemListBgImage) {
@@ -97,7 +103,25 @@
         /*
          * Fetch user's data from datastore
          */
+        WidgetItem.getNoteDetailFromItem = function(noteId){
+
+          var result = function (res) {
+            WidgetItem.ItemNoteList = res;
+            WidgetItem.getNoteDetail(noteId)
+            },err = function(err){
+            console.log("error in fetching data")
+          }
+          UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+        }
         var init = function () {
+          if (currentView.params && currentView.params.noteId) {
+            WidgetItem.getNoteDetailFromItem(currentView.params.noteId)
+            $scope.toggleNoteList = true;
+            $scope.showNoteDescription = true;
+            $scope.showNoteList = true;
+            $scope.toggleNoteAdd = 0;
+            $scope.showNoteAdd = false;
+          }
           Buildfire.spinner.show();
           var success = function (result) {
               Buildfire.spinner.hide();
@@ -105,7 +129,7 @@
               if (!WidgetItem.data.design)
                 WidgetItem.data.design = {};
               getEventDetails();
-                WidgetItem.getBookmarkedItems();
+              WidgetItem.getBookmarkedItems();
             }
             , error = function (err) {
               Buildfire.spinner.hide();
@@ -117,31 +141,40 @@
         init();
 
         WidgetItem.showHideNoteList = function () {
-          $scope.showNoteDescription=false;
+          $scope.showNoteDescription = false;
           if (WidgetItem.currentLoggedInUser) {
-            WidgetItem.getNoteList();
             if ($scope.toggleNoteList && !$scope.toggleNoteAdd) {
               $scope.toggleNoteList = 0;
+              WidgetItem.ItemNoteList = [];
             } else {
               $scope.toggleNoteList = 1;
               $scope.showNoteList = 1;
               $scope.showNoteAdd = 0;
+              WidgetItem.busy = false;
+              searchOptions.skip = 0;
+              WidgetItem.loadMore();
             }
             if ($scope.toggleNoteList && $scope.toggleNoteAdd) {
               $scope.toggleNoteList = 0;
-              $scope.toggleNoteAdd = 0
+              $scope.toggleNoteAdd = 0;
+              WidgetItem.ItemNoteList = [];
             }
           }
-          else{
+          else {
             WidgetItem.openLogin();
           }
         };
 
         WidgetItem.showNoteList = function(){
+          WidgetItem.ItemNoteList = [];
+          WidgetItem.busy=false;
+          searchOptions.skip=0;
+          WidgetItem.loadMore();
           $scope.showNoteDescription=false;
-        }
+        };
+
         WidgetItem.showHideAddNote = function () {
-          $scope.showNoteDescription=false;
+          $scope.showNoteDescription = false;
           if (WidgetItem.currentLoggedInUser) {
             if ($scope.toggleNoteAdd && !$scope.toggleNoteList) {
               $scope.toggleNoteAdd = 0
@@ -154,7 +187,7 @@
               $scope.toggleNoteList = 0;
               $scope.toggleNoteAdd = 0
             }
-          }else{
+          } else {
             WidgetItem.openLogin();
           }
 
@@ -186,8 +219,8 @@
          */
         $rootScope.$on("Carousel2:LOADED", function () {
           //  WidgetItem.view = null;
-          if( WidgetItem.view)
-          WidgetItem.view._destroySlider();
+          if (WidgetItem.view)
+            WidgetItem.view._destroySlider();
           if (!WidgetItem.view) {
             WidgetItem.view = new Buildfire.components.carousel.view("#carousel2", []);
           }
@@ -200,26 +233,20 @@
 
         WidgetItem.getNoteList = function () {
           Buildfire.spinner.show();
-          console.log("============itemIDDDD", WidgetItem.item.id)
+          console.log("============itemIDDDD", WidgetItem.item);
           searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
           var err = function (error) {
             Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
             Buildfire.spinner.hide();
-            console.log("===========searchItem", result);
-            WidgetItem.ItemNoteList = result;
-
-            if (currentView.params && currentView.params.noteId) {
-              //
-              //console.log("============>>",currentView.params.noteId)
-              //WidgetItem.getNoteDetail(currentView.params.noteId);
-              //$scope.toggleNoteList = true;
-              //$scope.showNoteDescription=true;
-              //$scope.showNoteList = true;
+            console.log("===========searchItem5", result, searchOptions);
+            WidgetItem.ItemNoteList = WidgetItem.ItemNoteList.length ? WidgetItem.ItemNoteList.concat(result) : result;
+            searchOptions.skip = searchOptions.skip + PAGINATION.noteCount;
+            if (result.length == PAGINATION.noteCount) {
+              WidgetItem.busy = false;
             }
-          //  currentView.params.noteId = null;
-          }
+          };
           UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };
 
@@ -237,12 +264,12 @@
 
         WidgetItem.getBookmarkedItems = function () {
           Buildfire.spinner.show();
-          var err = function(error){
+          var err = function (error) {
             Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
-          },result = function(result){
+          }, result = function (result) {
             Buildfire.spinner.hide();
-            console.log("===========searchinItem",result);
+            console.log("===========searchinItem", result);
             WidgetItem.bookmarks = result;
             WidgetItem.getBookmarks();
           };
@@ -250,40 +277,46 @@
         };
 
         WidgetItem.getNoteDetail = function (noteId) {
-          $scope.showNoteDescription=true;
-          WidgetItem.ItemNoteList.map(function(obj){
+          $scope.showNoteDescription = true;
+          WidgetItem.ItemNoteList.map(function (obj) {
             var rObj = {};
-            if(obj.id==noteId){
+            if (obj.id == noteId) {
               rObj = obj;
               WidgetItem.noteDetail = rObj;
             }
           });
-          console.log("==================...",WidgetItem.noteDetail)
+          console.log("==================...", WidgetItem.noteDetail)
         };
 
-        WidgetItem.addToBookmark = function(itemId){
+        WidgetItem.addToBookmark = function (itemId) {
           Buildfire.spinner.show();
           WidgetItem.bookmarkItem = {
-            data:{
+            data: {
               itemIds: itemId
             }
-          }
+          };
           var successItem = function (result) {
             Buildfire.spinner.hide();
             WidgetItem.item.isBookmarked = true;
             console.log("Inserted", result);
             $scope.isClicked = itemId;
             WidgetItem.getBookmarks();
+            $modal.open({
+              templateUrl: 'templates/Bookmark_Confirm.html',
+              size: 'sm'
+            });
+            $rootScope.$broadcast("ITEM_BOOKMARKED");
           }, errorItem = function () {
             Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
           UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
         };
-        WidgetItem.getBookmarks = function(){
-          if(WidgetItem.item){
-            for (var bookmark in WidgetItem.bookmarks)  {
-              if(WidgetItem.bookmarks[bookmark].data.itemIds == WidgetItem.item.id){
+
+        WidgetItem.getBookmarks = function () {
+          if (WidgetItem.item) {
+            for (var bookmark in WidgetItem.bookmarks) {
+              if (WidgetItem.bookmarks[bookmark].data.itemIds == WidgetItem.item.id) {
                 WidgetItem.item.isBookmarked = true;
               }
             }
@@ -291,6 +324,7 @@
             $scope.isFetchedAllData = true;
           }
         };
+
         var onUpdateCallback = function (event) {
           setTimeout(function () {
             $scope.$digest();
@@ -304,10 +338,10 @@
                   break;
                 case TAG_NAMES.SEMINAR_ITEMS:
                   WidgetItem.item.data = event.data;
+                  $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
                   if (WidgetItem.view) {
                     WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
                   }
-
                   if (!WidgetItem.item.data.itemListBgImage) {
                     $rootScope.itemDetailbackgroundImage = "";
                   } else {
@@ -320,7 +354,15 @@
             }
           }, 0);
         };
+
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
+        WidgetItem.loadMore = function () {
+          console.log("===============In loadmore Note");
+          if (WidgetItem.busy) return;
+          WidgetItem.busy = true;
+          if (WidgetItem.item && WidgetItem.item.id)
+            WidgetItem.getNoteList();
+        };
       }]);
 })(window.angular, window.buildfire, window);

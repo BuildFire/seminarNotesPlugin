@@ -2,30 +2,38 @@
 
 (function (angular, buildfire, window) {
     angular.module('seminarNotesPluginWidget')
-        .controller('WidgetNotesCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData',
-            function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData) {
+        .controller('WidgetNotesCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION',
+            function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION) {
                 var WidgetNotes = this;
                 WidgetNotes.Notes = [];
-                var searchOptions = {};
+                WidgetNotes.busy = false;
+                var searchOptions = {
+                  skip:0,
+                  limit:PAGINATION.noteCount
+                };
                 WidgetNotes.swiped = [];
                 WidgetNotes.swipeToDeleteNote = function (e, i, toggle) {
-                    console.log("=============i Am in swipe of Note")
+
                     toggle ? WidgetNotes.swiped[i] = true : WidgetNotes.swiped[i] = false;
                 };
                 WidgetNotes.getNoteList = function(){
+                  console.log("=============i Am in of getNoteList")
                   Buildfire.spinner.show();
-                  //  searchOptions.filter = {"$or": [{"$json.ItemID": {"$eq": WidgetItem.item.id}}]};
                     var err = function(error){
                       Buildfire.spinner.hide();
                         console.log("============ There is an error in getting data", error);
                     },result = function(result){
                       Buildfire.spinner.hide();
-                        console.log("===========searchItem",result);
-                        WidgetNotes.Notes = result;
+                      WidgetNotes.Notes = WidgetNotes.Notes.length ? WidgetNotes.Notes.concat(result) : result;
+                      searchOptions.skip = searchOptions.skip + PAGINATION.noteCount;
+                      if (result.length == PAGINATION.noteCount) {
+                        WidgetNotes.busy = false;
+                      }
+
                     };
-                    UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+                    UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
                 };
-                WidgetNotes.getNoteList();
+               // WidgetNotes.getNoteList();
                 WidgetNotes.showBookmarkItems = function () {
                     ViewStack.push({
                         template: 'Bookmarks',
@@ -87,6 +95,12 @@
                     //})
                 }
 
+              WidgetNotes.loadMore = function () {
+                console.log("===============In loadmore Note");
+                if (WidgetNotes.busy) return;
+                WidgetNotes.busy = true;
+                WidgetNotes.getNoteList();
+              };
               WidgetNotes.showItemList = function(){
                 ViewStack.popAllViews();
               };

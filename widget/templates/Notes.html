@@ -1,5 +1,5 @@
 <div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu" ng-controller="WidgetNotesCtrl as WidgetNotes">
-    <div class="scrollable">
+    <div class="scrollable infinite-scroll-parent">
         <div class="seminar-notes layout3">
             <div class="form-holder">
                 <input type="text" class="border-none form-control bodyTextTheme"
@@ -10,7 +10,11 @@
               class="well well-sm text-center margin-top-twenty margin-left-ten margin-right-ten hidde" ng-if="WidgetNotes.Notes.length < 1">
             <p class="margin-top-ten">No notes added yet.</p>
           </div>
-            <div class="list-layout" ng-if="WidgetNotes.Notes.length">
+            <div class="list-layout"
+                 infinite-scroll="WidgetNotes.loadMore()"
+                 infinite-scroll-distance="1"
+                 data-infinite-container=".infinite-scroll-parent"
+                 infinite-scroll-disabled="WidgetNotes.busy">
                 <div class="list-item" ng-repeat="note in WidgetNotes.Notes | filter:WidgetNotes.search"
                      ng-swipe-left="WidgetNotes.swipeToDeleteNote($event, $index, true)"
                      ng-swipe-right="WidgetNotes.swipeToDeleteNote($event, $index, false)">
@@ -20,7 +24,7 @@
 
                                 <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" ng-click="WidgetNotes.openDetails(note.data.itemID, note.id)">{{note.data.noteTitle}}</span>
                                 <span class="pull-right small opacity-seventy"><i>{{note.data.dateAdded|
-                                    date:'short'}}</i></span>
+                                    date}}</i></span>
                             </p>
 
                             <p class="ellipsis margin-zero bodyTextTheme">

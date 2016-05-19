@@ -51,10 +51,10 @@
           Buildfire.spinner.show();
           var successAll = function (resultAll) {
               Buildfire.spinner.hide();
-              WidgetBookmark.items = WidgetBookmark.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
+              WidgetBookmark.items = WidgetBookmark.items.length ? WidgetBookmark.items.concat(resultAll) : resultAll;
               console.log("==============", WidgetBookmark.items);
-              searchOptions.skip = searchOptions.skip + WidgetBookmark.itemCount;
-              if (resultAll.length == WidgetBookmark.itemCount) {
+              searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
+              if (resultAll.length == PAGINATION.itemCount) {
                 WidgetBookmark.busy = false;
               }
               WidgetBookmark.getBookmarks();
@@ -67,10 +67,8 @@
         };
 
         WidgetBookmark.getBookmarks = function () {
-          console.log("====================2222", WidgetBookmark.items, WidgetBookmark.items);
           for (var item = 0; item < WidgetBookmark.items.length; item++) {
             for (var bookmark in WidgetBookmark.bookmarks) {
-              console.log("====================", WidgetBookmark.items[item].id, WidgetBookmark.bookmarks[bookmark].data.itemIds)
               if (WidgetBookmark.items[item].id == WidgetBookmark.bookmarks[bookmark].data.itemIds) {
                 WidgetBookmark.items[item].isBookmarked = true;
               }
@@ -111,7 +109,7 @@
           ViewStack.popAllViews()
         };
         WidgetBookmark.loadMore = function () {
-          console.log("===============In loadmore");
+          console.log("===============In loadmore Bookmark");
           if (WidgetBookmark.busy) return;
           WidgetBookmark.busy = true;
           WidgetBookmark.getItems();

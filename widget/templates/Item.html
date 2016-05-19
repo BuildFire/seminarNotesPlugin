@@ -55,10 +55,13 @@
     </div>
 
 
-    <div class="col-xs-12 hidden-content" ng-show="toggleNoteList || toggleNoteAdd">
+    <div class="col-xs-12 hidden-content infinite-scroll-parent" ng-show="toggleNoteList || toggleNoteAdd">
       <div class="content note-list clearfix" ng-class="showNoteList?'active':''">
         <div class="seminar-notes layout3">
-          <div class="list-layout">
+          <div class="list-layout" infinite-scroll="WidgetItem.loadMore()"
+               infinite-scroll-distance="1"
+               data-infinite-container=".infinite-scroll-parent"
+               infinite-scroll-disabled="WidgetItem.busy">
             <div class="list-item" ng-repeat="note in WidgetItem.ItemNoteList"
                  ng-swipe-left="WidgetItem.swipeToDeleteNote($event, $index, true)"
                  ng-swipe-right="WidgetItem.swipeToDeleteNote($event, $index, false)" ng-if="!showNoteDescription">
