@@ -113,7 +113,7 @@
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
         };
 
-        WidgetHome.getBookMarkData = function () {
+        WidgetHome.getBookMarkData = function (setBookMarks) {
           Buildfire.spinner.show();
           var err = function (error) {
             Buildfire.spinner.hide();
@@ -122,6 +122,8 @@
             Buildfire.spinner.hide();
             console.log("===========Bookmarks", result);
             WidgetHome.bookmarks = result;
+            if (setBookMarks)
+              WidgetHome.setBookmarks();
           };
           UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
         };
@@ -300,7 +302,7 @@
             if (user) {
               WidgetHome.currentLoggedInUser = user;
               $scope.$apply();
-              WidgetHome.getBookMarkData();
+              WidgetHome.getBookMarkData(true);
             }
           });
         };
