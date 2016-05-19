@@ -207,8 +207,8 @@
 
         WidgetItem.getNoteList = function () {
           Buildfire.spinner.show();
-          console.log("============itemIDDDD", WidgetItem.item.id)
-          searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
+            console.log("============itemIDDDD", WidgetItem.item);
+            searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
           var err = function (error) {
             Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
@@ -230,7 +230,7 @@
               //$scope.showNoteList = true;
             }
           //  currentView.params.noteId = null;
-          }
+          };
           UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };
 
@@ -337,6 +337,7 @@
           console.log("===============In loadmore Note");
           if (WidgetItem.busy) return;
           WidgetItem.busy = true;
+          if(WidgetItem.item && WidgetItem.item.id)
           WidgetItem.getNoteList();
         };
       }]);
