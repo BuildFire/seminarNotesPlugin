@@ -73,13 +73,13 @@
                 });
               };
 
-                WidgetNotes.deleteNote = function(noteId, itemId){
+                WidgetNotes.deleteNote = function(noteId, itemId, itemTitle){
                    console.log('================I Am in delete notes',noteId, itemId);
                     WidgetNotes.itemNote = {
-                        noteTitle: "test title kmt",
-                        noteDescription: "test description kmt",
+                        noteTitle: "test title kmt2222",
+                        noteDescription: "test description kmt2222",
                         itemID: itemId,
-                        itemTitle: "I Am item title",
+                        itemTitle: itemTitle,
                         dateAdded: new Date()
                     };
 
@@ -94,12 +94,15 @@
                   }
                     UserData.delete(noteId,TAG_NAMES.SEMINAR_NOTES,WidgetNotes.currentLoggedInUser._id).then(success, error)
 
-                    //buildfire.userData.update(noteId,WidgetNotes.itemNote, TAG_NAMES.SEMINAR_NOTES,WidgetNotes.currentLoggedInUser._id, function(err, status){
-                    //    if(err)
-                    //        console.log('=============there was a problem saving your data',err);
-                    //    else
-                    //        console.log( '================updated tel',status);
-                    //})
+                  //  var success = function(res){
+                  //    console.log( '================updated tel',res);
+                  //    searchOptions.skip = 0;
+                  //    WidgetNotes.loadMore();
+                  //    },error = function(err){
+                  //    console.log('=============there was a problem saving your data',err);
+                  //}
+                  //  UserData.update(noteId, WidgetNotes.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetNotes.currentLoggedInUser._id).then(success, error)
+                  //
                 }
 
 
