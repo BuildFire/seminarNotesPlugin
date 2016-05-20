@@ -211,7 +211,7 @@
             Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
-          UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser.userToken).then(successItem, errorItem);
+          UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(successItem, errorItem);
         };
 
         /**
@@ -239,7 +239,7 @@
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
             Buildfire.spinner.hide();
-            console.log("===========searchItem5", result, searchOptions);
+            console.log("===========Search Note", result, searchOptions);
             WidgetItem.ItemNoteList = WidgetItem.ItemNoteList.length ? WidgetItem.ItemNoteList.concat(result) : result;
             searchOptions.skip = searchOptions.skip + PAGINATION.noteCount;
             if (result.length == PAGINATION.noteCount) {

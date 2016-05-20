@@ -82,18 +82,24 @@
                         itemTitle: "I Am item title",
                         dateAdded: new Date()
                     };
-                    //buildfire.userData.delete(noteId,TAG_NAMES.SEMINAR_NOTES,function(err, status){
+
+                    var success = function(res){
+                      console.log( '================record deleted',res);
+                      WidgetNotes.Notes = [];
+                      WidgetNotes.busy = false;
+                      searchOptions.skip = 0;
+                      WidgetNotes.loadMore();
+                      },error = function(err){
+                    console.log('================there was a problem deleteing your data',err);
+                  }
+                    UserData.delete(noteId,TAG_NAMES.SEMINAR_NOTES,WidgetNotes.currentLoggedInUser._id).then(success, error)
+
+                    //buildfire.userData.update(noteId,WidgetNotes.itemNote, TAG_NAMES.SEMINAR_NOTES,WidgetNotes.currentLoggedInUser._id, function(err, status){
                     //    if(err)
-                    //        console.log('================there was a problem deleteing your data',err);
+                    //        console.log('=============there was a problem saving your data',err);
                     //    else
-                    //        console.log( '================record deleted',status);
+                    //        console.log( '================updated tel',status);
                     //})
-                    buildfire.userData.update(noteId,WidgetNotes.itemNote, TAG_NAMES.SEMINAR_NOTES,WidgetNotes.currentLoggedInUser.userToken, function(err, status){
-                        if(err)
-                            console.log('=============there was a problem saving your data',err);
-                        else
-                            console.log( '================updated tel',status);
-                    })
                 }
 
 
