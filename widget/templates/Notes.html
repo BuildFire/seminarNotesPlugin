@@ -35,7 +35,8 @@
                                 {{note.data.noteDescription}}
                             </p>
                         </div>
-                        <div class="remove-btn text-center dangerBackgroundTheme" style="background:red;" ng-click="WidgetNotes.deleteNote(note.id, note.data.itemID, note.data.itemTitle)">
+                        <div
+                            class="remove-btn text-center dangerBackgroundTheme" style="background:red; cursor: pointer" ng-click="WidgetNotes.deleteNote(note.id, $index)">
                             <span>Delete</span>
                         </div>
                     </div>

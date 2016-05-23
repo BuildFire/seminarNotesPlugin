@@ -103,16 +103,16 @@
         /*
          * Fetch user's data from datastore
          */
-        WidgetItem.getNoteDetailFromItem = function(noteId){
+        WidgetItem.getNoteDetailFromItem = function (noteId) {
 
           var result = function (res) {
             WidgetItem.ItemNoteList = res;
             WidgetItem.getNoteDetail(noteId)
-            },err = function(err){
+          }, err = function (err) {
             console.log("error in fetching data")
           }
           UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
-        }
+        };
         var init = function () {
           if (currentView.params && currentView.params.noteId) {
             WidgetItem.getNoteDetailFromItem(currentView.params.noteId)
@@ -165,12 +165,12 @@
           }
         };
 
-        WidgetItem.showNoteList = function(){
+        WidgetItem.showNoteList = function () {
           WidgetItem.ItemNoteList = [];
-          WidgetItem.busy=false;
-          searchOptions.skip=0;
+          WidgetItem.busy = false;
+          searchOptions.skip = 0;
           WidgetItem.loadMore();
-          $scope.showNoteDescription=false;
+          $scope.showNoteDescription = false;
         };
 
         WidgetItem.showHideAddNote = function () {
@@ -187,6 +187,8 @@
               $scope.toggleNoteList = 0;
               $scope.toggleNoteAdd = 0
             }
+            WidgetItem.Note.noteTitle = null;
+            WidgetItem.Note.noteDescription = null;
           } else {
             WidgetItem.openLogin();
           }
@@ -233,7 +235,7 @@
 
         WidgetItem.getNoteList = function () {
           Buildfire.spinner.show();
-         searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
+          searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
           var err = function (error) {
             Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
@@ -362,6 +364,17 @@
           WidgetItem.busy = true;
           if (WidgetItem.item && WidgetItem.item.id)
             WidgetItem.getNoteList();
+        };
+
+        WidgetItem.deleteNote = function (noteId, index) {
+          var success = function (res) {
+            console.log('================record deleted', res);
+            WidgetItem.ItemNoteList.splice(index, 1);
+            WidgetItem.swiped[index] = false;
+          }, error = function (err) {
+            console.log('================there was a problem deleting your data', err);
+          };
+          UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(success, error)
         };
       }]);
 })(window.angular, window.buildfire, window);
