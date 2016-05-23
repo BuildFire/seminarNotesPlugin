@@ -28,8 +28,8 @@
 					</div>
 					<!-- Use these theme classes when inactive/not selected -->
 					<fieldset ng-if="WidgetHome.currentLoggedInUser" class="bookmark-icon"
-                     ng-class="item.isBookmarked || isClicked==item.id?'whiteBackgroundTheme':'primaryBackgroundTheme'" ng-click="WidgetHome.addToBookmark(item.id)" ng-disabled="item.isBookmarked || isClicked==item.id">
-						<span class="icon icon-bookmark2  " ng-class="item.isBookmarked || isClicked==item.id?'text-primary':'whiteTheme'"></span>
+                     ng-class="item.isBookmarked?'whiteBackgroundTheme':'primaryBackgroundTheme'" ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
+						<span class="icon icon-bookmark2  " ng-class="item.isBookmarked?'text-primary':'whiteTheme'"></span>
 					</fieldset>
 				</div>
 			</div>
