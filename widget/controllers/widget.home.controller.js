@@ -334,7 +334,6 @@
               Buildfire.spinner.hide();
               WidgetHome.items[index].isBookmarked = false;
               WidgetHome.items[index].bookmarkId = null;
-              console.log(">>>>>>>>>>>", WidgetHome.items);
               if (!$scope.$$phase)
                 $scope.$digest();
               $modal.open({

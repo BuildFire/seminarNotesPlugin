@@ -141,7 +141,6 @@
               return deferred.resolve(result);
             }
           });
-          console.log("========================",options, _tagName)
           return deferred.promise;
         },
         delete: function (id, _tagName, _userToken) {
