@@ -49,7 +49,7 @@
 
               Buildfire.spinner.hide();
               WidgetItem.item = result;
-              $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
+              //$rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
               console.log("========ingeteventdetails", result);
 
               if (!WidgetItem.item.data.itemListBgImage) {
@@ -355,7 +355,7 @@
               $scope.$digest();
               $rootScope.$apply();
             }
-          }, 0);
+          }, 500);
         };
 
         DataStore.onUpdate().then(null, null, onUpdateCallback);
