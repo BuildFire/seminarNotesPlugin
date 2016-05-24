@@ -12,6 +12,7 @@
         $scope.showNoteDescription = false;
         WidgetItem.busy = false;
         WidgetItem.swiped = [];
+        WidgetItem.isNoteInserted =false;
         var searchOptions = {
           skip: 0,
           limit: PAGINATION.noteCount
@@ -30,7 +31,14 @@
           noteDescription: ""
         };
         WidgetItem.ItemNoteList = {};
+        WidgetItem.masterItem = {};
+        var updateMasterItem = function (item) {
+          WidgetItem.masterItem = angular.copy(item);
+        };
 
+        var isUnchanged = function (item) {
+          return angular.equals(item, WidgetItem.masterItem);
+        };
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
           toggle ? WidgetItem.swiped[i] = true : WidgetItem.swiped[i] = false;
         };
@@ -189,27 +197,29 @@
             }
             WidgetItem.Note.noteTitle = null;
             WidgetItem.Note.noteDescription = null;
+            WidgetItem.isNoteInserted = false;
           } else {
             WidgetItem.openLogin();
           }
 
         };
 
-        WidgetItem.addNoteToItem = function (itemId) {
+        WidgetItem.addNoteToItem = function () {
           Buildfire.spinner.show();
           WidgetItem.itemNote = {
             noteTitle: WidgetItem.Note.noteTitle,
             noteDescription: WidgetItem.Note.noteDescription,
-            itemID: itemId,
+            itemID: WidgetItem.item.id,
             itemTitle: WidgetItem.item.data.title,
             dateAdded: new Date()
           };
           var successItem = function (result) {
             Buildfire.spinner.hide();
             console.log("Inserted Item Note", result);
-            $scope.isClicked = itemId;
-            $scope.toggleNoteAdd = 0;
-          }, errorItem = function () {
+            $scope.isClicked = WidgetItem.item.id;
+            updateMasterItem(result.data)
+            WidgetItem.isNoteInserted = result.id;
+           }, errorItem = function () {
             Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
@@ -376,5 +386,43 @@
           };
           UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(success, error)
         };
+
+        var tmrDelayForNote = null;
+        WidgetItem.isValidItem = function (note) {
+          return note.noteTitle;
+        };
+
+        WidgetItem.updateNoteData = function () {
+          WidgetItem.itemNote = {
+            noteTitle: WidgetItem.Note.noteTitle,
+            noteDescription: WidgetItem.Note.noteDescription,
+            itemID: WidgetItem.item.id,
+            itemTitle: WidgetItem.item.data.title,
+            dateAdded: new Date()
+          };
+          var data = function(data){
+            WidgetItem.isUpdating = false;
+            },err = function(err){
+          }
+          UserData.update(WidgetItem.isNoteInserted,  WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then (err, data)
+        };
+
+        var updateNoteWithDelay = function (note) {
+           clearTimeout(tmrDelayForNote);
+          WidgetItem.isUpdating = false;
+          WidgetItem.isItemValid = WidgetItem.isValidItem(WidgetItem.Note);
+          if (!WidgetItem.isUpdating && !isUnchanged(WidgetItem.Note) && WidgetItem.isItemValid) {
+            tmrDelayForNote = setTimeout(function () {
+              if (WidgetItem.isNoteInserted) {
+                 WidgetItem.updateNoteData();
+              } else {
+                WidgetItem.addNoteToItem();
+              }
+            }, 300);
+          }
+        };
+        $scope.$watch(function () {
+          return WidgetItem.Note;
+        }, updateNoteWithDelay, true);
       }]);
 })(window.angular, window.buildfire, window);
