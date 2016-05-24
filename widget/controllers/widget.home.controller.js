@@ -262,6 +262,7 @@
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetHome.busy = false;
               }
+              console.log("----------------------",WidgetHome.items)
               WidgetHome.setBookmarks();
             },
             errorAll = function (error) {
