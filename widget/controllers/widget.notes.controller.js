@@ -7,6 +7,8 @@
         var WidgetNotes = this;
         WidgetNotes.Notes = [];
         WidgetNotes.busy = false;
+        WidgetNotes.searchOptions = {};
+        var tmrDelay = null;
         var searchOptions = {
           skip: 0,
           limit: PAGINATION.noteCount
@@ -111,6 +113,111 @@
         };
 
         buildfire.auth.onLogin(loginCallback);
+        var searchData = function (newValue, tag) {
+          //Buildfire.spinner.show();
+          var searchTerm = '';
+          //if (typeof newValue === 'undefined') {
+          //  return;
+          //}
+          //var success = function (result) {
+          //    Buildfire.spinner.hide();
+          //    console.info('Searched data result:=================== ', result);
+          //    WidgetNotes.Notes = result;
+          //  }
+          //  , error = function (err) {
+          //    Buildfire.spinner.hide();
+          //    console.error('Error while searching data : ', err);
+          //  };
+          if (newValue) {
+            newValue = newValue.trim();
+            if (newValue.indexOf(' ') !== -1) {
+              searchTerm = newValue.split(' ');
+            searchOptions.filter = {
+                "$or": [{
+                  "$json.noteTitle": {
+                    "$regex": searchTerm[0],
+                    "$options": "i"
+                  }
+                }, {
+                  "$json.noteDescription": {
+                    "$regex": searchTerm[0],
+                    "$options": "i"
+                  }
+                }, {
+                  "$json.noteTitle": {
+                    "$regex": searchTerm[1],
+                    "$options": "i"
+                  }
+                }, {
+                  "$json.noteDescription": {
+                    "$regex": searchTerm[1],
+                    "$options": "i"
+                  }
+                }
+                ]
+              };
+            } else {
+
+              searchTerm = newValue;
+               searchOptions.filter = {
+                "$or": [{
+                  "$json.noteTitle": {
+                    "$regex": searchTerm,
+                    "$options": "i"
+                  }
+                }, {"$json.noteDescription": {"$regex": searchTerm, "$options": "i"}}]
+              };
+            }
+          }
+          WidgetNotes.Notes=[];
+          searchOptions.skip = 0;
+          WidgetNotes.busy = false;
+          WidgetNotes.loadMore();
+         // DataStore.search(WidgetNotes.searchOptions, tag).then(success, error);
+        };
+        WidgetNotes.clearSearchResult = function () {
+          WidgetNotes.search = null;
+          searchOptions.skip = 0;
+          searchOptions.filter = {};
+          WidgetNotes.busy = false;
+          WidgetNotes.loadMore();
+       };
+        WidgetNotes.clearTextBox = function () {
+          if(!WidgetNotes.search.length) {
+            WidgetNotes.Notes=[];
+            WidgetNotes.search = null;
+            searchOptions.skip = 0;
+            searchOptions.filter = {};
+            WidgetNotes.busy = false;
+            WidgetNotes.loadMore();
+          }else{
+            if(!WidgetNotes.search.length) {
+              WidgetNotes.Notes=[];
+              searchOptions.skip = 0;
+              WidgetNotes.busy = false;
+              WidgetNotes.loadMore();
+            }
+          }
+        };
+        var saveDataWithDelay = function (newObj) {
+          console.log("******************", newObj);
+          if (newObj) {
+            if (tmrDelay) {
+              clearTimeout(tmrDelay);
+            }
+            tmrDelay = setTimeout(function () {
+              if (newObj)
+                searchData(newObj, TAG_NAMES.SEMINAR_NOTES);
+            }, 500);
+          }
+          else {
+            WidgetNotes.Notes = [];
+          }
+        };
+
+        $scope.$watch(function () {
+          return WidgetNotes.search;
+        }, saveDataWithDelay, true);
 
         WidgetNotes.loadMore = function () {
           console.log("===============In loadmore Note");
@@ -122,6 +229,7 @@
         WidgetNotes.showItemList = function () {
           ViewStack.popAllViews();
         };
+
 
       }]);
 })(window.angular, window.buildfire, window);

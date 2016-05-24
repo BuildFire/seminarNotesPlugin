@@ -3,7 +3,10 @@
         <div class="seminar-notes layout3">
             <div class="form-holder">
                 <input type="text" class="border-none form-control bodyTextTheme"
-                       placeholder="Search note titles and content" ng-model="WidgetNotes.search">
+                       placeholder="Search note titles and content" ng-model="WidgetNotes.search" ng-change="WidgetNotes.clearTextBox()">
+               <span class="clear-icon dangerBackgroundTheme"
+                     ng-if="WidgetNotes.search"
+                     ng-click="WidgetNotes.clearSearchResult()"></span>
                 <hr class="small margin-zero">
             </div>
           <div
@@ -15,7 +18,7 @@
                  infinite-scroll-distance="1"
                  data-infinite-container=".infinite-scroll-parent"
                  infinite-scroll-disabled="WidgetNotes.busy">
-                <div class="list-item" ng-repeat="note in WidgetNotes.Notes | filter:WidgetNotes.search"
+                <div class="list-item" ng-repeat="note in WidgetNotes.Notes"
                      ng-swipe-left="WidgetNotes.swipeToDeleteNote($event, $index, true)"
                      ng-swipe-right="WidgetNotes.swipeToDeleteNote($event, $index, false)">
                     <div class="list-item-media text-left" ng-class="{'edit' : WidgetNotes.swiped[$index]}" >
