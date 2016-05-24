@@ -348,15 +348,17 @@
                     WidgetItem.data.design = {};
                   break;
                 case TAG_NAMES.SEMINAR_ITEMS:
-                  WidgetItem.item.data = event.data;
-                  $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
-                  if (WidgetItem.view) {
-                    WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
-                  }
-                  if (!WidgetItem.item.data.itemListBgImage) {
-                    $rootScope.itemDetailbackgroundImage = "";
-                  } else {
-                    $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
+                  if(event.data){
+                    WidgetItem.item.data = event.data;
+                    $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
+                    if (WidgetItem.view) {
+                      WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
+                    }
+                    if (!WidgetItem.item.data.itemListBgImage) {
+                      $rootScope.itemDetailbackgroundImage = "";
+                    } else {
+                      $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
+                    }
                   }
                   break;
               }
