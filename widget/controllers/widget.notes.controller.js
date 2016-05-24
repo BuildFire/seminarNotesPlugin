@@ -81,7 +81,6 @@
           UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetNotes.currentLoggedInUser._id).then(success, error)
         };
 
-
         /**
          * Check for current logged in user, if not show ogin screen
          */
@@ -113,13 +112,13 @@
 
         buildfire.auth.onLogin(loginCallback);
 
-
         WidgetNotes.loadMore = function () {
           console.log("===============In loadmore Note");
           if (WidgetNotes.busy) return;
           WidgetNotes.busy = true;
           WidgetNotes.getNoteList();
         };
+
         WidgetNotes.showItemList = function () {
           ViewStack.popAllViews();
         };
