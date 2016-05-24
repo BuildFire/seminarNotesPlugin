@@ -35,7 +35,7 @@
         /**
          * getSearchOptions(value) is used to get searchOptions with one more key sort which decide the order of sorting.
          */
-        var getSearchOptions = function (value) {
+        WidgetHome.getSearchOptions = function (value) {
           switch (value) {
             case SORT.ITEM_TITLE_A_Z:
               searchOptions.sort = {"title": 1};
@@ -131,12 +131,14 @@
         WidgetHome.setBookmarks = function () {
           for (var item = 0; item < WidgetHome.items.length; item++) {
             for (var bookmark in WidgetHome.bookmarks) {
-              if (WidgetHome.items[item].id == WidgetHome.bookmarks[bookmark].data.itemIds) {
+              if (WidgetHome.items[item].id == WidgetHome.bookmarks[bookmark].data.itemId) {
                 WidgetHome.items[item].isBookmarked = true;
+                WidgetHome.items[item].bookmarkId = WidgetHome.bookmarks[bookmark].id;
               }
             }
           }
           $scope.isFetchedAllData = true;
+          console.log("$$$$$$$$$$$$$$$$$$", WidgetHome.items);
         };
         WidgetHome.init();
 
@@ -217,7 +219,10 @@
               }
             }
             else if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {
-              console.log("============items", event);
+              WidgetHome.items = [];
+              searchOptions.skip = 0;
+              WidgetHome.busy = false;
+              WidgetHome.loadMore();
             }
 
             if (!WidgetHome.data.design.itemListLayout) {
@@ -257,6 +262,7 @@
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetHome.busy = false;
               }
+              console.log("----------------------",WidgetHome.items)
               WidgetHome.setBookmarks();
             },
             errorAll = function (error) {
@@ -265,7 +271,7 @@
             };
           console.log("***********", WidgetHome.data.content);
           if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.sortBy) {
-            searchOptions = getSearchOptions(WidgetHome.data.content.sortBy);
+            searchOptions = WidgetHome.getSearchOptions(WidgetHome.data.content.sortBy);
           }
           DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
         };
@@ -321,28 +327,47 @@
           }
         });
 
-        WidgetHome.addToBookmark = function (itemId) {
+        WidgetHome.addToBookmark = function (item, isBookmarked, index) {
+          console.log("$$$$$$$$$$$$$$$$$", item, isBookmarked, index);
           Buildfire.spinner.show();
-          WidgetHome.bookmarkItem = {
-            data: {
-              itemIds: itemId
-            }
-          };
-          var successItem = function (result) {
-            Buildfire.spinner.hide();
-            console.log("Inserted", result);
-            $scope.isClicked = itemId;
-            WidgetHome.setBookmarks();
-            $modal.open({
-              templateUrl: 'templates/Bookmark_Confirm.html',
-              size: 'sm'
-            });
-          }, errorItem = function () {
-            Buildfire.spinner.hide();
-            return console.error('There was a problem saving your data');
-          };
-          console.log("===============", WidgetHome.currentLoggedInUser.username);
-          UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+          if (isBookmarked && item.bookmarkId) {
+            var successRemove = function (result) {
+              Buildfire.spinner.hide();
+              WidgetHome.items[index].isBookmarked = false;
+              WidgetHome.items[index].bookmarkId = null;
+              if (!$scope.$$phase)
+                $scope.$digest();
+              $modal.open({
+                templateUrl: 'templates/Bookmark_Removed.html',
+                size: 'sm'
+              });
+            }, errorRemove = function () {
+              Buildfire.spinner.hide();
+              return console.error('There was a problem removing your data');
+            };
+            UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetHome.currentLoggedInUser._id).then(successRemove, errorRemove)
+          } else {
+            WidgetHome.bookmarkItem = {
+              data: {
+                itemId: item.id
+              }
+            };
+            var successItem = function (result) {
+              Buildfire.spinner.hide();
+              console.log("Inserted", result);
+              WidgetHome.items[index].isBookmarked = true;
+              if (!$scope.$$phase)
+                $scope.$digest();
+              $modal.open({
+                templateUrl: 'templates/Bookmark_Confirm.html',
+                size: 'sm'
+              });
+            }, errorItem = function () {
+              Buildfire.spinner.hide();
+              return console.error('There was a problem saving your data');
+            };
+            UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+          }
         };
 
         WidgetHome.showSearchPage = function () {

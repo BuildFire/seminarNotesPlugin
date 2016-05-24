@@ -2,14 +2,15 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetBookmarkCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION) {
+    .controller('WidgetBookmarkCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal) {
         var WidgetBookmark = this;
         WidgetBookmark.busy = false;
         WidgetBookmark.items = [];
         $scope.isClicked = false;
         WidgetBookmark.bookmarkItem = [];
         WidgetBookmark.bookmarks = {};
+        WidgetBookmark.currentLoggedInUser = null;
         $scope.isFetchedAllData = false;
         var searchOptions = {
           skip: 0,
@@ -20,6 +21,17 @@
             itemListLayout: LAYOUTS.itemListLayout[0].name
           }
         };
+        WidgetBookmark.hasAtleastOneBookmark = false;
+
+        /**
+         * Check for current logged in user, if not show ogin screen
+         */
+        buildfire.auth.getCurrentUser(function (err, user) {
+          console.log("===========LoggedInUser", user);
+          if (user) {
+            WidgetBookmark.currentLoggedInUser = user;
+          }
+        });
         WidgetBookmark.init = function () {
           Buildfire.spinner.show();
           var success = function (result) {
@@ -69,8 +81,10 @@
         WidgetBookmark.getBookmarks = function () {
           for (var item = 0; item < WidgetBookmark.items.length; item++) {
             for (var bookmark in WidgetBookmark.bookmarks) {
-              if (WidgetBookmark.items[item].id == WidgetBookmark.bookmarks[bookmark].data.itemIds) {
+              if (WidgetBookmark.items[item].id == WidgetBookmark.bookmarks[bookmark].data.itemId) {
+                WidgetBookmark.hasAtleastOneBookmark = true;
                 WidgetBookmark.items[item].isBookmarked = true;
+                WidgetBookmark.items[item].bookmarkId = WidgetBookmark.bookmarks[bookmark].id;
               }
             }
           }
@@ -114,6 +128,27 @@
           WidgetBookmark.busy = true;
           WidgetBookmark.getItems();
         };
+
+        WidgetBookmark.removeBookmark = function (item, index) {
+          Buildfire.spinner.show();
+          var successRemove = function (result) {
+            Buildfire.spinner.hide();
+            WidgetBookmark.items.splice(index, 1);
+            WidgetBookmark.getBookmarks();
+            if (!$scope.$$phase)
+              $scope.$digest();
+            $modal.open({
+              templateUrl: 'templates/Bookmark_Removed.html',
+              size: 'sm'
+            });
+          }, errorRemove = function () {
+            Buildfire.spinner.hide();
+            return console.error('There was a problem removing your data');
+          };
+          console.log("****************,", item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id);
+          UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id).then(successRemove, errorRemove)
+        }
+
       }]);
 })(window.angular, window.buildfire, window);
 
