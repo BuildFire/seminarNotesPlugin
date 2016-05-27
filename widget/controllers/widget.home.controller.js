@@ -14,6 +14,7 @@
         WidgetHome.bookmarkItem = [];
         WidgetHome.bookmarks = {};
         $scope.isFetchedAllData = false;
+        WidgetHome.listeners={};
         var searchOptions = {
           skip: 0,
           limit: PAGINATION.itemCount
@@ -125,11 +126,13 @@
             if (setBookMarks)
               WidgetHome.setBookmarks();
           };
+
           UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
         };
 
         WidgetHome.setBookmarks = function () {
           for (var item = 0; item < WidgetHome.items.length; item++) {
+            WidgetHome.items[item].isBookmarked = false;
             for (var bookmark in WidgetHome.bookmarks) {
               if (WidgetHome.items[item].id == WidgetHome.bookmarks[bookmark].data.itemId) {
                 WidgetHome.items[item].isBookmarked = true;
@@ -137,8 +140,8 @@
               }
             }
           }
+          console.log("$$$$$$$$$$$$$$$$$$",WidgetHome.bookmarks, WidgetHome.items);
           $scope.isFetchedAllData = true;
-          console.log("$$$$$$$$$$$$$$$$$$", WidgetHome.items);
         };
         WidgetHome.init();
 
@@ -396,6 +399,31 @@
 
         $rootScope.$on('ITEM_BOOKMARKED', function (e) {
           WidgetHome.getBookMarkData(true);
+        });
+
+        $scope.$on("$destroy", function () {
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed211112");
+          for (var i in WidgetHome.listeners) {
+            if (WidgetHome.listeners.hasOwnProperty(i)) {
+              WidgetHome.listeners[i]();
+            }
+          }
+          DataStore.clearListener();
+        });
+
+        WidgetHome.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+          if (type === 'POP') {
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed311113");
+            DataStore.onUpdate().then(null, null, onUpdateCallback);
+            WidgetHome.getBookMarkData(true);
+            WidgetHome.setBookmarks();
+           }
+          if (type === 'POPALL') {
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed311113");
+            DataStore.onUpdate().then(null, null, onUpdateCallback);
+            WidgetHome.getBookMarkData(true);
+            WidgetHome.setBookmarks();
+          }
         });
       }])
 })(window.angular, window.buildfire);
