@@ -11,10 +11,10 @@
         <hr class="small margin-zero">
       </div>
       <div
-          class="well well-sm text-center margin-top-twenty margin-left-ten margin-right-ten hidde" ng-if="WidgetSearch.items.length < 1">
+          class="well well-sm text-center margin-top-twenty margin-left-ten margin-right-ten hidde" ng-if="WidgetSearch.items.length < 1 || !WidgetSearch.keyword">
         <p class="margin-top-ten">No search results.</p>
       </div>
-      <div class="list-layout" ng-if="WidgetSearch.items.length">
+      <div class="list-layout" ng-if="WidgetSearch.items.length && WidgetSearch.keyword">
         <div class="list-item" ng-repeat="item in WidgetSearch.items" ng-if="isFetchedAllData">
           <div class="list-item-media text-left overflow-hidden">
             <div class="square-icon list-media-holder pull-left">
