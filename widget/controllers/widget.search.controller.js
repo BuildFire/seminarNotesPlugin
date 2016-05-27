@@ -88,13 +88,14 @@
         WidgetSearch.getBookmarks = function () {
           for (var item = 0; item < WidgetSearch.items.length; item++) {
             for (var bookmark in WidgetSearch.bookmarks) {
-              if (WidgetSearch.items[item].id == WidgetSearch.bookmarks[bookmark].data.itemIds) {
+              if (WidgetSearch.items[item].id == WidgetSearch.bookmarks[bookmark].data.itemId) {
                 WidgetSearch.items[item].isBookmarked = true;
               }
             }
           }
           $scope.isFetchedAllData = true;
         };
+
         var saveDataWithDelay = function (newObj) {
           console.log("******************", newObj);
           if (newObj) {
@@ -151,6 +152,7 @@
             }
           });
         };
+
         WidgetSearch.addToBookmark= function(itemId){
           Buildfire.spinner.show();
           WidgetSearch.bookmarkItem = {

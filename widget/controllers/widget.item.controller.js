@@ -327,7 +327,7 @@
         WidgetItem.getBookmarks = function () {
           if (WidgetItem.item) {
             for (var bookmark in WidgetItem.bookmarks) {
-              if (WidgetItem.bookmarks[bookmark].data.itemIds == WidgetItem.item.id) {
+              if (WidgetItem.bookmarks[bookmark].data.itemId == WidgetItem.item.id) {
                 WidgetItem.item.isBookmarked = true;
               }
             }
