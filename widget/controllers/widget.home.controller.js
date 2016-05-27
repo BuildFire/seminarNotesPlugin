@@ -418,6 +418,12 @@
             WidgetHome.getBookMarkData(true);
             WidgetHome.setBookmarks();
            }
+          if (type === 'POPALL') {
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed311113");
+            DataStore.onUpdate().then(null, null, onUpdateCallback);
+            WidgetHome.getBookMarkData(true);
+            WidgetHome.setBookmarks();
+          }
         });
       }])
 })(window.angular, window.buildfire);

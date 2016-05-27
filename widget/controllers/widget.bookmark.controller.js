@@ -48,16 +48,6 @@
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
-          var err = function (error) {
-            Buildfire.spinner.hide();
-            console.log("============ There is an error in getting data", error);
-          }, result = function (result) {
-            Buildfire.spinner.hide();
-            console.log("===========search", result);
-            WidgetBookmark.bookmarks = result;
-          };
-          UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
-
         };
 
         WidgetBookmark.getItems = function () {
@@ -70,7 +60,18 @@
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetBookmark.busy = false;
               }
-              WidgetBookmark.getBookmarks();
+              var err = function (error) {
+                Buildfire.spinner.hide();
+                console.log("============ There is an error in getting data", error);
+              }, result = function (result) {
+                Buildfire.spinner.hide();
+                console.log("===========search", result);
+                WidgetBookmark.bookmarks = result;
+                WidgetBookmark.getBookmarks();
+              };
+              UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+
+
             },
             errorAll = function (error) {
               Buildfire.spinner.hide();
@@ -81,6 +82,7 @@
 
         WidgetBookmark.getBookmarks = function () {
           for (var item = 0; item < WidgetBookmark.items.length; item++) {
+            WidgetBookmark.items[item].isBookmarked = false;
             for (var bookmark in WidgetBookmark.bookmarks) {
               if (WidgetBookmark.items[item].id == WidgetBookmark.bookmarks[bookmark].data.itemId) {
                 WidgetBookmark.hasAtleastOneBookmark = true;
