@@ -33,7 +33,7 @@
   <div class="bottom fixed-bottom primaryBackgroundTheme has-content open transition-third">
     <div class="extra-links" ng-if="WidgetItem.currentLoggedInUser">
       <!-- When Inactive, use these theme classes -->
-      <a class="bg-primary" ng-click="WidgetItem.addToBookmark(WidgetItem.item.id)"
+      <a class="bg-primary" ng-click="WidgetItem.addToBookmark(WidgetItem.item.id,WidgetItem.item, WidgetItem.item.isBookmarked )"
          ng-disabled="WidgetItem.item.isBookmarked" ng-class="WidgetItem.item.isBookmarked?'bookmarked':''">
         <span class="icon icon-bookmark2 whiteTheme"></span>
       </a>

@@ -300,29 +300,47 @@
           console.log("==================...", WidgetItem.noteDetail)
         };
 
-        WidgetItem.addToBookmark = function (itemId) {
-          Buildfire.spinner.show();
-          WidgetItem.bookmarkItem = {
-            data: {
-              itemIds: itemId
-            }
-          };
-          var successItem = function (result) {
-            Buildfire.spinner.hide();
-            WidgetItem.item.isBookmarked = true;
-            console.log("Inserted", result);
-            $scope.isClicked = itemId;
-            WidgetItem.getBookmarks();
-            $modal.open({
-              templateUrl: 'templates/Bookmark_Confirm.html',
-              size: 'sm'
-            });
-            $rootScope.$broadcast("ITEM_BOOKMARKED");
-          }, errorItem = function () {
-            Buildfire.spinner.hide();
-            return console.error('There was a problem saving your data');
-          };
-          UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+        WidgetItem.addToBookmark = function (itemId, item, isBookmarked) {
+           Buildfire.spinner.show();
+          if (isBookmarked && item.bookmarkId) {
+            var successRemove = function (result) {
+              Buildfire.spinner.hide();
+              WidgetItem.item.isBookmarked = false;
+              WidgetItem.item.bookmarkId = null;
+              if (!$scope.$$phase)
+                $scope.$digest();
+              $modal.open({
+                templateUrl: 'templates/Bookmark_Removed.html',
+                size: 'sm'
+              });
+            }, errorRemove = function () {
+              Buildfire.spinner.hide();
+              return console.error('There was a problem removing your data');
+            };
+            UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetItem.currentLoggedInUser._id).then(successRemove, errorRemove)
+          }else {
+            WidgetItem.bookmarkItem = {
+              data: {
+                itemId: itemId
+              }
+            };
+            var successItem = function (result) {
+              Buildfire.spinner.hide();
+              WidgetItem.item.isBookmarked = true;
+              console.log("Inserted", result);
+              $scope.isClicked = itemId;
+              WidgetItem.getBookmarks();
+              $modal.open({
+                templateUrl: 'templates/Bookmark_Confirm.html',
+                size: 'sm'
+              });
+              $rootScope.$broadcast("ITEM_BOOKMARKED");
+            }, errorItem = function () {
+              Buildfire.spinner.hide();
+              return console.error('There was a problem saving your data');
+            };
+            UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+          }
         };
 
         WidgetItem.getBookmarks = function () {
@@ -330,9 +348,10 @@
             for (var bookmark in WidgetItem.bookmarks) {
               if (WidgetItem.bookmarks[bookmark].data.itemId == WidgetItem.item.id) {
                 WidgetItem.item.isBookmarked = true;
+                WidgetItem.item.bookmarkId = WidgetItem.bookmarks[bookmark].id;
               }
             }
-            console.log("============initemGetBookmarks", WidgetItem.item);
+            console.log("============initemGetBookmarks", WidgetItem.item, WidgetItem.bookmarks);
             $scope.isFetchedAllData = true;
           }
         };
