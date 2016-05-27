@@ -80,7 +80,7 @@
         };
 
         /* background image add <start>*/
-        var background = new Buildfire.components.images.thumbnail("#background");
+        var background = new Buildfire.components.images.thumbnail("#background", {title : "Item List Background Image"});
 
         background.onChange = function (url) {
           DesignHome.data.design.itemListBgImage = url;
