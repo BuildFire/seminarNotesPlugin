@@ -11,6 +11,7 @@
         WidgetBookmark.bookmarkItem = [];
         WidgetBookmark.bookmarks = {};
         WidgetBookmark.currentLoggedInUser = null;
+        WidgetBookmark.listeners = {};
         $scope.isFetchedAllData = false;
         var searchOptions = {
           skip: 0,
@@ -47,16 +48,6 @@
               console.error('Error while getting data', err);
             };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
-          var err = function (error) {
-            Buildfire.spinner.hide();
-            console.log("============ There is an error in getting data", error);
-          }, result = function (result) {
-            Buildfire.spinner.hide();
-            console.log("===========search", result);
-            WidgetBookmark.bookmarks = result;
-          };
-          UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
-
         };
 
         WidgetBookmark.getItems = function () {
@@ -69,7 +60,18 @@
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetBookmark.busy = false;
               }
-              WidgetBookmark.getBookmarks();
+              var err = function (error) {
+                Buildfire.spinner.hide();
+                console.log("============ There is an error in getting data", error);
+              }, result = function (result) {
+                Buildfire.spinner.hide();
+                console.log("===========search", result);
+                WidgetBookmark.bookmarks = result;
+                WidgetBookmark.getBookmarks();
+              };
+              UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+
+
             },
             errorAll = function (error) {
               Buildfire.spinner.hide();
@@ -80,6 +82,7 @@
 
         WidgetBookmark.getBookmarks = function () {
           for (var item = 0; item < WidgetBookmark.items.length; item++) {
+            WidgetBookmark.items[item].isBookmarked = false;
             for (var bookmark in WidgetBookmark.bookmarks) {
               if (WidgetBookmark.items[item].id == WidgetBookmark.bookmarks[bookmark].data.itemId) {
                 WidgetBookmark.hasAtleastOneBookmark = true;
@@ -148,7 +151,24 @@
           console.log("****************,", item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id);
           UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id).then(successRemove, errorRemove)
         }
+        $scope.$on("$destroy", function () {
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
+          for (var i in WidgetBookmark.listeners) {
+            if (WidgetBookmark.listeners.hasOwnProperty(i)) {
+              WidgetBookmark.listeners[i]();
+            }
+          }
+          DataStore.clearListener();
+        });
 
+        WidgetBookmark.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+          if (type === 'POP') {
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
+            WidgetBookmark.init()
+          }
+        });
+        WidgetBookmark.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
+        });
       }]);
 })(window.angular, window.buildfire, window);
 

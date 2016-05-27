@@ -1,7 +1,7 @@
 
 <tabset justified="true">
   <tab heading="Item Content">
-    <div class="item clearfix row">
+    <div class="item clearfix row" style="padding-top: 20px">
       <div class="col-md-3 labels pull-left">
         <span>Item Title *</span>
       </div>
@@ -36,7 +36,7 @@
       </div>
       <div class="col-md-9 main pull-right">
         <input type="date" class="form-control" date-time=""
-               placeholder="Publication Date"
+               placeholder="mm/dd/yyy"
                ng-model="ContentItem.item.data.publishDate">
       </div>
     </div>
@@ -51,7 +51,7 @@
     <hr class="none">
     <div class="item clearfix row">
       <div class="labels col-md-3 padding-right-zero pull-left">
-        <span>Links</span>
+        <span>Links/Actions</span>
       </div>
       <div class="main col-md-9 pull-right">
         <div class="col-md-4 row" style="margin-left: 15%;">
@@ -119,6 +119,8 @@
     </div>
   </tab>
   <tab heading="Item Design">
-    <div id="background"></div>
+    <div style="padding-top: 20px">
+      <div id="background"></div>
+    </div>
   </tab>
 </tabset>
