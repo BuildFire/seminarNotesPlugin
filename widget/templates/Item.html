@@ -85,7 +85,7 @@
             </div>
             <div class="pull-left" ng-if="showNoteDescription">
               <p class="ellipsis margin-zero margin-top-five clearfix">
-                <span class="pull-left" style="max-width:65%;">{{WidgetItem.noteDetail.data.noteTitle}}</span>
+               <span class="pull-left" style="max-width:65%; cursor: pointer;" ng-click="WidgetItem.editNote(WidgetItem.noteDetail.id)">{{WidgetItem.noteDetail.data.noteTitle}}</span>
               </p>
               <hr class="margin-zero">
               <p class="small margin-zero bodyTextTheme">
