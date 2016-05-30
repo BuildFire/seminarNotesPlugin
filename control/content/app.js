@@ -38,16 +38,27 @@
     }])
     .directive('dateTime', function () {
       return {
-        require: 'ngModel',
-        scope: {},
-        link: function (scope, elem, attrs, ngModel) {
-          ngModel.$formatters.push(function (value) {
-            //to view
-            return new Date(value);
-          });
-          ngModel.$parsers.push(function (value) {
-            //to model
-            return +new Date(value);
+        scope: {publishDate: "="},
+        link: function (scope, elem, attrs) {
+          setTimeout(function () {
+            $(elem).datepicker({
+              dateFormat: "mm/dd/yy",
+              onSelect: function () {
+                var value = $(this).val();
+                scope.publishDate = +new Date(value);
+                scope.$apply();
+                $(elem).datepicker("setDate", new Date(value));
+              }
+            });
+            scope.hasDatePicker = true;
+            scope.$apply();
+          }, 0);
+
+          var unbindWatch = scope.$watch("publishDate", function (newVal) {
+            if(newVal && scope.hasDatePicker) {
+              $(elem).datepicker("setDate", new Date(newVal));
+              unbindWatch();
+            }
           });
         }
       };
