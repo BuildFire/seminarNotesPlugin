@@ -21,8 +21,8 @@
 							 load-image="1x1" data-final-src="{{item.data.listImage |
                        getImageUrl :162 :162}}">
 						<div class="blackLayer"></div>
-						<div class="item-text">
-							<p class="item-title margin-zero whiteTheme text-center"><a  ng-click="WidgetHome.openDetails(item.id)">{{item.data.title}}</a></p>
+						<div class="item-text" ng-click="WidgetHome.openDetails(item.id)">
+							<p class="item-title margin-zero whiteTheme text-center">{{item.data.title}}</p>
 							<p class="item-summary margin-zero whiteTheme text-center">{{item.data.summary}}</p>
 							<p class="item-date margin-zero whiteTheme text-center">{{item.data.publishDate | date}}</p>
 						</div>
