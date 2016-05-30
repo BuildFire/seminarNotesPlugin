@@ -539,3 +539,11 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 .bottom-zero {
 	bottom: 0px !important;
 }
+
+/*
+* Removed border for modal pop up
+*/
+
+html[buildfire] .modal .modal-dialog {
+    border: none !important;
+}
