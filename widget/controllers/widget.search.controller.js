@@ -2,8 +2,8 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetSearchCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION','$modal',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION,$modal) {
+    .controller('WidgetSearchCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal', '$timeout',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal, $timeout) {
         var WidgetSearch = this;
 
         WidgetSearch.items = [];
@@ -153,10 +153,10 @@
           });
         };
 
-        WidgetSearch.addToBookmark= function(itemId){
+        WidgetSearch.addToBookmark = function (itemId) {
           Buildfire.spinner.show();
           WidgetSearch.bookmarkItem = {
-            data:{
+            data: {
               itemIds: itemId
             }
           };
@@ -165,10 +165,15 @@
             console.log("Inserted", result);
             $scope.isClicked = itemId;
             WidgetSearch.getBookmarks();
-            $modal.open({
+            var addedBookmarkModal = $modal.open({
               templateUrl: 'templates/Bookmark_Confirm.html',
-              size: 'sm'
+              size: 'sm',
+              backdropClass: "ng-hide"
             });
+            $timeout(function () {
+              addedBookmarkModal.close();
+            }, 3000);
+
             $rootScope.$broadcast("ITEM_BOOKMARKED");
           }, errorItem = function () {
             Buildfire.spinner.hide();

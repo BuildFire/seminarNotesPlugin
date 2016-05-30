@@ -2,8 +2,8 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetBookmarkCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal) {
+    .controller('WidgetBookmarkCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal','$timeout',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal,$timeout) {
         var WidgetBookmark = this;
         WidgetBookmark.busy = false;
         WidgetBookmark.items = [];
@@ -140,17 +140,22 @@
             WidgetBookmark.getBookmarks();
             if (!$scope.$$phase)
               $scope.$digest();
-            $modal.open({
+            var removeBookmarkModal = $modal.open({
               templateUrl: 'templates/Bookmark_Removed.html',
-              size: 'sm'
+              size: 'sm',
+              backdropClass: "ng-hide"
             });
+            $timeout(function () {
+              removeBookmarkModal.close();
+            }, 3000);
+
           }, errorRemove = function () {
             Buildfire.spinner.hide();
             return console.error('There was a problem removing your data');
           };
           console.log("****************,", item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id);
           UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id).then(successRemove, errorRemove)
-        }
+        };
         $scope.$on("$destroy", function () {
           console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
           for (var i in WidgetBookmark.listeners) {
