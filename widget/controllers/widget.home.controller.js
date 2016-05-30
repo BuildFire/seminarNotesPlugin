@@ -318,6 +318,13 @@
 
         buildfire.auth.onLogin(loginCallback);
 
+        var logoutCallback = function () {
+          WidgetHome.currentLoggedInUser = null;
+          $scope.$apply();
+        };
+
+        buildfire.auth.onLogout(logoutCallback);
+
         /**
          * Check for current logged in user, if not show ogin screen
          */
