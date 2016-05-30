@@ -2,8 +2,8 @@
 
 (function (angular, buildfire) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData', 'SORT', '$modal',
-      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData, SORT, $modal) {
+    .controller('WidgetHomeCtrl', ['$scope', 'TAG_NAMES', 'LAYOUTS', 'DataStore', 'PAGINATION', 'Buildfire', 'Location', '$rootScope', 'ViewStack', '$sce', 'UserData', 'SORT', '$modal', '$timeout',
+      function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData, SORT, $modal, $timeout) {
         var WidgetHome = this;
         var currentListLayout, currentSortOrder = null;
         $rootScope.deviceHeight = window.innerHeight;
@@ -14,7 +14,7 @@
         WidgetHome.bookmarkItem = [];
         WidgetHome.bookmarks = {};
         $scope.isFetchedAllData = false;
-        WidgetHome.listeners={};
+        WidgetHome.listeners = {};
         var searchOptions = {
           skip: 0,
           limit: PAGINATION.itemCount
@@ -140,7 +140,7 @@
               }
             }
           }
-          console.log("$$$$$$$$$$$$$$$$$$",WidgetHome.bookmarks, WidgetHome.items);
+          console.log("$$$$$$$$$$$$$$$$$$", WidgetHome.bookmarks, WidgetHome.items);
           $scope.isFetchedAllData = true;
         };
         WidgetHome.init();
@@ -265,7 +265,7 @@
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetHome.busy = false;
               }
-              console.log("----------------------",WidgetHome.items)
+              console.log("----------------------", WidgetHome.items)
               WidgetHome.setBookmarks();
             },
             errorAll = function (error) {
@@ -318,6 +318,13 @@
 
         buildfire.auth.onLogin(loginCallback);
 
+        var logoutCallback = function () {
+          WidgetHome.currentLoggedInUser = null;
+          $scope.$apply();
+        };
+
+        buildfire.auth.onLogout(logoutCallback);
+
         /**
          * Check for current logged in user, if not show ogin screen
          */
@@ -340,10 +347,15 @@
               WidgetHome.items[index].bookmarkId = null;
               if (!$scope.$$phase)
                 $scope.$digest();
-              $modal.open({
+              var removeBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Removed.html',
-                size: 'sm'
+                size: 'sm',
+                backdropClass: "ng-hide"
               });
+              $timeout(function () {
+                removeBookmarkModal.close();
+              }, 3000);
+
             }, errorRemove = function () {
               Buildfire.spinner.hide();
               return console.error('There was a problem removing your data');
@@ -359,12 +371,19 @@
               Buildfire.spinner.hide();
               console.log("Inserted", result);
               WidgetHome.items[index].isBookmarked = true;
+              WidgetHome.items[index].bookmarkId = result.id;
               if (!$scope.$$phase)
                 $scope.$digest();
-              $modal.open({
+
+              var addedBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Confirm.html',
-                size: 'sm'
+                size: 'sm',
+                backdropClass: "ng-hide"
               });
+              $timeout(function () {
+                addedBookmarkModal.close();
+              }, 3000);
+
             }, errorItem = function () {
               Buildfire.spinner.hide();
               return console.error('There was a problem saving your data');
@@ -417,7 +436,7 @@
             DataStore.onUpdate().then(null, null, onUpdateCallback);
             WidgetHome.getBookMarkData(true);
             WidgetHome.setBookmarks();
-           }
+          }
           if (type === 'POPALL') {
             console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed311113");
             DataStore.onUpdate().then(null, null, onUpdateCallback);

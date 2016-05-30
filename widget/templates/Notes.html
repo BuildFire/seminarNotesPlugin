@@ -2,7 +2,8 @@
     <div class="scrollable infinite-scroll-parent">
         <div class="seminar-notes layout3">
             <div class="form-holder">
-                <input type="text" class="border-none form-control bodyTextTheme"
+                <input type="text"
+                       class="border-none form-control bodyTextTheme search"
                        placeholder="Search note titles and content" ng-model="WidgetNotes.search" ng-change="WidgetNotes.clearTextBox()">
                <span class="clear-icon dangerBackgroundTheme"
                      ng-if="WidgetNotes.search"
@@ -10,7 +11,7 @@
                 <hr class="small margin-zero">
             </div>
           <div
-              class="well well-sm text-center margin-top-twenty margin-left-ten margin-right-ten hidde" ng-if="WidgetNotes.Notes.length < 1">
+              class="well well-sm text-center margin-top-twenty margin-left-ten margin-right-ten hidde" ng-if="WidgetNotes.noItemFound">
             <p class="margin-top-ten">No notes added yet.</p>
           </div>
             <div class="list-layout"

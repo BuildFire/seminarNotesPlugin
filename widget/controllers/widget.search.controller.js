@@ -2,8 +2,8 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetSearchCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION','$modal',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION,$modal) {
+    .controller('WidgetSearchCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal', '$timeout',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal, $timeout) {
         var WidgetSearch = this;
 
         WidgetSearch.items = [];
@@ -12,7 +12,51 @@
 
         WidgetSearch.bookmarks = [];
 
+        WidgetSearch.currentLoggedInUser = null;
+
         var tmrDelay = null;
+
+        /**
+         * Method to open buildfire auth login pop up and allow user to login using credentials.
+         */
+        WidgetSearch.openLogin = function () {
+          buildfire.auth.login({}, function () {
+
+          });
+        };
+
+        var loginCallback = function () {
+          buildfire.auth.getCurrentUser(function (err, user) {
+            console.log("=========User", user);
+            if (user) {
+              WidgetSearch.currentLoggedInUser = user;
+              $scope.$apply();
+             // WidgetSearch.getBookMarkData(true);
+            }
+          });
+        };
+
+        buildfire.auth.onLogin(loginCallback);
+
+        var logoutCallback = function () {
+          WidgetSearch.currentLoggedInUser = null;
+          $scope.$apply();
+        };
+
+        buildfire.auth.onLogout(logoutCallback);
+
+        /**
+         * Check for current logged in user, if not show ogin screen
+         */
+        buildfire.auth.getCurrentUser(function (err, user) {
+          console.log("===========LoggedInUser", user);
+          if (user) {
+            WidgetSearch.currentLoggedInUser = user;
+            $scope.$apply();
+            //WidgetSearch.getBookMarkData();
+          }
+        });
+
         /*
          * Call the datastore to save the data object
          */
@@ -90,6 +134,7 @@
             for (var bookmark in WidgetSearch.bookmarks) {
               if (WidgetSearch.items[item].id == WidgetSearch.bookmarks[bookmark].data.itemId) {
                 WidgetSearch.items[item].isBookmarked = true;
+                WidgetSearch.items[item].bookmarkId = WidgetSearch.bookmarks[bookmark].id;
               }
             }
           }
@@ -153,29 +198,63 @@
           });
         };
 
-        WidgetSearch.addToBookmark= function(itemId){
+        WidgetSearch.addToBookmark = function (itemId, isBookmarked, index, item) {
+          console.log("$$$$$$$$$$$$$$$$$111", item.isBookmarked);
           Buildfire.spinner.show();
-          WidgetSearch.bookmarkItem = {
-            data:{
-              itemIds: itemId
-            }
-          };
-          var successItem = function (result) {
-            Buildfire.spinner.hide();
-            console.log("Inserted", result);
-            $scope.isClicked = itemId;
-            WidgetSearch.getBookmarks();
-            $modal.open({
-              templateUrl: 'templates/Bookmark_Confirm.html',
-              size: 'sm'
-            });
-            $rootScope.$broadcast("ITEM_BOOKMARKED");
-          }, errorItem = function () {
-            Buildfire.spinner.hide();
-            return console.error('There was a problem saving your data');
-          };
-          UserData.insert(WidgetSearch.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
-        }
+          if (isBookmarked && item.bookmarkId) {
+            var successRemove = function (result) {
+              Buildfire.spinner.hide();
+              WidgetSearch.items[index].isBookmarked = false;
+              WidgetSearch.items[index].bookmarkId = null;
+              if (!$scope.$$phase)
+                $scope.$digest();
+              var removeBookmarkModal = $modal.open({
+                templateUrl: 'templates/Bookmark_Removed.html',
+                size: 'sm',
+                backdropClass: "ng-hide"
+              });
+              $timeout(function () {
+                removeBookmarkModal.close();
+              }, 3000);
+
+            }, errorRemove = function () {
+              Buildfire.spinner.hide();
+              return console.error('There was a problem removing your data');
+            };
+            UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetSearch.currentLoggedInUser._id).then(successRemove, errorRemove)
+          } else {
+            Buildfire.spinner.show();
+            WidgetSearch.bookmarkItem = {
+              data: {
+                itemId: itemId
+              }
+            };
+            var successItem = function (result) {
+              Buildfire.spinner.hide();
+              WidgetSearch.items[index].isBookmarked = true;
+              WidgetSearch.items[index].bookmarkId = result.id;
+              console.log("Inserted", result);
+              $scope.isClicked = itemId;
+           //   WidgetSearch.getBookmarks();
+              if (!$scope.$$phase)
+                $scope.$digest();
+              var addedBookmarkModal = $modal.open({
+                templateUrl: 'templates/Bookmark_Confirm.html',
+                size: 'sm',
+                backdropClass: "ng-hide"
+              });
+              $timeout(function () {
+                addedBookmarkModal.close();
+              }, 3000);
+
+              $rootScope.$broadcast("ITEM_BOOKMARKED");
+            }, errorItem = function () {
+              Buildfire.spinner.hide();
+              return console.error('There was a problem saving your data');
+            };
+            UserData.insert(WidgetSearch.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetSearch.currentLoggedInUser._id).then(successItem, errorItem);
+          }
+        };
       }]);
 })(window.angular, window.buildfire, window);
 

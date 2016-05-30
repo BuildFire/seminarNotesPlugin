@@ -21,16 +21,16 @@
                        getImageUrl :deviceWidth :183}}">
 					<div class="blackLayer"></div>
 					<div class="backgroundLayer" style="background:url('../../../styles/media/holder-1x1.png');"></div>
-					<div class="item-text">
-						<p class="ellipsis item-title margin-zero whiteTheme text-center"><a  ng-click="WidgetHome.openDetails(item.id)">{{item.data.title}}</a></p>
+					<div class="item-text" ng-click="WidgetHome.openDetails(item.id)">
+						<p class="ellipsis item-title margin-zero whiteTheme text-center">{{item.data.title}}</p>
 						<p class="ellipsis item-summary margin-zero whiteTheme text-center">{{item.data.summary}} </p>
 						<p class="ellipsis item-date margin-zero whiteTheme text-center">{{item.data.publishDate | date}}</p>
 					</div>
 					<!-- Use these theme classes when inactive/not selected -->
-					<fieldset ng-if="WidgetHome.currentLoggedInUser" class="bookmark-icon"
+					<div ng-if="WidgetHome.currentLoggedInUser" class="bookmark-icon"
                      ng-class="item.isBookmarked?'whiteBackgroundTheme':'primaryBackgroundTheme'" ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
 						<span class="icon icon-bookmark2  " ng-class="item.isBookmarked?'text-primary':'whiteTheme'"></span>
-					</fieldset>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -2,18 +2,20 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal) {
+    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal', '$timeout',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal, $timeout) {
         var WidgetItem = this;
         $scope.toggleNoteList = 0;
         $scope.toggleNoteAdd = 0;
         $scope.showNoteList = 1;
         $scope.showNoteAdd = 1;
         $scope.showNoteDescription = false;
-        WidgetItem.listeners={};
+        WidgetItem.listeners = {};
+        WidgetItem.inInsertNote = false;
         WidgetItem.busy = false;
         WidgetItem.swiped = [];
-        WidgetItem.isNoteInserted =false;
+        WidgetItem.isNoteInserted = false;
+        WidgetItem.noteIdToBeUpdate = "";
         var searchOptions = {
           skip: 0,
           limit: PAGINATION.noteCount
@@ -161,7 +163,7 @@
               $scope.showNoteAdd = 0;
               WidgetItem.busy = false;
               searchOptions.skip = 0;
-              WidgetItem.loadMore();
+              WidgetItem.showNoteList();
             }
             if ($scope.toggleNoteList && $scope.toggleNoteAdd) {
               $scope.toggleNoteList = 0;
@@ -183,6 +185,7 @@
         };
 
         WidgetItem.showHideAddNote = function () {
+          WidgetItem.inInsertNote = false;
           $scope.showNoteDescription = false;
           if (WidgetItem.currentLoggedInUser) {
             if ($scope.toggleNoteAdd && !$scope.toggleNoteList) {
@@ -206,6 +209,7 @@
         };
 
         WidgetItem.addNoteToItem = function () {
+          WidgetItem.inInsertNote = true;
           Buildfire.spinner.show();
           WidgetItem.itemNote = {
             noteTitle: WidgetItem.Note.noteTitle,
@@ -220,7 +224,7 @@
             $scope.isClicked = WidgetItem.item.id;
             updateMasterItem(result.data)
             WidgetItem.isNoteInserted = result.id;
-           }, errorItem = function () {
+          }, errorItem = function () {
             Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
@@ -301,7 +305,7 @@
         };
 
         WidgetItem.addToBookmark = function (itemId, item, isBookmarked) {
-           Buildfire.spinner.show();
+          Buildfire.spinner.show();
           if (isBookmarked && item.bookmarkId) {
             var successRemove = function (result) {
               Buildfire.spinner.hide();
@@ -309,16 +313,21 @@
               WidgetItem.item.bookmarkId = null;
               if (!$scope.$$phase)
                 $scope.$digest();
-              $modal.open({
+              var removeBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Removed.html',
-                size: 'sm'
+                size: 'sm',
+                backdropClass: "ng-hide"
               });
+              $timeout(function () {
+                removeBookmarkModal.close();
+              }, 3000);
+
             }, errorRemove = function () {
               Buildfire.spinner.hide();
               return console.error('There was a problem removing your data');
             };
             UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetItem.currentLoggedInUser._id).then(successRemove, errorRemove)
-          }else {
+          } else {
             WidgetItem.bookmarkItem = {
               data: {
                 itemId: itemId
@@ -327,13 +336,18 @@
             var successItem = function (result) {
               Buildfire.spinner.hide();
               WidgetItem.item.isBookmarked = true;
+              WidgetItem.item.bookmarkId = result.id;
               console.log("Inserted", result);
               $scope.isClicked = itemId;
-              WidgetItem.getBookmarks();
-              $modal.open({
+            //  WidgetItem.getBookmarks();
+              var addedBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Confirm.html',
-                size: 'sm'
+                size: 'sm',
+                backdropClass: "ng-hide"
               });
+              $timeout(function () {
+                addedBookmarkModal.close();
+              }, 3000);
               $rootScope.$broadcast("ITEM_BOOKMARKED");
             }, errorItem = function () {
               Buildfire.spinner.hide();
@@ -368,7 +382,7 @@
                     WidgetItem.data.design = {};
                   break;
                 case TAG_NAMES.SEMINAR_ITEMS:
-                  if(event.data){
+                  if (event.data) {
                     WidgetItem.item.data = event.data;
                     $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
                     if (WidgetItem.view) {
@@ -422,26 +436,39 @@
             itemTitle: WidgetItem.item.data.title,
             dateAdded: new Date()
           };
-          var data = function(data){
+          var data = function (data) {
             WidgetItem.isUpdating = false;
-            },err = function(err){
-          }
-          UserData.update(WidgetItem.isNoteInserted,  WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then (err, data)
+          }, err = function (err) {
+          };
+          UserData.update(WidgetItem.isNoteInserted, WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(err, data)
         };
 
         var updateNoteWithDelay = function (note) {
-           clearTimeout(tmrDelayForNote);
+          clearTimeout(tmrDelayForNote);
           WidgetItem.isUpdating = false;
           WidgetItem.isItemValid = WidgetItem.isValidItem(WidgetItem.Note);
           if (!WidgetItem.isUpdating && !isUnchanged(WidgetItem.Note) && WidgetItem.isItemValid) {
             tmrDelayForNote = setTimeout(function () {
-              if (WidgetItem.isNoteInserted) {
-                 WidgetItem.updateNoteData();
+              if (WidgetItem.inInsertNote) {
+                WidgetItem.updateNoteData();
               } else {
                 WidgetItem.addNoteToItem();
               }
             }, 300);
           }
+        };
+
+        WidgetItem.editNote = function (noteId) {
+          WidgetItem.inInsertNote = true;
+          $scope.toggleNoteAdd = 1;
+          $scope.showNoteAdd = 1;
+          $scope.showNoteList = 0;
+          $scope.toggleNoteList = 0;
+          $scope.showNoteDescription = 0;
+          WidgetItem.getNoteDetail(noteId);
+          WidgetItem.isNoteInserted = noteId;
+          WidgetItem.Note.noteTitle = WidgetItem.noteDetail.data.noteTitle;
+          WidgetItem.Note.noteDescription = WidgetItem.noteDetail.data.noteDescription;
         };
         $scope.$on("$destroy", function () {
           console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed22");

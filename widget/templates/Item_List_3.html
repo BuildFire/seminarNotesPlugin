@@ -23,9 +23,9 @@
                        getImageUrl : 60:60}}">
                         </div>
                         <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                            <div class="copy-holder">
+                            <div class="copy-holder"  ng-click="WidgetHome.openDetails(item.id)">
                                 <p class="ellipsis margin-zero text-primary margin-top-five">
-                                  <a  ng-click="WidgetHome.openDetails(item.id)">{{item.data.title}}</a>
+                                  {{item.data.title}}
                                 </p>
 
                                 <p class="ellipsis margin-zero bodyTextTheme">
@@ -36,10 +36,10 @@
                                     <i>{{item.data.publishDate | date}}</i>
                                 </p>
                             </div>
-                            <fieldset ng-if="WidgetHome.currentLoggedInUser" class="bookmark-holder"
+                            <div ng-if="WidgetHome.currentLoggedInUser" class="bookmark-holder"
                                       ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
                                 <span class="icon icon-bookmark2 " ng-class="item.isBookmarked?'text-primary':''"></span>
-                            </fieldset>
+                            </div>
                         </div>
                     </div>
                 </div>
