@@ -27,10 +27,10 @@
 						<p class="ellipsis item-date margin-zero whiteTheme text-center">{{item.data.publishDate | date}}</p>
 					</div>
 					<!-- Use these theme classes when inactive/not selected -->
-					<fieldset ng-if="WidgetHome.currentLoggedInUser" class="bookmark-icon"
+					<div ng-if="WidgetHome.currentLoggedInUser" class="bookmark-icon"
                      ng-class="item.isBookmarked?'whiteBackgroundTheme':'primaryBackgroundTheme'" ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
 						<span class="icon icon-bookmark2  " ng-class="item.isBookmarked?'text-primary':'whiteTheme'"></span>
-					</fieldset>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -38,10 +38,10 @@
                                 </p>
                             </div>
 
-                            <fieldset class="bookmark-holder" ng-if="WidgetHome.currentLoggedInUser"
+                            <div class="bookmark-holder" ng-if="WidgetHome.currentLoggedInUser"
                                       ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
                                 <span class="icon icon-bookmark2 " ng-class="item.isBookmarked?'text-primary':''"></span>
-                            </fieldset>
+                            </div>
                         </div>
                     </div>
                 </div>
