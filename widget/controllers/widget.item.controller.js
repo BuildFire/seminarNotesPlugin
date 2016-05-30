@@ -11,9 +11,11 @@
         $scope.showNoteAdd = 1;
         $scope.showNoteDescription = false;
         WidgetItem.listeners={};
+        WidgetItem.inInsertNote = false;
         WidgetItem.busy = false;
         WidgetItem.swiped = [];
         WidgetItem.isNoteInserted =false;
+        WidgetItem.noteIdToBeUpdate = "";
         var searchOptions = {
           skip: 0,
           limit: PAGINATION.noteCount
@@ -161,7 +163,7 @@
               $scope.showNoteAdd = 0;
               WidgetItem.busy = false;
               searchOptions.skip = 0;
-              WidgetItem.loadMore();
+              WidgetItem.showNoteList();
             }
             if ($scope.toggleNoteList && $scope.toggleNoteAdd) {
               $scope.toggleNoteList = 0;
@@ -183,6 +185,7 @@
         };
 
         WidgetItem.showHideAddNote = function () {
+          WidgetItem.inInsertNote = false;
           $scope.showNoteDescription = false;
           if (WidgetItem.currentLoggedInUser) {
             if ($scope.toggleNoteAdd && !$scope.toggleNoteList) {
@@ -206,6 +209,7 @@
         };
 
         WidgetItem.addNoteToItem = function () {
+          WidgetItem.inInsertNote = true;
           Buildfire.spinner.show();
           WidgetItem.itemNote = {
             noteTitle: WidgetItem.Note.noteTitle,
@@ -435,7 +439,7 @@
           WidgetItem.isItemValid = WidgetItem.isValidItem(WidgetItem.Note);
           if (!WidgetItem.isUpdating && !isUnchanged(WidgetItem.Note) && WidgetItem.isItemValid) {
             tmrDelayForNote = setTimeout(function () {
-              if (WidgetItem.isNoteInserted) {
+              if (WidgetItem.inInsertNote) {
                  WidgetItem.updateNoteData();
               } else {
                 WidgetItem.addNoteToItem();
@@ -443,6 +447,19 @@
             }, 300);
           }
         };
+
+        WidgetItem.editNote = function(noteId){
+          WidgetItem.inInsertNote = true;
+          $scope.toggleNoteAdd = 1;
+          $scope.showNoteAdd = 1;
+          $scope.showNoteList = 0;
+          $scope.toggleNoteList = 0;
+          $scope.showNoteDescription = 0;
+          WidgetItem.getNoteDetail(noteId);
+          WidgetItem.isNoteInserted =noteId;
+          WidgetItem.Note.noteTitle = WidgetItem.noteDetail.data.noteTitle;
+          WidgetItem.Note.noteDescription =  WidgetItem.noteDetail.data.noteDescription;
+        }
         $scope.$on("$destroy", function () {
           console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed22");
           for (var i in WidgetItem.listeners) {
