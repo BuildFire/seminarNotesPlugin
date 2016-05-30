@@ -8,6 +8,7 @@
         WidgetNotes.Notes = [];
         WidgetNotes.busy = false;
         WidgetNotes.searchOptions = {};
+        WidgetNotes.noItemFound = false;
         var tmrDelay = null;
         var searchOptions = {
           skip: 0,
@@ -21,6 +22,7 @@
           Buildfire.spinner.show();
           var err = function (error) {
             Buildfire.spinner.hide();
+            WidgetNotes.noItemFound = true;
             console.log("============ There is an error in getting data", error);
           }, result = function (result) {
             Buildfire.spinner.hide();
@@ -28,6 +30,11 @@
             searchOptions.skip = searchOptions.skip + PAGINATION.noteCount;
             if (result.length == PAGINATION.noteCount) {
               WidgetNotes.busy = false;
+            }
+            if(result.length<1){
+              WidgetNotes.noItemFound = true;
+            }else{
+              WidgetNotes.noItemFound = false;
             }
 
           };
