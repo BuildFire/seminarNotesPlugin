@@ -339,7 +339,7 @@
               WidgetItem.item.bookmarkId = result.id;
               console.log("Inserted", result);
               $scope.isClicked = itemId;
-              WidgetItem.getBookmarks();
+            //  WidgetItem.getBookmarks();
               var addedBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Confirm.html',
                 size: 'sm',
