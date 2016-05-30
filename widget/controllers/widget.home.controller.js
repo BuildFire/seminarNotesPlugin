@@ -364,6 +364,7 @@
               Buildfire.spinner.hide();
               console.log("Inserted", result);
               WidgetHome.items[index].isBookmarked = true;
+              WidgetHome.items[index].bookmarkId = result.id;
               if (!$scope.$$phase)
                 $scope.$digest();
 
