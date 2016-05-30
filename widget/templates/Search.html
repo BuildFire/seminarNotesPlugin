@@ -40,8 +40,8 @@
                   <i>{{item.data.publishDate | date}}</i>
                 </p>
               </div>
-              <fieldset class="bookmark-holder" ng-click="WidgetSearch.addToBookmark(item.id)" ng-disabled="item.isBookmarked || isClicked==item.id">
-                <span class="icon icon-bookmark2 " ng-class="item.isBookmarked || isClicked==item.id?'text-primary':''"></span>
+              <fieldset class="bookmark-holder" ng-click="WidgetSearch.addToBookmark(item.id, item.isBookmarked, $index, item)">
+                <span class="icon icon-bookmark2 " ng-class="item.isBookmarked?'text-primary':''"></span>
               </fieldset>
             </div>
           </div>
