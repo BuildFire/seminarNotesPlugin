@@ -12,7 +12,7 @@
           "summary": "",
           "listImage": "",
           "dateCreated": "",
-          "publishedOn": "",
+          "publishDate": "",
           "links": [],
           "description": "",
           "carouselImages": [],
