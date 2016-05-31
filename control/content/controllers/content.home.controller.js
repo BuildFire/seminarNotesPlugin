@@ -3,8 +3,8 @@
 (function (angular, buildfire) {
   angular
     .module('seminarNotesPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'TAG_NAMES', 'STATUS_CODE', 'DataStore', 'LAYOUTS', '$sce', 'PAGINATION', 'Buildfire', '$modal', '$rootScope', 'RankOfLastItem', 'SORT',
-      function ($scope, TAG_NAMES, STATUS_CODE, DataStore, LAYOUTS, $sce, PAGINATION, Buildfire, $modal, $rootScope, RankOfLastItem, SORT) {
+    .controller('ContentHomeCtrl', ['$scope', 'TAG_NAMES', 'STATUS_CODE', 'DataStore', 'LAYOUTS', '$sce', 'PAGINATION', 'Buildfire', '$modal', '$rootScope', 'RankOfLastItem', 'SORT', 'UserData',
+      function ($scope, TAG_NAMES, STATUS_CODE, DataStore, LAYOUTS, $sce, PAGINATION, Buildfire, $modal, $rootScope, RankOfLastItem, SORT, UserData) {
 
         var ContentHome = this;
 
@@ -81,11 +81,28 @@
               }
             }
           });
+          var searchOptionUserData = {};
           modalInstance.result.then(function (message) {
             if (message === 'yes') {
               var item = ContentHome.items[_index];
               DataStore.deleteById(item.id, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
                 ContentHome.items.splice(_index, 1);
+                searchOptionUserData.filter ={"$or": [{"$json.itemID": {"$eq": item.id}}]};
+                var success = function(data) {
+                    for (var note = 0; note < data.length; note++) {
+                      var successDelete = function (data) {
+                        console.log("Note-" + note + " is deleted", data);
+                      }, errorDelete = function (err) {
+                        console.log("There is an error in deleting the userData from seminar Notes");
+                      }
+                      UserData.delete(data[note].id, TAG_NAMES.SEMINAR_NOTES, data[note].userToken).then(successDelete, errorDelete)
+                    }
+                  } ,
+                  error = function (err) {
+                    console.log("There is an error in fetching the userData from seminar Notes");
+                  }
+                  UserData.search(searchOptionUserData, TAG_NAMES.SEMINAR_NOTES).then(success, error)
+
               }, function (error) {
                 console.log("Error deleting item :", error);
               });
