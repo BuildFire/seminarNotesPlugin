@@ -19,7 +19,7 @@
             var views = 0,
               currentView = null;
             manageDisplay();
-            $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+            $rootScope.$on('VIEW_CHANGED', function (e, type, view,noAnimation) {
               if (type === 'PUSH') {
                 console.log("VIEW_CHANGED>>>>>>>>", type, view);
                 currentView = ViewStack.getPreviousView();
@@ -47,9 +47,20 @@
               else if (type === 'POPALL') {
                 console.log(view);
                 angular.forEach(view, function (value, key) {
-                  $(elem).find('#' + value.template).remove();
+                  var _elToRemove = $(elem).find('#' + value.template),
+                    _child = _elToRemove.children("div").eq(0);
+
+                  if (!noAnimation) {
+                    _child.addClass("ng-leave ng-leave-active");
+                    _child.one("webkitTransitionEnd transitionend oTransitionEnd", function (e) {
+                      _elToRemove.remove();
+                      views--;
+                    });
+                  } else {
+                    _elToRemove.remove();
+                    views--;
+                  }
                 });
-                views = 0;
               }
               manageDisplay();
             });
