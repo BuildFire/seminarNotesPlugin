@@ -4,7 +4,9 @@
   angular.module('seminarNotesPluginContent')
     .constant('TAG_NAMES', {
       SEMINAR_INFO: 'seminarInfo',
-      SEMINAR_ITEMS: "seminarItems"
+      SEMINAR_ITEMS: "seminarItems",
+      SEMINAR_BOOKMARKS: "seminarBookmarks",
+      SEMINAR_NOTES: "seminarNotes"
     })
     .constant('STATUS_CODE', {
       INSERTED: 'inserted',

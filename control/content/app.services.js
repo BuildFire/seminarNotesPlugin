@@ -139,6 +139,50 @@
         }
       }
     }])
+    .factory("UserData", ['Buildfire', '$q', 'STATUS_CODE', 'STATUS_MESSAGES', function (Buildfire, $q, STATUS_CODE, STATUS_MESSAGES) {
+      return {
+        search: function (options, _tagName) {
+
+          var deferred = $q.defer();
+          if (typeof options == 'undefined') {
+            return deferred.reject(new Error({
+              code: STATUS_CODE.UNDEFINED_OPTIONS,
+              message: STATUS_MESSAGES.UNDEFINED_OPTIONS
+            }));
+          }
+
+          Buildfire.userData.search(options, _tagName, function (err, result) {
+
+            if (err) {
+              return deferred.reject(err);
+            } else if (result) {
+              return deferred.resolve(result);
+            }
+          });
+          return deferred.promise;
+        },
+        delete: function (id, _tagName, _userToken) {
+
+          var deferred = $q.defer();
+          if (typeof id == 'undefined') {
+            return deferred.reject(new Error({
+              code: STATUS_CODE.UNDEFINED_OPTIONS,
+              message: STATUS_MESSAGES.UNDEFINED_OPTIONS
+            }));
+          }
+
+          Buildfire.userData.delete(id, _tagName, _userToken, function (err, result) {
+
+            if (err) {
+              return deferred.reject(err);
+            } else if (result) {
+              return deferred.resolve(result);
+            }
+          });
+          return deferred.promise;
+        }
+      }
+    }])
     .factory('Location', [function () {
       var _location = window.location;
       return {
