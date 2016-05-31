@@ -48,6 +48,7 @@
                 scope.publishDate = +new Date(value);
                 scope.$apply();
                 $(elem).datepicker("setDate", new Date(value));
+                document.activeElement.blur();
               }
             });
             scope.hasDatePicker = true;
