@@ -36,7 +36,7 @@
       </div>
       <div class="col-md-9 main pull-right">
         <input type="text" class="form-control" date-time=""
-               placeholder="mm/dd/yyy"
+               placeholder="MM/DD/YYYY"
                data-publish-date="ContentItem.item.data.publishDate">
       </div>
     </div>
@@ -44,11 +44,14 @@
     <div id="listImage"></div>
     <hr class="none">
     <div class="carousel-padding-botton" id="carousel2"></div>
-    <div
-        class="well text-center margin-bottom-zero border-none carousel-list-noImage-margin margin-top-twenty"
-         ng-hide="ContentItem.item.data.carouselImages.length">
-      <p class="margin-zero">No images found.</p>
-    </div>
+	<div class="item clearfix row">
+      <div class="col-md-9 main pull-right">
+    	<div class="well text-center margin-bottom-zero margin-top-twenty"
+	         ng-hide="ContentItem.item.data.carouselImages.length">
+	      <p class="margin-zero">No images found.</p>
+	    </div>
+	  </div>
+	</div>
     <hr class="none">
     <div class="item clearfix row">
       <div class="labels col-md-3 padding-right-zero pull-left">
@@ -83,8 +86,8 @@
                 _link.phoneNumber}}</span>
               </div>
           <span
-              class="btn-icon btn-delete-icon btn-danger transition-th  ird pull-right"
-              ng-click="ContentItem.removeLink($index)"></span>
+              class="btn-icon btn-delete-icon btn-danger transition-third pull-right"
+              ng-click="ContentItem.removeLink($index)" style="top:12px;"></span>
             </div>
           </div>
 
