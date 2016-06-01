@@ -406,7 +406,9 @@
         };
 
         WidgetHome.showDescription = function (description) {
-          return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>') || (description == ''));
+          if (description)
+            return !((description == '<p>&nbsp;<br></p>') || (description == '<p><br data-mce-bogus="1"></p>') || (description == ''));
+          else return false;
         };
 
         $rootScope.$on('NEW_ITEM_ADDED_UPDATED', function (e) {
