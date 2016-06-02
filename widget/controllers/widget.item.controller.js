@@ -470,21 +470,22 @@
           WidgetItem.Note.noteTitle = WidgetItem.noteDetail.data.noteTitle;
           WidgetItem.Note.noteDescription = WidgetItem.noteDetail.data.noteDescription;
         };
+        //$scope.$on("$destroy", function () {
+        //  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed22");
+        //  for (var i in WidgetItem.listeners) {
+        //    if (WidgetItem.listeners.hasOwnProperty(i)) {
+        //      WidgetItem.listeners[i]();
+        //    }
+        //  }
+        //  DataStore.clearListener();
+        //});
         $scope.$on("$destroy", function () {
-          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed22");
-          for (var i in WidgetItem.listeners) {
-            if (WidgetItem.listeners.hasOwnProperty(i)) {
-              WidgetItem.listeners[i]();
-            }
-          }
-          DataStore.clearListener();
-        });
-
-        WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+        $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (type === 'POP') {
             console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed33");
             DataStore.onUpdate().then(null, null, onUpdateCallback);
           }
+        });
         });
         $scope.$watch(function () {
           return WidgetItem.Note;
