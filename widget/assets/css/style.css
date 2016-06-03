@@ -658,3 +658,19 @@ html[buildfire='widget'] .modal {
 input[type="text"].search {
     color: #555555 !important;
 }
+
+.form-holder-custom{
+    position: relative;
+}
+.form-holder-custom span.label-saved{
+    position:absolute;
+    bottom:0;
+    display:inline-block;
+    text-align: center;
+    color:green;
+    left:0px;
+    width:100%;
+    /*background: #eeeeee;*/
+    font-size: 14px;
+    padding: 3px;
+}

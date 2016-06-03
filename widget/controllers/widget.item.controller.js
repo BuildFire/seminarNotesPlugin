@@ -10,6 +10,7 @@
         $scope.showNoteList = 1;
         $scope.showNoteAdd = 1;
         $scope.showNoteDescription = false;
+        WidgetItem.isNoteSaved = false;
         WidgetItem.listeners = {};
         WidgetItem.inInsertNote = false;
         WidgetItem.busy = false;
@@ -185,6 +186,7 @@
         };
 
         WidgetItem.showHideAddNote = function () {
+          WidgetItem.isNoteSaved = false;
           WidgetItem.inInsertNote = false;
           $scope.showNoteDescription = false;
           if (WidgetItem.currentLoggedInUser) {
@@ -224,6 +226,11 @@
             $scope.isClicked = WidgetItem.item.id;
             updateMasterItem(result.data)
             WidgetItem.isNoteInserted = result.id;
+            WidgetItem.isNoteSaved = true;
+            $timeout(function() {
+              WidgetItem.isNoteSaved = false;
+            }, 1000);
+
           }, errorItem = function () {
             Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
@@ -438,9 +445,13 @@
           };
           var data = function (data) {
             WidgetItem.isUpdating = false;
+            WidgetItem.isNoteSaved = true;
+            $timeout(function() {
+              WidgetItem.isNoteSaved = false;
+            }, 1000);
           }, err = function (err) {
           };
-          UserData.update(WidgetItem.isNoteInserted, WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(err, data)
+          UserData.update(WidgetItem.isNoteInserted, WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(data, err)
         };
 
         var updateNoteWithDelay = function (note) {
