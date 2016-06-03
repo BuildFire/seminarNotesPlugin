@@ -98,7 +98,7 @@
       </div>
 
       <div class="content add-note clearfix" ng-class="showNoteAdd ?'active':''">
-        <div class="form-holder">
+        <div class="form-holder form-holder-custom">
           <input type="text" name="note-title" placeholder="Enter Note Title"
                  class="form-control border-none padding-left-zero padding-right-zero"
                  ng-model="WidgetItem.Note.noteTitle">
@@ -106,6 +106,7 @@
           <textarea placeholder="Enter note content" class="form-control border-none padding-left-zero padding-right-zero"
                     ng-model="WidgetItem.Note.noteDescription"></textarea>
           <!--<a class="btn btn-primary stretch" ng-click="WidgetItem.addNoteToItem(WidgetItem.item.id)">Add Note</a>-->
+          <span class="label-saved" ng-if="WidgetItem.isNoteSaved">Saved!</span>
         </div>
       </div>
     </div>
