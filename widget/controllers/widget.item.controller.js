@@ -43,6 +43,15 @@
         var isUnchanged = function (item) {
           return angular.equals(item, WidgetItem.masterItem);
         };
+
+
+        //Refresh item details on pulling the tile bar
+
+        buildfire.datastore.onRefresh(function () {
+          if (currentView.params && currentView.params.noteId)
+            WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
+        });
+
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
           toggle ? WidgetItem.swiped[i] = true : WidgetItem.swiped[i] = false;
         };
@@ -122,12 +131,12 @@
             WidgetItem.getNoteDetail(noteId)
           }, err = function (err) {
             console.log("error in fetching data")
-          }
+          };
           UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };
         var init = function () {
           if (currentView.params && currentView.params.noteId) {
-            WidgetItem.getNoteDetailFromItem(currentView.params.noteId)
+            WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
             $scope.toggleNoteList = true;
             $scope.showNoteDescription = true;
             $scope.showNoteList = true;
@@ -227,7 +236,7 @@
             updateMasterItem(result.data)
             WidgetItem.isNoteInserted = result.id;
             WidgetItem.isNoteSaved = true;
-            $timeout(function() {
+            $timeout(function () {
               WidgetItem.isNoteSaved = false;
             }, 1000);
 
@@ -346,7 +355,7 @@
               WidgetItem.item.bookmarkId = result.id;
               console.log("Inserted", result);
               $scope.isClicked = itemId;
-            //  WidgetItem.getBookmarks();
+              //  WidgetItem.getBookmarks();
               var addedBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Confirm.html',
                 size: 'sm',
@@ -446,7 +455,7 @@
           var data = function (data) {
             WidgetItem.isUpdating = false;
             WidgetItem.isNoteSaved = true;
-            $timeout(function() {
+            $timeout(function () {
               WidgetItem.isNoteSaved = false;
             }, 1000);
           }, err = function (err) {
@@ -481,22 +490,29 @@
           WidgetItem.Note.noteTitle = WidgetItem.noteDetail.data.noteTitle;
           WidgetItem.Note.noteDescription = WidgetItem.noteDetail.data.noteDescription;
         };
-        //$scope.$on("$destroy", function () {
-        //  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed22");
-        //  for (var i in WidgetItem.listeners) {
-        //    if (WidgetItem.listeners.hasOwnProperty(i)) {
-        //      WidgetItem.listeners[i]();
-        //    }
-        //  }
-        //  DataStore.clearListener();
-        //});
+
         $scope.$on("$destroy", function () {
-        $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+          for (var i in WidgetItem.listeners) {
+            if (WidgetItem.listeners.hasOwnProperty(i)) {
+              WidgetItem.listeners[i]();
+            }
+          }
+          DataStore.clearListener();
+        });
+
+
+        WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (type === 'POP') {
-            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed33");
             DataStore.onUpdate().then(null, null, onUpdateCallback);
           }
-        });
+
+          if (ViewStack.getCurrentView().template == 'Item') {
+            //bind on refresh again
+            buildfire.datastore.onRefresh(function () {
+              if (currentView.params && currentView.params.noteId)
+                WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
+            });
+          }
         });
         $scope.$watch(function () {
           return WidgetItem.Note;

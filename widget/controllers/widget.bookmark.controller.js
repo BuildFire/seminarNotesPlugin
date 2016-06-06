@@ -2,8 +2,8 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetBookmarkCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal','$timeout',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal,$timeout) {
+    .controller('WidgetBookmarkCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal', '$timeout',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal, $timeout) {
         var WidgetBookmark = this;
         WidgetBookmark.busy = false;
         WidgetBookmark.items = [];
@@ -23,6 +23,16 @@
           }
         };
         WidgetBookmark.hasAtleastOneBookmark = false;
+
+
+        //Refresh list of bookmarks on pulling the tile bar
+
+        buildfire.datastore.onRefresh(function () {
+          WidgetBookmark.items = [];
+          searchOptions.skip = 0;
+          WidgetBookmark.busy = false;
+          WidgetBookmark.loadMore();
+        });
 
         /**
          * Check for current logged in user, if not show ogin screen
@@ -156,6 +166,7 @@
           console.log("****************,", item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id);
           UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id).then(successRemove, errorRemove)
         };
+
         $scope.$on("$destroy", function () {
           console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
           for (var i in WidgetBookmark.listeners) {
@@ -167,12 +178,17 @@
         });
 
         WidgetBookmark.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
-          if (type === 'POP') {
-            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
-            WidgetBookmark.init()
+
+          if (ViewStack.getCurrentView().template == 'Bookmarks') {
+            //bind on refresh again
+
+            buildfire.datastore.onRefresh(function () {
+              WidgetBookmark.items = [];
+              searchOptions.skip = 0;
+              WidgetBookmark.busy = false;
+              WidgetBookmark.loadMore();
+            });
           }
-        });
-        WidgetBookmark.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
         });
       }]);
 })(window.angular, window.buildfire, window);

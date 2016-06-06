@@ -6,6 +6,17 @@
       function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData, SORT, $modal, $timeout) {
         var WidgetHome = this;
         var currentListLayout, currentSortOrder = null;
+
+        //Refresh list of items on pulling the tile bar
+
+        buildfire.datastore.onRefresh(function () {
+          WidgetHome.items = [];
+          searchOptions.skip = 0;
+          WidgetHome.busy = false;
+          WidgetHome.loadMore();
+        });
+
+
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth || 320;
         WidgetHome.busy = false;
@@ -411,39 +422,37 @@
           else return false;
         };
 
-        $rootScope.$on('NEW_ITEM_ADDED_UPDATED', function (e) {
+        WidgetHome.listeners['NEW_ITEM_ADDED_UPDATED'] = $rootScope.$on('NEW_ITEM_ADDED_UPDATED', function (e) {
           WidgetHome.items = [];
           searchOptions.skip = 0;
           WidgetHome.busy = false;
           WidgetHome.loadMore();
         });
 
-        $rootScope.$on('ITEM_BOOKMARKED', function (e) {
+        WidgetHome.listeners['ITEM_BOOKMARKED'] = $rootScope.$on('ITEM_BOOKMARKED', function (e) {
           WidgetHome.getBookMarkData(true);
         });
 
-        $scope.$on("$destroy", function () {
-          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed211112");
-          for (var i in WidgetHome.listeners) {
-            if (WidgetHome.listeners.hasOwnProperty(i)) {
-              WidgetHome.listeners[i]();
-            }
-          }
-          DataStore.clearListener();
-        });
 
         WidgetHome.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (type === 'POP') {
-            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed311113");
             DataStore.onUpdate().then(null, null, onUpdateCallback);
             WidgetHome.getBookMarkData(true);
             WidgetHome.setBookmarks();
           }
           if (type === 'POPALL') {
-            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed311113");
             DataStore.onUpdate().then(null, null, onUpdateCallback);
             WidgetHome.getBookMarkData(true);
             WidgetHome.setBookmarks();
+          }
+          if(!ViewStack.hasViews()){
+            // bind on refresh again
+            buildfire.datastore.onRefresh(function () {
+              WidgetHome.items = [];
+              searchOptions.skip = 0;
+              WidgetHome.busy = false;
+              WidgetHome.loadMore();
+            });
           }
         });
       }])
