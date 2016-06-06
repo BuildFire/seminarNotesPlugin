@@ -32,6 +32,7 @@
           searchOptions.skip = 0;
           WidgetBookmark.busy = false;
           WidgetBookmark.loadMore();
+          $scope.$digest();
         });
 
         /**
@@ -187,6 +188,7 @@
               searchOptions.skip = 0;
               WidgetBookmark.busy = false;
               WidgetBookmark.loadMore();
+              $scope.$digest();
             });
           }
         });

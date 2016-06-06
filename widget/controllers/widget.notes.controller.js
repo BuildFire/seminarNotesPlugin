@@ -24,6 +24,7 @@
           searchOptions.skip = 0;
           WidgetNotes.busy = false;
           WidgetNotes.loadMore();
+          $scope.$digest();
         });
 
 
@@ -273,6 +274,7 @@
               searchOptions.skip = 0;
               WidgetNotes.busy = false;
               WidgetNotes.loadMore();
+              $scope.$digest();
             });
           }
         });

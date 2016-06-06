@@ -50,6 +50,7 @@
         buildfire.datastore.onRefresh(function () {
           if (currentView.params && currentView.params.noteId)
             WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
+          $scope.$digest();
         });
 
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
@@ -509,8 +510,10 @@
           if (ViewStack.getCurrentView().template == 'Item') {
             //bind on refresh again
             buildfire.datastore.onRefresh(function () {
-              if (currentView.params && currentView.params.noteId)
+              if (currentView.params && currentView.params.noteId) {
                 WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
+                $scope.$digest();
+              }
             });
           }
         });

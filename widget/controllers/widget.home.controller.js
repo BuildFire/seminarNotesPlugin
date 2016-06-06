@@ -14,6 +14,7 @@
           searchOptions.skip = 0;
           WidgetHome.busy = false;
           WidgetHome.loadMore();
+          $scope.$digest();
         });
 
 
@@ -276,7 +277,7 @@
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetHome.busy = false;
               }
-              console.log("----------------------", WidgetHome.items)
+              console.log("----------------------", WidgetHome.items);
               WidgetHome.setBookmarks();
             },
             errorAll = function (error) {
@@ -445,13 +446,14 @@
             WidgetHome.getBookMarkData(true);
             WidgetHome.setBookmarks();
           }
-          if(!ViewStack.hasViews()){
+          if (!ViewStack.hasViews()) {
             // bind on refresh again
             buildfire.datastore.onRefresh(function () {
               WidgetHome.items = [];
               searchOptions.skip = 0;
               WidgetHome.busy = false;
               WidgetHome.loadMore();
+              $scope.$digest();
             });
           }
         });
