@@ -8,7 +8,7 @@
         <span class="clear-icon dangerBackgroundTheme"
               ng-if="WidgetSearch.keyword"
               ng-click="WidgetSearch.clearSearchResult()"></span>
-        <hr class="small margin-zero">
+        <hr class="small margin-zero" ng-if="WidgetSearch.items.length < 1 || !WidgetSearch.keyword">
       </div>
       <div
           class="well well-sm text-center margin-top-twenty margin-left-ten margin-right-ten hidde" ng-if="WidgetSearch.items.length < 1 || !WidgetSearch.keyword">
