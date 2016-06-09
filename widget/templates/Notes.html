@@ -6,9 +6,7 @@
                	<span class="clear-icon dangerBackgroundTheme" ng-if="WidgetNotes.search" ng-click="WidgetNotes.clearSearchResult()"></span>
            		<hr class="small margin-zero" ng-if="WidgetNotes.noItemFound">
  			</div>
-          <div class="well well-sm text-center margin-top-twenty margin-left-ten margin-right-ten hidde" ng-if="WidgetNotes.noItemFound">
-            <p class="margin-top-ten">No notes added yet.</p>
-          </div>
+            <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center" ng-if="WidgetNotes.noItemFound">No notes added yet.</p>
             <div class="list-layout" ng-hide="WidgetNotes.noItemFound"
                  infinite-scroll="WidgetNotes.loadMore()"
                  infinite-scroll-distance="1"
@@ -43,7 +41,7 @@
             <a class="whiteTheme stretch" ng-click="WidgetNotes.showItemList()">Items</a>
         </div>
         <div class="col-xs-3 pull-left text-center">
-            <a class="whiteTheme stretch active">Notes</a>
+            <a class="whiteTheme stretch active">My Notes</a>
         </div>
         <div class="col-xs-3 pull-left text-center">
             <a class="whiteTheme stretch" ng-click="WidgetNotes.showBookmarkItems()">Bookmarks</a>

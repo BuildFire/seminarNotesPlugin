@@ -1,8 +1,6 @@
 <div class="holder padding-zero has-bottom sticky-bottom-menu" ng-controller="WidgetBookmarkCtrl as WidgetBookmark">
   <div class="scrollable infinite-scroll-parent">
-    <div class="well well-sm text-center margin-top-twenty margin-left-ten margin-right-ten hidde" ng-if="!WidgetBookmark.hasAtleastOneBookmark">
-      <p class="margin-top-ten">No bookmarks added yet.</p>
-    </div>
+    <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center" ng-if="!WidgetBookmark.hasAtleastOneBookmark">No bookmarks added yet.</p>
     <div class="seminar-notes layout3"
          infinite-scroll="WidgetBookmark.loadMore()"
          infinite-scroll-distance="1"
@@ -41,7 +39,7 @@
       <a class="whiteTheme stretch" ng-click="WidgetBookmark.goToItem()">Items</a>
     </div>
     <div class="col-xs-3 pull-left text-center">
-      <a class="whiteTheme stretch" ng-click="WidgetBookmark.showItemNotes()">Notes</a>
+      <a class="whiteTheme stretch" ng-click="WidgetBookmark.showItemNotes()">My Notes</a>
     </div>
     <div class="col-xs-3 pull-left text-center">
       <a class="whiteTheme stretch active">Bookmarks</a>
