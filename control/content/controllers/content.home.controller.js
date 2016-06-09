@@ -352,10 +352,10 @@
               ContentHome.searchOptions.sort = {"title": -1};
               break;
             case SORT.NEWEST_PUBLICATION_DATE:
-              ContentHome.searchOptions.sort = {"publishDate": 1};
+              ContentHome.searchOptions.sort = {"publishDate": -1};
               break;
             case SORT.OLDEST_PUBLICATION_DATE:
-              ContentHome.searchOptions.sort = {"publishDate": -1};
+              ContentHome.searchOptions.sort = {"publishDate": 1};
               break;
             case SORT.NEWEST_FIRST:
               ContentHome.searchOptions.sort = {"dateCreated": -1};

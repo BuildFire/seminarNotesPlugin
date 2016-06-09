@@ -57,10 +57,10 @@
               searchOptions.sort = {"title": -1};
               break;
             case SORT.NEWEST_PUBLICATION_DATE:
-              searchOptions.sort = {"publishDate": 1};
+              searchOptions.sort = {"publishDate": -1};
               break;
             case SORT.OLDEST_PUBLICATION_DATE:
-              searchOptions.sort = {"publishDate": -1};
+              searchOptions.sort = {"publishDate": 1};
               break;
             case SORT.NEWEST_FIRST:
               searchOptions.sort = {"dateCreated": -1};
