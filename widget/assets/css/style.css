@@ -377,6 +377,10 @@ html[browser="Firefox"] .seminar-notes .form-holder .clear-icon:after {
 html[browser="Netscape"] .seminar-notes .form-holder .clear-icon:after {
 	left:3.5px;
 }
+html[os="Windows"][browser="Chrome"] .seminar-notes .form-holder .clear-icon:after {
+	left:3px;
+	top:-1px;
+}
 .seminar-notes .well p {
     font-size: 13px;
 }

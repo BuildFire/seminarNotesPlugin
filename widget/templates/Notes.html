@@ -2,19 +2,12 @@
     <div class="scrollable infinite-scroll-parent">
         <div class="seminar-notes layout3">
             <div class="form-holder">
-                <input type="text"
-                       class="border-none form-control bodyTextTheme search"
-                       placeholder="Search note titles and content" ng-model="WidgetNotes.search" ng-change="WidgetNotes.clearTextBox()">
-               <span class="clear-icon dangerBackgroundTheme"
-                     ng-if="WidgetNotes.search"
-                     ng-click="WidgetNotes.clearSearchResult()"></span>
-                <hr class="small margin-zero">
-            </div>
-          <div
-              class="well well-sm text-center margin-top-twenty margin-left-ten margin-right-ten hidde" ng-if="WidgetNotes.noItemFound">
-            <p class="margin-top-ten">No notes added yet.</p>
-          </div>
-            <div class="list-layout"
+                <input type="text" class="border-none form-control bodyTextTheme search" placeholder="Search note titles and content" ng-model="WidgetNotes.search" ng-change="WidgetNotes.clearTextBox()">
+               	<span class="clear-icon dangerBackgroundTheme" ng-if="WidgetNotes.search" ng-click="WidgetNotes.clearSearchResult()"></span>
+           		<hr class="small margin-zero" ng-if="WidgetNotes.noItemFound">
+ 			</div>
+            <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center" ng-if="WidgetNotes.noItemFound">No notes added yet.</p>
+            <div class="list-layout" ng-hide="WidgetNotes.noItemFound"
                  infinite-scroll="WidgetNotes.loadMore()"
                  infinite-scroll-distance="1"
                  data-infinite-container=".infinite-scroll-parent"
@@ -25,23 +18,18 @@
                     <div class="list-item-media text-left" ng-class="{'edit' : WidgetNotes.swiped[$index]}"  ng-click="WidgetNotes.openDetails(note.data.itemID, note.id)">
                         <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                             <p class="ellipsis margin-zero margin-top-five clearfix">
-
-                                <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer">{{note.data.noteTitle}}</span>
-                                <span class="pull-right small opacity-seventy"><i>{{note.data.dateAdded|
-                                    date}}</i></span>
+                                <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" ng-click="WidgetNotes.openDetails(note.data.itemID, note.id)">{{note.data.noteTitle}}</span>
+                                <span class="pull-right small opacity-seventy"><i>{{note.data.dateAdded|date}}</i></span>
                             </p>
-
                             <p class="ellipsis margin-zero bodyTextTheme">
                                 {{note.data.itemTitle}}
                             </p>
-
                             <p class="small ellipsis margin-zero bodyTextTheme">
                                 {{note.data.noteDescription}}
                             </p>
                         </div>
-                        <div
-                            class="remove-btn text-center dangerBackgroundTheme" style="background:red; cursor: pointer" ng-click="WidgetNotes.deleteNote(note.id, $index)">
-                            <span>Delete</span>
+                        <div class="remove-btn text-center dangerBackgroundTheme" style="background:red; cursor: pointer" ng-click="WidgetNotes.deleteNote(note.id, $index)">
+                            <span class="whiteTheme">Delete</span>
                         </div>
                     </div>
                 </div>
@@ -53,7 +41,7 @@
             <a class="whiteTheme stretch" ng-click="WidgetNotes.showItemList()">Items</a>
         </div>
         <div class="col-xs-3 pull-left text-center">
-            <a class="whiteTheme stretch active">Notes</a>
+            <a class="whiteTheme stretch active">My Notes</a>
         </div>
         <div class="col-xs-3 pull-left text-center">
             <a class="whiteTheme stretch" ng-click="WidgetNotes.showBookmarkItems()">Bookmarks</a>
