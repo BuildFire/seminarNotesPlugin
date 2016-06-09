@@ -7,7 +7,7 @@
             <div id="carousel" ng-if="WidgetHome.data.content.carouselImages.length"
                  build-fire-carousel=""
                  ng-style="WidgetHome.data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
-            <div class="padded" ng-if="WidgetHome.showDescription(WidgetHome.data.content.description)">
+            <div class="padded padding-bottom-five" ng-if="WidgetHome.showDescription(WidgetHome.data.content.description)">
                 <p class="margin-zero" ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
             </div>
             <div class="list-layout" ng-if="WidgetHome.data.content"
@@ -52,7 +52,7 @@
             <a class="whiteTheme stretch active">Items</a>
         </div>
         <div class="col-xs-3 pull-left text-center">
-            <a class="whiteTheme stretch" ng-click="WidgetHome.showItemNotes()">Notes</a>
+            <a class="whiteTheme stretch" ng-click="WidgetHome.showItemNotes()">My Notes</a>
         </div>
         <div class="col-xs-3 pull-left text-center">
             <a class="whiteTheme stretch" ng-click="WidgetHome.showBookmarkItems()">Bookmarks</a>

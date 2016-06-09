@@ -38,13 +38,10 @@
         <span class="icon icon-bookmark2 whiteTheme"></span>
       </a>
     </div>
-    <div class="pull-left text-center" disable-animate ng-hide="toggleNoteAdd"
-         ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
-      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open
-        Note List</a>
+    <div class="pull-left text-center" disable-animate ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open Item Notes</a>
       <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-show="toggleNoteList && !showNoteDescription">Close Note List </a>
-      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showNoteList()" ng-show="showNoteDescription">Back to
-        Note List</a>
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showNoteList()" ng-show="showNoteDescription">Back to Note List</a>
     </div>
     <div class="pull-left text-center" disable-animate ng-hide="toggleNoteList"
          ng-class="toggleNoteAdd?'col-xs-12':'col-xs-6'">
