@@ -66,9 +66,10 @@
     })
     .run(['$location', '$rootScope',function ($location, $rootScope) {
       buildfire.messaging.onReceivedMessage = function (msg) {
+        console.log("&&&&&&&&&&&&&&&&&&&&", msg);
         switch (msg.type) {
           case 'OpenItem':
-            $location.path('/item/' + msg.data.id);
+            $location.path('/item/' + msg.id);
             $rootScope.$apply();
             break;
           case 'BackToHome':
