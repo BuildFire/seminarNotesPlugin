@@ -99,7 +99,7 @@
             /* Build fire thumbnail component to add thumbnail image*/
             listImage = new Buildfire.components.images.thumbnail("#listImage", {
               title: "List Image",
-              dimensionsLabel: "600x280"
+              dimensionsLabel: "1200x675"
             });
 
             listImage.onChange = function (url) {

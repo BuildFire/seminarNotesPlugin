@@ -15,6 +15,19 @@
           limit: PAGINATION.noteCount
         };
         WidgetNotes.swiped = [];
+        WidgetNotes.listeners = {};
+
+        //Refresh list of notes on pulling the tile bar
+
+        buildfire.datastore.onRefresh(function () {
+          WidgetNotes.Notes = [];
+          searchOptions.skip = 0;
+          WidgetNotes.busy = false;
+          WidgetNotes.loadMore();
+          $scope.$digest();
+        });
+
+
         WidgetNotes.swipeToDeleteNote = function (e, i, toggle) {
           toggle ? WidgetNotes.swiped[i] = true : WidgetNotes.swiped[i] = false;
         };
@@ -31,9 +44,9 @@
             if (result.length == PAGINATION.noteCount) {
               WidgetNotes.busy = false;
             }
-            if(result.length<1){
+            if (result.length < 1) {
               WidgetNotes.noItemFound = true;
-            }else{
+            } else {
               WidgetNotes.noItemFound = false;
             }
 
@@ -79,10 +92,10 @@
           });
         };
 
-        WidgetNotes.deleteNote = function (noteId,index) {
+        WidgetNotes.deleteNote = function (noteId, index) {
           var success = function (res) {
             console.log('================record deleted', res);
-            WidgetNotes.Notes.splice(index,1);
+            WidgetNotes.Notes.splice(index, 1);
             WidgetNotes.swiped[index] = false;
           }, error = function (err) {
             console.log('================there was a problem deleting your data', err);
@@ -139,7 +152,7 @@
             newValue = newValue.trim();
             if (newValue.indexOf(' ') !== -1) {
               searchTerm = newValue.split(' ');
-            searchOptions.filter = {
+              searchOptions.filter = {
                 "$or": [{
                   "$json.noteTitle": {
                     "$regex": searchTerm[0],
@@ -166,21 +179,26 @@
             } else {
 
               searchTerm = newValue;
-               searchOptions.filter = {
+              searchOptions.filter = {
                 "$or": [{
                   "$json.noteTitle": {
                     "$regex": searchTerm,
                     "$options": "i"
                   }
-                }, {"$json.noteDescription": {"$regex": searchTerm, "$options": "i"}}]
+                }, {
+                  "$json.noteDescription": {
+                    "$regex": searchTerm,
+                    "$options": "i"
+                  }
+                }]
               };
             }
           }
-          WidgetNotes.Notes=[];
+          WidgetNotes.Notes = [];
           searchOptions.skip = 0;
           WidgetNotes.busy = false;
           WidgetNotes.loadMore();
-         // DataStore.search(WidgetNotes.searchOptions, tag).then(success, error);
+          // DataStore.search(WidgetNotes.searchOptions, tag).then(success, error);
         };
         WidgetNotes.clearSearchResult = function () {
           WidgetNotes.search = null;
@@ -188,18 +206,18 @@
           searchOptions.filter = {};
           WidgetNotes.busy = false;
           WidgetNotes.loadMore();
-       };
+        };
         WidgetNotes.clearTextBox = function () {
-          if(!WidgetNotes.search.length) {
-            WidgetNotes.Notes=[];
+          if (!WidgetNotes.search.length) {
+            WidgetNotes.Notes = [];
             WidgetNotes.search = null;
             searchOptions.skip = 0;
             searchOptions.filter = {};
             WidgetNotes.busy = false;
             WidgetNotes.loadMore();
-          }else{
-            if(!WidgetNotes.search.length) {
-              WidgetNotes.Notes=[];
+          } else {
+            if (!WidgetNotes.search.length) {
+              WidgetNotes.Notes = [];
               searchOptions.skip = 0;
               WidgetNotes.busy = false;
               WidgetNotes.loadMore();
@@ -237,6 +255,28 @@
           ViewStack.popAllViews();
         };
 
+        $scope.$on("$destroy", function () {
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed");
+          for (var i in WidgetNotes.listeners) {
+            if (WidgetNotes.listeners.hasOwnProperty(i)) {
+              WidgetNotes.listeners[i]();
+            }
+          }
+          DataStore.clearListener();
+        });
 
+        WidgetNotes.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+
+          if (ViewStack.getCurrentView().template == 'Notes') {
+            // bind on refresh again
+            buildfire.datastore.onRefresh(function () {
+              WidgetNotes.Notes = [];
+              searchOptions.skip = 0;
+              WidgetNotes.busy = false;
+              WidgetNotes.loadMore();
+              $scope.$digest();
+            });
+          }
+        });
       }]);
 })(window.angular, window.buildfire, window);

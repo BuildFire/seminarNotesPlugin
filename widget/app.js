@@ -142,15 +142,17 @@
             ViewStack.push({
               template: 'Item',
               params: {
-                itemId: msg.id
+                itemId: msg.id,
+                stopSwitch : true
               }
             });
             $rootScope.$apply();
 
             break;
           case 'OpenItem':
-            if (ViewStack.getCurrentView()) {
-              ViewStack.popAllViews(true);
+            var currentView = ViewStack.getCurrentView();
+            if (currentView && currentView.template !== "Item") {
+             // ViewStack.popAllViews(true);
               ViewStack.push({
                 template: 'Item',
                 params: {

@@ -2,8 +2,8 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal', '$timeout',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal, $timeout) {
+    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal', '$timeout','$location',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal, $timeout,$location) {
         var WidgetItem = this;
         $scope.toggleNoteList = 0;
         $scope.toggleNoteAdd = 0;
@@ -39,15 +39,33 @@
         var updateMasterItem = function (item) {
           WidgetItem.masterItem = angular.copy(item);
         };
+        var currentView = ViewStack.getCurrentView();
 
         var isUnchanged = function (item) {
           return angular.equals(item, WidgetItem.masterItem);
         };
+
+        console.log("&&&&&&&&&&&&&&&&&&&&", currentView);
+        if (currentView.params && currentView.params.itemId && !currentView.params.stopSwitch) {
+          $rootScope.showFeed = false;
+          buildfire.messaging.sendMessageToControl({
+            id: currentView.params.itemId,
+            type: 'OpenItem'
+          });
+        }
+
+
+        //Refresh item details on pulling the tile bar
+
+        buildfire.datastore.onRefresh(function () {
+          if (currentView.params && currentView.params.noteId)
+            WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
+          $scope.$digest();
+        });
+
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
           toggle ? WidgetItem.swiped[i] = true : WidgetItem.swiped[i] = false;
         };
-
-        var currentView = ViewStack.getCurrentView();
 
         WidgetItem.safeHtml = function (html) {
           if (html) {
@@ -122,12 +140,12 @@
             WidgetItem.getNoteDetail(noteId)
           }, err = function (err) {
             console.log("error in fetching data")
-          }
+          };
           UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };
         var init = function () {
           if (currentView.params && currentView.params.noteId) {
-            WidgetItem.getNoteDetailFromItem(currentView.params.noteId)
+            WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
             $scope.toggleNoteList = true;
             $scope.showNoteDescription = true;
             $scope.showNoteList = true;
@@ -227,7 +245,7 @@
             updateMasterItem(result.data)
             WidgetItem.isNoteInserted = result.id;
             WidgetItem.isNoteSaved = true;
-            $timeout(function() {
+            $timeout(function () {
               WidgetItem.isNoteSaved = false;
             }, 1000);
 
@@ -346,7 +364,7 @@
               WidgetItem.item.bookmarkId = result.id;
               console.log("Inserted", result);
               $scope.isClicked = itemId;
-            //  WidgetItem.getBookmarks();
+              //  WidgetItem.getBookmarks();
               var addedBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Confirm.html',
                 size: 'sm',
@@ -446,7 +464,7 @@
           var data = function (data) {
             WidgetItem.isUpdating = false;
             WidgetItem.isNoteSaved = true;
-            $timeout(function() {
+            $timeout(function () {
               WidgetItem.isNoteSaved = false;
             }, 1000);
           }, err = function (err) {
@@ -481,22 +499,31 @@
           WidgetItem.Note.noteTitle = WidgetItem.noteDetail.data.noteTitle;
           WidgetItem.Note.noteDescription = WidgetItem.noteDetail.data.noteDescription;
         };
-        //$scope.$on("$destroy", function () {
-        //  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed22");
-        //  for (var i in WidgetItem.listeners) {
-        //    if (WidgetItem.listeners.hasOwnProperty(i)) {
-        //      WidgetItem.listeners[i]();
-        //    }
-        //  }
-        //  DataStore.clearListener();
-        //});
+
         $scope.$on("$destroy", function () {
-        $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+          for (var i in WidgetItem.listeners) {
+            if (WidgetItem.listeners.hasOwnProperty(i)) {
+              WidgetItem.listeners[i]();
+            }
+          }
+          DataStore.clearListener();
+        });
+
+
+        WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (type === 'POP') {
-            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>destroyed33");
             DataStore.onUpdate().then(null, null, onUpdateCallback);
           }
-        });
+
+          if (ViewStack.getCurrentView().template == 'Item') {
+            //bind on refresh again
+            buildfire.datastore.onRefresh(function () {
+              if (currentView.params && currentView.params.noteId) {
+                WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
+                $scope.$digest();
+              }
+            });
+          }
         });
         $scope.$watch(function () {
           return WidgetItem.Note;

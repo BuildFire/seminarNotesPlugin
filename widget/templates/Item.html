@@ -62,10 +62,11 @@
             <div class="list-item" ng-repeat="note in WidgetItem.ItemNoteList"
                  ng-swipe-left="WidgetItem.swipeToDeleteNote($event, $index, true)"
                  ng-swipe-right="WidgetItem.swipeToDeleteNote($event, $index, false)" ng-if="!showNoteDescription">
-              <div class="list-item-media text-left" ng-class="{'edit' : WidgetItem.swiped[$index]}">
+              <div class="list-item-media text-left"
+                   ng-class="{'edit' : WidgetItem.swiped[$index]}" ng-click=" WidgetItem.getNoteDetail(note.id)">
                 <div class="list-item-copy text-left padding-left-ten padding-right-ten" >
                   <p class="ellipsis margin-zero margin-top-five clearfix">
-                    <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" ng-click=" WidgetItem.getNoteDetail(note.id)">{{note.data.noteTitle}}</span>
+                    <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" >{{note.data.noteTitle}}</span>
                     <span class="pull-right small opacity-seventy"><i>{{note.data.dateAdded | date}}</i></span>
                   </p>
 
