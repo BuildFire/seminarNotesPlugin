@@ -19,8 +19,8 @@
 
         <p class="margin-zero small"><i>{{WidgetItem.item.data
           .publishDate | date}}</i></p>
-        <hr class="small">
-        <div class="text-center">
+        <hr class="small" ng-if="WidgetItem.item.data.links.length">
+        <div class="text-center" ng-if="WidgetItem.item.data.links.length">
           <a class="text-primary"
              ng-click="WidgetItem.openLinks(WidgetItem.item.data.links)">Open
             Menu Options</a>
