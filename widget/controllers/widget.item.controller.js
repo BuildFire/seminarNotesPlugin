@@ -137,7 +137,7 @@
 
           var result = function (res) {
             WidgetItem.ItemNoteList = res;
-            WidgetItem.getNoteDetail(noteId)
+            WidgetItem.editNote(noteId)
           }, err = function (err) {
             console.log("error in fetching data")
           };
