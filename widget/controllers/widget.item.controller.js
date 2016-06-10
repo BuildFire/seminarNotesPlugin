@@ -450,7 +450,7 @@
 
         var tmrDelayForNote = null;
         WidgetItem.isValidItem = function (note) {
-          return note.noteTitle;
+          return note.noteTitle || note.noteDescription;
         };
 
         WidgetItem.updateNoteData = function () {
