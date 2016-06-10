@@ -481,11 +481,6 @@
 
         WidgetItem.editNote = function (noteId) {
           WidgetItem.inInsertNote = true;
-          $scope.toggleNoteAdd = 1;
-          $scope.showNoteAdd = 1;
-          $scope.showNoteList = 0;
-          $scope.toggleNoteList = 0;
-          $scope.showNoteDescription = 0;
           WidgetItem.getNoteDetail(noteId);
           WidgetItem.isNoteInserted = noteId;
           WidgetItem.Note.noteTitle = WidgetItem.noteDetail.data.noteTitle;

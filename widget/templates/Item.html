@@ -68,7 +68,7 @@
               <div class="list-item-media text-left" ng-class="{'edit' : WidgetItem.swiped[$index]}">
                 <div class="list-item-copy text-left padding-left-ten padding-right-ten" >
                   <p class="ellipsis margin-zero margin-top-five clearfix">
-                    <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" ng-click=" WidgetItem.getNoteDetail(note.id)">{{note.data.noteTitle}}</span>
+                    <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" ng-click=" WidgetItem.editNote(note.id)">{{note.data.noteTitle}}</span>
                     <span class="pull-right small opacity-seventy"><i>{{note.data.dateAdded | date}}</i></span>
                   </p>
 
@@ -83,14 +83,27 @@
                 </div>
               </div>
             </div>
-            <div class="pull-left" ng-if="showNoteDescription">
-              <p class="ellipsis margin-zero margin-top-five clearfix">
-               <span class="pull-left" style="max-width:65%; cursor: pointer;" ng-click="WidgetItem.editNote(WidgetItem.noteDetail.id)">{{WidgetItem.noteDetail.data.noteTitle}}</span>
-              </p>
-              <hr class="margin-zero">
-              <p class="small margin-zero bodyTextTheme">
-                {{WidgetItem.noteDetail.data.noteDescription}}
-              </p>
+            <div class="add-note clearfix" ng-if="showNoteDescription">
+
+              <div class="form-holder form-holder-custom">
+                <input type="text" name="note-title" placeholder="Enter Note Title"
+                       class="form-control border-none padding-left-zero padding-right-zero"
+                       ng-model="WidgetItem.Note.noteTitle">
+                <hr class="margin-zero">
+                 <textarea placeholder="Enter note content" class="form-control border-none padding-left-zero padding-right-zero"
+                    ng-model="WidgetItem.Note.noteDescription"></textarea>
+                <!--<a class="btn btn-primary stretch" ng-click="WidgetItem.addNoteToItem(WidgetItem.item.id)">Add Note</a>-->
+                <div class="savedMessage successBackgroundTheme text-center" ng-class="{'active': WidgetItem.isNoteSaved}">
+                  <p class="text-success whiteTheme margin-zero">Saved</p>
+                </div>
+              </div>
+              <!--<p class="ellipsis margin-zero margin-top-five clearfix">-->
+               <!--<span class="pull-left" style="max-width:65%; cursor: pointer;" ng-click="WidgetItem.editNote(WidgetItem.noteDetail.id)">{{WidgetItem.noteDetail.data.noteTitle}}</span>-->
+              <!--</p>-->
+              <!--<hr class="margin-zero">-->
+              <!--<p class="small margin-zero bodyTextTheme">-->
+                <!--{{WidgetItem.noteDetail.data.noteDescription}}-->
+              <!--</p>-->
             </div>
           </div>
 
