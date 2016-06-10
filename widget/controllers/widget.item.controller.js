@@ -2,8 +2,8 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal', '$timeout',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal, $timeout) {
+    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal', '$timeout','$location',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal, $timeout,$location) {
         var WidgetItem = this;
         $scope.toggleNoteList = 0;
         $scope.toggleNoteAdd = 0;
@@ -39,10 +39,20 @@
         var updateMasterItem = function (item) {
           WidgetItem.masterItem = angular.copy(item);
         };
+        var currentView = ViewStack.getCurrentView();
 
         var isUnchanged = function (item) {
           return angular.equals(item, WidgetItem.masterItem);
         };
+
+        console.log("&&&&&&&&&&&&&&&&&&&&", currentView);
+        if (currentView.params && currentView.params.itemId && !currentView.params.stopSwitch) {
+          $rootScope.showFeed = false;
+          buildfire.messaging.sendMessageToControl({
+            id: currentView.params.itemId,
+            type: 'OpenItem'
+          });
+        }
 
 
         //Refresh item details on pulling the tile bar
@@ -56,8 +66,6 @@
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
           toggle ? WidgetItem.swiped[i] = true : WidgetItem.swiped[i] = false;
         };
-
-        var currentView = ViewStack.getCurrentView();
 
         WidgetItem.safeHtml = function (html) {
           if (html) {

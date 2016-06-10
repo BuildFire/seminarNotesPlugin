@@ -142,15 +142,17 @@
             ViewStack.push({
               template: 'Item',
               params: {
-                itemId: msg.id
+                itemId: msg.id,
+                stopSwitch : true
               }
             });
             $rootScope.$apply();
 
             break;
           case 'OpenItem':
-            if (ViewStack.getCurrentView()) {
-              ViewStack.popAllViews(true);
+            var currentView = ViewStack.getCurrentView();
+            if (currentView && currentView.template !== "Item") {
+             // ViewStack.popAllViews(true);
               ViewStack.push({
                 template: 'Item',
                 params: {
@@ -185,17 +187,11 @@
           var img = '';
           if (value) {
             img = $filter("cropImage")(value, $rootScope.deviceWidth, $rootScope.deviceHeight, true);
-            element.attr("style", 'background:url(' + img + ') !important');
-            element.css({
-              'background-size': 'cover'
-            });
+            element.attr("style", 'background:url(' + img + ') !important; background-size:cover !important;');
           }
           else {
             img = "";
-            element.attr("style", 'background-color:white');
-            element.css({
-              'background-size': 'cover'
-            });
+            element.attr("style", 'background-color:white;');
           }
         });
       };

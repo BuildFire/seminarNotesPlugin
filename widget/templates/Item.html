@@ -38,13 +38,10 @@
         <span class="icon icon-bookmark2 whiteTheme"></span>
       </a>
     </div>
-    <div class="pull-left text-center" disable-animate ng-hide="toggleNoteAdd"
-         ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
-      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open
-        Note List</a>
+    <div class="pull-left text-center" disable-animate ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open Item Notes</a>
       <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-show="toggleNoteList && !showNoteDescription">Close Note List </a>
-      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showNoteList()" ng-show="showNoteDescription">Back to
-        Note List</a>
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showNoteList()" ng-show="showNoteDescription">Back to Note List</a>
     </div>
     <div class="pull-left text-center" disable-animate ng-hide="toggleNoteList"
          ng-class="toggleNoteAdd?'col-xs-12':'col-xs-6'">
@@ -65,10 +62,11 @@
             <div class="list-item" ng-repeat="note in WidgetItem.ItemNoteList"
                  ng-swipe-left="WidgetItem.swipeToDeleteNote($event, $index, true)"
                  ng-swipe-right="WidgetItem.swipeToDeleteNote($event, $index, false)" ng-if="!showNoteDescription">
-              <div class="list-item-media text-left" ng-class="{'edit' : WidgetItem.swiped[$index]}">
+              <div class="list-item-media text-left"
+                   ng-class="{'edit' : WidgetItem.swiped[$index]}" ng-click=" WidgetItem.getNoteDetail(note.id)">
                 <div class="list-item-copy text-left padding-left-ten padding-right-ten" >
                   <p class="ellipsis margin-zero margin-top-five clearfix">
-                    <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" ng-click=" WidgetItem.editNote(note.id)">{{note.data.noteTitle}}</span>
+                    <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" >{{note.data.noteTitle}}</span>
                     <span class="pull-right small opacity-seventy"><i>{{note.data.dateAdded | date}}</i></span>
                   </p>
 
