@@ -409,7 +409,7 @@
                 case TAG_NAMES.SEMINAR_ITEMS:
                   if (event.data) {
                     WidgetItem.item.data = event.data;
-                    $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
+                   // $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
                     if (WidgetItem.view) {
                       WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
                     }
@@ -504,7 +504,6 @@
           DataStore.clearListener();
         });
 
-
         WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (type === 'POP') {
             DataStore.onUpdate().then(null, null, onUpdateCallback);
@@ -520,6 +519,7 @@
             });
           }
         });
+
         $scope.$watch(function () {
           return WidgetItem.Note;
         }, updateNoteWithDelay, true);
