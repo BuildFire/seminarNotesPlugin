@@ -284,7 +284,6 @@
               Buildfire.spinner.hide();
               console.log("error", error)
             };
-          console.log("***********", WidgetHome.data.content);
           if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.sortBy) {
             searchOptions = WidgetHome.getSearchOptions(WidgetHome.data.content.sortBy);
           }
@@ -423,26 +422,16 @@
           else return false;
         };
 
-        WidgetHome.listeners['NEW_ITEM_ADDED_UPDATED'] = $rootScope.$on('NEW_ITEM_ADDED_UPDATED', function (e) {
-          WidgetHome.items = [];
-          searchOptions.skip = 0;
-          WidgetHome.busy = false;
-          WidgetHome.loadMore();
-        });
-
         WidgetHome.listeners['ITEM_BOOKMARKED'] = $rootScope.$on('ITEM_BOOKMARKED', function (e) {
           WidgetHome.getBookMarkData(true);
         });
 
-
         WidgetHome.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (type === 'POP') {
-            DataStore.onUpdate().then(null, null, onUpdateCallback);
             WidgetHome.getBookMarkData(true);
             WidgetHome.setBookmarks();
           }
           if (type === 'POPALL') {
-            DataStore.onUpdate().then(null, null, onUpdateCallback);
             WidgetHome.getBookMarkData(true);
             WidgetHome.setBookmarks();
           }
