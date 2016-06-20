@@ -19,7 +19,7 @@
             var views = 0,
               currentView = null;
             manageDisplay();
-            $rootScope.$on('VIEW_CHANGED', function (e, type, view,noAnimation) {
+            $rootScope.$on('VIEW_CHANGED', function (e, type, view, noAnimation) {
               if (type === 'PUSH') {
                 console.log("VIEW_CHANGED>>>>>>>>", type, view);
                 currentView = ViewStack.getPreviousView();
@@ -76,20 +76,32 @@
           }
         };
       }])
-    .filter('getImageUrl', function () {
-      return function (url, width, height, type) {
-        if (type == 'resize')
-          return buildfire.imageLib.resizeImage(url, {
-            width: width,
-            height: height
-          });
-        else
-          return buildfire.imageLib.cropImage(url, {
-            width: width,
-            height: height
-          });
+    .filter('getImageUrl', ['Buildfire', function (Buildfire) {
+      filter.$stateful = true;
+      function filter(url, width, height, type) {
+        var _imgUrl;
+        if (!_imgUrl) {
+          if (type == 'resize') {
+            Buildfire.imageLib.local.resizeImage(url, {
+              width: width,
+              height: height
+            }, function (err, imgUrl) {
+              _imgUrl = imgUrl;
+              return _imgUrl;
+            });
+          } else {
+            Buildfire.imageLib.local.cropImage(url, {
+              width: width,
+              height: height
+            }, function (err, imgUrl) {
+              _imgUrl = imgUrl;
+              return _imgUrl;
+            });
+          }
+        }
       }
-    })
+      return filter;
+    }])
     .directive("buildFireCarousel", ["$rootScope", function ($rootScope) {
       return {
         restrict: 'A',
@@ -143,7 +155,7 @@
               template: 'Item',
               params: {
                 itemId: msg.id,
-                stopSwitch : true
+                stopSwitch: true
               }
             });
             $rootScope.$apply();
@@ -152,7 +164,7 @@
           case 'OpenItem':
             var currentView = ViewStack.getCurrentView();
             if (currentView && currentView.template !== "Item") {
-             // ViewStack.popAllViews(true);
+              // ViewStack.popAllViews(true);
               ViewStack.push({
                 template: 'Item',
                 params: {
@@ -170,28 +182,50 @@
 
     }])
     .filter('cropImage', [function () {
-      return function (url, width, height, noDefault) {
-        if (noDefault) {
-          if (!url)
-            return '';
+      filter.$stateful = true;
+      function filter(url, width, height) {
+        var _imgUrl;
+        if (!_imgUrl) {
+          buildfire.imageLib.local.cropImage(url, {
+            width: width,
+            height: height
+          }, function (err, imgUrl) {
+            _imgUrl = imgUrl;
+          });
         }
-        return buildfire.imageLib.cropImage(url, {
-          width: width,
-          height: height
-        });
-      };
+        return _imgUrl;
+      }
+
+      return filter;
     }])
-    .directive('backImg', ["$filter", "$rootScope", function ($filter, $rootScope) {
+    .directive('backImg', ["$rootScope", function ($rootScope) {
       return function (scope, element, attrs) {
         attrs.$observe('backImg', function (value) {
           var img = '';
           if (value) {
-            img = $filter("cropImage")(value, $rootScope.deviceWidth, $rootScope.deviceHeight, true);
-            element.attr("style", 'background:url(' + img + ') !important; background-size:cover !important;');
+            buildfire.imageLib.local.cropImage(value, {
+              width: $rootScope.deviceWidth,
+              height: $rootScope.deviceHeight
+            }, function (err, imgUrl) {
+              if (imgUrl) {
+                img = imgUrl;
+                element.attr("style", 'background:url(' + img + ') !important');
+              } else {
+                img = '';
+                element.attr("style", 'background-color:white');
+              }
+              element.css({
+                'background-size': 'cover'
+              });
+            });
+            // img = $filter("cropImage")(value, $rootScope.deviceWidth, $rootScope.deviceHeight, true);
           }
           else {
             img = "";
-            element.attr("style", 'background-color:white;');
+            element.attr("style", 'background-color:white');
+            element.css({
+              'background-size': 'cover'
+            });
           }
         });
       };
