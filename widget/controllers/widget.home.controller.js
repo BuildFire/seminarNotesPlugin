@@ -7,17 +7,6 @@
         var WidgetHome = this;
         var currentListLayout, currentSortOrder = null;
 
-        //Refresh list of items on pulling the tile bar
-
-        buildfire.datastore.onRefresh(function () {
-          WidgetHome.items = [];
-          searchOptions.skip = 0;
-          WidgetHome.busy = false;
-          WidgetHome.loadMore();
-          $scope.$digest();
-        });
-
-
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth || 320;
         WidgetHome.busy = false;
@@ -31,6 +20,29 @@
           skip: 0,
           limit: PAGINATION.itemCount
         };
+
+
+        //Refresh list of items on pulling the tile bar
+
+        buildfire.datastore.onRefresh(function () {
+          WidgetHome.init(function(err){
+            if(!err){
+              if (!WidgetHome.view) {
+                WidgetHome.view = new Buildfire.components.carousel.view("#carousel", []);
+              }
+              if (WidgetHome.data.content && WidgetHome.data.content.carouselImages) {
+                WidgetHome.view.loadItems(WidgetHome.data.content.carouselImages);
+              } else {
+                WidgetHome.view.loadItems([]);
+              }
+              WidgetHome.items = [];
+              searchOptions.skip = 0;
+              WidgetHome.busy = false;
+              WidgetHome.loadMore();
+              $scope.$digest();
+            }
+          });
+        });
 
         /**
          * WidgetHome.sortingOptions are used to show options in Sort Items drop-down menu in home.html.
@@ -80,7 +92,7 @@
             itemListLayout: LAYOUTS.itemListLayout[0].name
           }
         };
-        WidgetHome.init = function () {
+        WidgetHome.init = function (cb) {
           Buildfire.spinner.show();
           var success = function (result) {
               Buildfire.spinner.hide();
@@ -116,12 +128,14 @@
               } else {
                 $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
               }
-              console.log("==============", WidgetHome.data.design)
+              console.log("==============", WidgetHome.data.design);
+              cb();
             }
             , error = function (err) {
               Buildfire.spinner.hide();
               WidgetHome.data = {design: {itemListLayout: LAYOUTS.itemListLayout[0].name}};
               console.error('Error while getting data', err);
+              cb(err);
             };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
         };
@@ -155,7 +169,7 @@
           console.log("$$$$$$$$$$$$$$$$$$", WidgetHome.bookmarks, WidgetHome.items);
           $scope.isFetchedAllData = true;
         };
-        WidgetHome.init();
+        WidgetHome.init(function(){});
 
         WidgetHome.safeHtml = function (html) {
           if (html) {
@@ -211,7 +225,7 @@
           }
         };
         var onUpdateCallback = function (event) {
-          console.log(event);
+          /*console.log(event);
           setTimeout(function () {
             $scope.$digest();
             if (event && event.tag === TAG_NAMES.SEMINAR_INFO) {
@@ -257,7 +271,7 @@
             currentListLayout = WidgetHome.data.design.itemListLayout;
             $scope.$digest();
             $rootScope.$digest();
-          }, 0);
+          }, 0);*/
         };
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
