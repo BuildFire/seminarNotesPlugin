@@ -225,7 +225,7 @@
           }
         };
         var onUpdateCallback = function (event) {
-          /*console.log(event);
+          console.log(event);
           setTimeout(function () {
             $scope.$digest();
             if (event && event.tag === TAG_NAMES.SEMINAR_INFO) {
@@ -271,7 +271,7 @@
             currentListLayout = WidgetHome.data.design.itemListLayout;
             $scope.$digest();
             $rootScope.$digest();
-          }, 0);*/
+          }, 0);
         };
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
