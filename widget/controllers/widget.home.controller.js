@@ -26,6 +26,7 @@
         WidgetHome.bookmarkItem = [];
         WidgetHome.bookmarks = {};
         $scope.isFetchedAllData = false;
+        WidgetHome.isFetched = true;
         WidgetHome.listeners = {};
         var searchOptions = {
           skip: 0,
@@ -262,13 +263,15 @@
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
         WidgetHome.loadMore = function () {
-          console.log("===============In loadmore");
+          console.log("------------------------In loadmore");
           if (WidgetHome.busy) return;
           WidgetHome.busy = true;
+          if(WidgetHome.isFetched)
           WidgetHome.getItems();
         };
 
         WidgetHome.getItems = function () {
+          WidgetHome.isFetched = false;
           Buildfire.spinner.show();
           var successAll = function (resultAll) {
               Buildfire.spinner.hide();
@@ -279,6 +282,7 @@
               }
               console.log("----------------------", WidgetHome.items);
               WidgetHome.setBookmarks();
+              WidgetHome.isFetched = true;
             },
             errorAll = function (error) {
               Buildfire.spinner.hide();
