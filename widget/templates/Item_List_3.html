@@ -19,8 +19,8 @@
                         <div class="square-icon list-media-holder pull-left overflow-hidden"
                              style="border-radius:100%; "  ng-if="item.data.listImage">
                             <img class="border-radius-three"
-                                  load-image="1x1" data-final-src="{{item.data.listImage |
-                       getImageUrl : 60:60}}">
+                                  load-image="1x1" crop-width="60" crop-height="60" crop-type="crop"
+                                  data-final-src="{{item.data.listImage}}">
                         </div>
                         <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                             <div class="copy-holder"  ng-click="WidgetHome.openDetails(item.id)">

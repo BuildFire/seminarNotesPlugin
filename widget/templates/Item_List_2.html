@@ -18,8 +18,8 @@
                     <div class="list-item-media text-left overflow-hidden">
                         <div class="list-media-holder pull-left"  ng-if="item.data.listImage">
                             <img class="border-radius-three"
-                                  load-image="16x9" data-final-src="{{item.data.listImage |
-                       getImageUrl : 120:70}}">
+                                  load-image="16x9" crop-width="120" crop-height="70" crop-type="crop"
+                                  data-final-src="{{item.data.listImage}}">
                         </div>
                         <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                             <div class="copy-holder" ng-click="WidgetHome.openDetails(item.id)">
