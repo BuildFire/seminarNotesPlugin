@@ -686,3 +686,8 @@ input[type="text"].search {
 .form-holder-custom .savedMessage.active{
 	bottom:-1px;
 }
+
+
+.get-focus:not(input):not(textarea) {
+    -webkit-user-select: text !important;
+}
