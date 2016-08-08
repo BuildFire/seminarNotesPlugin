@@ -38,21 +38,21 @@
         <span class="icon icon-bookmark2 whiteTheme"></span>
       </a>
     </div>
-    <div class="pull-left text-center" disable-animate ng-if="!toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
-      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-if="!toggleNoteList">Open Item Notes</a>
-      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-if="toggleNoteList && !showNoteDescription">Close Note List </a>
-      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showNoteList()" ng-if="showNoteDescription">Back to Note List</a>
+    <div class="pull-left text-center" disable-animate ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open Item Notes</a>
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-show="toggleNoteList && !showNoteDescription">Close Note List </a>
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showNoteList()" ng-show="showNoteDescription">Back to Note List</a>
     </div>
-    <div class="pull-left text-center" disable-animate ng-if="!toggleNoteList"
+    <div class="pull-left text-center" disable-animate ng-hide="toggleNoteList"
          ng-class="toggleNoteAdd?'col-xs-12':'col-xs-6'">
-      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()" ng-if="!toggleNoteAdd">Add
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()" ng-hide="toggleNoteAdd">Add
         New Note</a>
-      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()" ng-if="toggleNoteAdd">
+      <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()" ng-show="toggleNoteAdd">
         Done</a>
     </div>
 
 
-    <div class="col-xs-12 hidden-content infinite-scroll-parent" ng-if="toggleNoteList || toggleNoteAdd">
+    <div class="col-xs-12 hidden-content infinite-scroll-parent" ng-show="toggleNoteList || toggleNoteAdd">
       <div class="content note-list clearfix" ng-class="showNoteList?'active':''">
         <div class="seminar-notes layout3">
           <div class="list-layout" infinite-scroll="WidgetItem.loadMore()"
