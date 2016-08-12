@@ -78,5 +78,75 @@
             break;
         }
       };
+    }]).directive('dynamicLinkComponent', ['$timeout',function ($timeout) {
+      return {
+        template: "<div id='actionItems'></div>",
+        replace: true,
+        scope: {links: '='},
+        link: function (scope, elem, attrs) {
+          // create a new instance of the buildfire action Items
+          var linkEditor = new buildfire.components.actionItems.sortableList("#actionItems");
+          function initDynamicLinks(){
+            if(scope.links && scope.links.length>0)
+              linkEditor.loadItems(scope.links);
+            // this method will be called when a new item added to the list
+            linkEditor.onAddItems = function (items) {
+              if (!scope.links)
+                scope.links = [];
+
+              $timeout(function(){
+                scope.$apply(function () {
+                  scope.links.push(items);
+                });
+              },0);
+            };
+            // this method will be called when an item deleted from the list
+            linkEditor.onDeleteItem = function (item, index) {
+              $timeout(function(){
+                scope.$apply(function () {
+                  scope.links.splice(index, 1);
+                });
+              },0);
+            };
+            // this method will be called when you edit item details
+            linkEditor.onItemChange = function (item, index) {
+              $timeout(function(){
+                scope.$apply(function () {
+                  scope.links.splice(index, 1, item);
+                });
+              },0);
+            };
+            // this method will be called when you change the order of items
+            linkEditor.onOrderChange = function (item, oldIndex, newIndex) {
+              $timeout(function(){
+                scope.$apply(function () {
+                  var items = scope.links;
+                  var i;
+                  var tmp = items[oldIndex];
+                  if (oldIndex < newIndex) {
+                    for ( i = oldIndex + 1; i <= newIndex; i++) {
+                      items[i - 1] = items[i];
+                    }
+                  } else {
+                    for (i = oldIndex - 1; i >= newIndex; i--) {
+                      items[i + 1] = items[i];
+                    }
+                  }
+                  items[newIndex] = tmp;
+                  scope.links = items;
+                });
+              },0);
+            };
+          }
+          initDynamicLinks();
+          scope.$watch("links", function (newVal, oldVal) {
+            if (newVal) {
+              if (scope.links) {
+                initDynamicLinks();
+              }
+            }
+          });
+        }
+      };
     }]);
 })(window.angular);
