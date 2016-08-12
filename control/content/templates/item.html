@@ -53,41 +53,8 @@
 	  </div>
 	</div>
     <hr class="none">
-    <div class="item clearfix row">
-      <div class="labels col-md-3 padding-right-zero pull-left">
-        <span>Menu Actions/Links</span>
-      </div>
-      <div class="main col-md-9 pull-right">
-        <div class="col-md-4 row">
-          <a class="btn btn-success pull-left stretch"
-             ng-click="ContentItem.addLink()">Add Link</a>
-        </div>
-      </div>
-    </div>
     <hr class="none">
-	<div class="item clearfix row">
-      <div class="col-md-9 main pull-right">
-    	<div class="draggable-list-view wide-list has-btn links-list" ui-sortable="ContentItem.linksSortableOptions" ng-model="ContentItem.item.data.links">
-          <div class=" ui-sortable d-item double-line square-icon clearfix" ng-repeat="_link in ContentItem.item.data.links">
-            <span class="icon icon-menu cursor-grab pull-left"></span>
-              <div class="col-md-6 padding-zero pull-left margin-bottom-five" style="margin-top:-3px;">
-                <a class="text-primary" ng-click="ContentItem.editLink(_link,$index)">
-				 <span class="title ellipsis pull-left">{{_link.title}}</span>
-				</a>
-                <span class="title ellipsis pull-left">{{_link.url ||
-                 _link.phoneNumber}}</span>
-                </div>
-               <span class="btn-icon btn-delete-icon btn-danger transition-third pull-right" ng-click="ContentItem.removeLink($index)" style="top:10px;"></span>
-          </div>
-
-          <!-- Show If No Links -->
-          <div class="well text-center margin-bottom-zero border-none"
-               ng-hide="ContentItem.item.data.links.length">
-            <p class="margin-zero">No links found.</p>
-          </div>
-        </div>
-	  </div>
-	</div>
+    <div id="actionItems"  dynamic-link-component links="ContentItem.item.data.links"></div>
     <hr class="none">
     <div class="item clearfix row">
       <div class="col-md-12 labels pull-left">
