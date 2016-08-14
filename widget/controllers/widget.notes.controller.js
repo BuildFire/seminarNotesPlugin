@@ -52,6 +52,14 @@
           };
           if (WidgetNotes.currentLoggedInUser && WidgetNotes.currentLoggedInUser._id)
             UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+          else
+            buildfire.auth.getCurrentUser(function (err, user) {
+              console.log("===========LoggedInUser2", user);
+              if (user) {
+                WidgetNotes.currentLoggedInUser = user;
+                UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+              }
+            });
         };
         // WidgetNotes.getNoteList();
         WidgetNotes.showBookmarkItems = function () {
