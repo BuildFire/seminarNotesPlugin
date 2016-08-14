@@ -49,9 +49,17 @@
             } else {
               WidgetNotes.noItemFound = false;
             }
-
           };
-          UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+          if (WidgetNotes.currentLoggedInUser && WidgetNotes.currentLoggedInUser._id)
+            UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+          else
+            buildfire.auth.getCurrentUser(function (err, user) {
+              console.log("===========LoggedInUser2", user);
+              if (user) {
+                WidgetNotes.currentLoggedInUser = user;
+                UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+              }
+            });
         };
         // WidgetNotes.getNoteList();
         WidgetNotes.showBookmarkItems = function () {
@@ -100,7 +108,8 @@
           }, error = function (err) {
             console.log('================there was a problem deleting your data', err);
           };
-          UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetNotes.currentLoggedInUser._id).then(success, error)
+          if(WidgetNotes.currentLoggedInUser && WidgetNotes.currentLoggedInUser._id)
+          UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetNotes.currentLoggedInUser._id).then(success, error);
         };
 
         /**
