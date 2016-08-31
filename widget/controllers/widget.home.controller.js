@@ -7,17 +7,6 @@
         var WidgetHome = this;
         var currentListLayout, currentSortOrder = null;
 
-        //Refresh list of items on pulling the tile bar
-
-        buildfire.datastore.onRefresh(function () {
-          WidgetHome.items = [];
-          searchOptions.skip = 0;
-          WidgetHome.busy = false;
-          WidgetHome.loadMore();
-          $scope.$digest();
-        });
-
-
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth || 320;
         WidgetHome.busy = false;
@@ -26,11 +15,35 @@
         WidgetHome.bookmarkItem = [];
         WidgetHome.bookmarks = {};
         $scope.isFetchedAllData = false;
+        WidgetHome.isFetched = true;
         WidgetHome.listeners = {};
         var searchOptions = {
           skip: 0,
           limit: PAGINATION.itemCount
         };
+
+
+        //Refresh list of items on pulling the tile bar
+
+        buildfire.datastore.onRefresh(function () {
+          WidgetHome.init(function (err) {
+            if (!err) {
+              if (!WidgetHome.view) {
+                WidgetHome.view = new Buildfire.components.carousel.view("#carousel", []);
+              }
+              if (WidgetHome.data.content && WidgetHome.data.content.carouselImages) {
+                WidgetHome.view.loadItems(WidgetHome.data.content.carouselImages);
+              } else {
+                WidgetHome.view.loadItems([]);
+              }
+              WidgetHome.items = [];
+              searchOptions.skip = 0;
+              WidgetHome.busy = false;
+              WidgetHome.loadMore();
+              $scope.$digest();
+            }
+          });
+        });
 
         /**
          * WidgetHome.sortingOptions are used to show options in Sort Items drop-down menu in home.html.
@@ -80,49 +93,51 @@
             itemListLayout: LAYOUTS.itemListLayout[0].name
           }
         };
-        WidgetHome.init = function () {
+        WidgetHome.init = function (cb) {
           Buildfire.spinner.show();
           var success = function (result) {
-              Buildfire.spinner.hide();
-              if (result && result.data) {
-                WidgetHome.data = result.data;
-              }
-              else {
-                WidgetHome.data = {
-                  design: {
-                    itemListLayout: LAYOUTS.itemListLayout[0].name
-                  }
-                };
-              }
-              if (WidgetHome.data && !WidgetHome.data.design) {
-                WidgetHome.data.design = {
-                  itemListLayout: LAYOUTS.itemListLayout[0].name
-                };
-              }
-              currentListLayout = WidgetHome.data.design.itemListLayout;
-              if (!WidgetHome.data.design)
-                WidgetHome.data.design = {};
-              if (!WidgetHome.data.design.itemListLayout) {
-                WidgetHome.data.design.itemListLayout = LAYOUTS.itemListLayout[0].name;
-              }
-              if (!WidgetHome.data.content)
-                WidgetHome.data.content = {};
-              if (WidgetHome.data.content.sortBy) {
-                currentSortOrder = WidgetHome.data.content.sortBy;
-              }
-
-              if (!WidgetHome.data.design.itemListBgImage) {
-                $rootScope.itemListbackgroundImage = "";
-              } else {
-                $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
-              }
-              console.log("==============", WidgetHome.data.design)
+            Buildfire.spinner.hide();
+            if (result && result.data) {
+              WidgetHome.data = result.data;
             }
+            else {
+              WidgetHome.data = {
+                design: {
+                  itemListLayout: LAYOUTS.itemListLayout[0].name
+                }
+              };
+            }
+            if (WidgetHome.data && !WidgetHome.data.design) {
+              WidgetHome.data.design = {
+                itemListLayout: LAYOUTS.itemListLayout[0].name
+              };
+            }
+            currentListLayout = WidgetHome.data.design.itemListLayout;
+            if (!WidgetHome.data.design)
+              WidgetHome.data.design = {};
+            if (!WidgetHome.data.design.itemListLayout) {
+              WidgetHome.data.design.itemListLayout = LAYOUTS.itemListLayout[0].name;
+            }
+            if (!WidgetHome.data.content)
+              WidgetHome.data.content = {};
+            if (WidgetHome.data.content.sortBy) {
+              currentSortOrder = WidgetHome.data.content.sortBy;
+            }
+
+            if (!WidgetHome.data.design.itemListBgImage) {
+              $rootScope.itemListbackgroundImage = "";
+            } else {
+              $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
+            }
+            console.log("==============", WidgetHome.data.design);
+            cb();
+          }
             , error = function (err) {
-              Buildfire.spinner.hide();
-              WidgetHome.data = {design: {itemListLayout: LAYOUTS.itemListLayout[0].name}};
-              console.error('Error while getting data', err);
-            };
+            Buildfire.spinner.hide();
+            WidgetHome.data = {design: {itemListLayout: LAYOUTS.itemListLayout[0].name}};
+            console.error('Error while getting data', err);
+            cb(err);
+          };
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
         };
 
@@ -138,8 +153,8 @@
             if (setBookMarks)
               WidgetHome.setBookmarks();
           };
-
-          UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+          if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)
+            UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
         };
 
         WidgetHome.setBookmarks = function () {
@@ -155,7 +170,8 @@
           console.log("$$$$$$$$$$$$$$$$$$", WidgetHome.bookmarks, WidgetHome.items);
           $scope.isFetchedAllData = true;
         };
-        WidgetHome.init();
+        WidgetHome.init(function () {
+        });
 
         WidgetHome.safeHtml = function (html) {
           if (html) {
@@ -185,7 +201,7 @@
           }
         });
         WidgetHome.showBookmarkItems = function () {
-          if (WidgetHome.currentLoggedInUser) {
+          if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
             ViewStack.push({
               template: 'Bookmarks',
               params: {
@@ -198,7 +214,7 @@
         };
 
         WidgetHome.showItemNotes = function () {
-          if (WidgetHome.currentLoggedInUser) {
+          if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
             ViewStack.push({
               template: 'Notes',
               params: {
@@ -262,13 +278,15 @@
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
         WidgetHome.loadMore = function () {
-          console.log("===============In loadmore");
+          console.log("------------------------In loadmore");
           if (WidgetHome.busy) return;
           WidgetHome.busy = true;
-          WidgetHome.getItems();
+          if (WidgetHome.isFetched)
+            WidgetHome.getItems();
         };
 
         WidgetHome.getItems = function () {
+          WidgetHome.isFetched = false;
           Buildfire.spinner.show();
           var successAll = function (resultAll) {
               Buildfire.spinner.hide();
@@ -279,12 +297,12 @@
               }
               console.log("----------------------", WidgetHome.items);
               WidgetHome.setBookmarks();
+              WidgetHome.isFetched = true;
             },
             errorAll = function (error) {
               Buildfire.spinner.hide();
               console.log("error", error)
             };
-          console.log("***********", WidgetHome.data.content);
           if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.sortBy) {
             searchOptions = WidgetHome.getSearchOptions(WidgetHome.data.content.sortBy);
           }
@@ -372,7 +390,8 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem removing your data');
             };
-            UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetHome.currentLoggedInUser._id).then(successRemove, errorRemove)
+            if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)
+              UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetHome.currentLoggedInUser._id).then(successRemove, errorRemove);
           } else {
             WidgetHome.bookmarkItem = {
               data: {
@@ -400,12 +419,13 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem saving your data');
             };
-            UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+            if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)
+              UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
           }
         };
 
         WidgetHome.showSearchPage = function () {
-          if (WidgetHome.currentLoggedInUser) {
+          if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
             ViewStack.push({
               template: 'Search',
               params: {
@@ -423,26 +443,16 @@
           else return false;
         };
 
-        WidgetHome.listeners['NEW_ITEM_ADDED_UPDATED'] = $rootScope.$on('NEW_ITEM_ADDED_UPDATED', function (e) {
-          WidgetHome.items = [];
-          searchOptions.skip = 0;
-          WidgetHome.busy = false;
-          WidgetHome.loadMore();
-        });
-
         WidgetHome.listeners['ITEM_BOOKMARKED'] = $rootScope.$on('ITEM_BOOKMARKED', function (e) {
           WidgetHome.getBookMarkData(true);
         });
 
-
         WidgetHome.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (type === 'POP') {
-            DataStore.onUpdate().then(null, null, onUpdateCallback);
             WidgetHome.getBookMarkData(true);
             WidgetHome.setBookmarks();
           }
           if (type === 'POPALL') {
-            DataStore.onUpdate().then(null, null, onUpdateCallback);
             WidgetHome.getBookMarkData(true);
             WidgetHome.setBookmarks();
           }

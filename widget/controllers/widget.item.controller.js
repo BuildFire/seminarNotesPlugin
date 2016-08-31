@@ -141,7 +141,8 @@
           }, err = function (err) {
             console.log("error in fetching data")
           };
-          UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+            UserData.search({}, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };
         var init = function () {
           if (currentView.params && currentView.params.noteId) {
@@ -172,7 +173,7 @@
 
         WidgetItem.showHideNoteList = function () {
           $scope.showNoteDescription = false;
-          if (WidgetItem.currentLoggedInUser) {
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id) {
             if ($scope.toggleNoteList && !$scope.toggleNoteAdd) {
               $scope.toggleNoteList = 0;
               WidgetItem.ItemNoteList = [];
@@ -207,7 +208,7 @@
           WidgetItem.isNoteSaved = false;
           WidgetItem.inInsertNote = false;
           $scope.showNoteDescription = false;
-          if (WidgetItem.currentLoggedInUser) {
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id) {
             if ($scope.toggleNoteAdd && !$scope.toggleNoteList) {
               $scope.toggleNoteAdd = 0
             } else {
@@ -253,7 +254,8 @@
             Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
-          UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(successItem, errorItem);
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+            UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(successItem, errorItem);
         };
 
         /**
@@ -288,7 +290,8 @@
               WidgetItem.busy = false;
             }
           };
-          UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+            UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };
 
         WidgetItem.openLinks = function (actionItems) {
@@ -314,7 +317,8 @@
             WidgetItem.bookmarks = result;
             WidgetItem.getBookmarks();
           };
-          UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+            UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
         };
 
         WidgetItem.getNoteDetail = function (noteId) {
@@ -351,7 +355,9 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem removing your data');
             };
-            UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetItem.currentLoggedInUser._id).then(successRemove, errorRemove)
+
+            if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+              UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetItem.currentLoggedInUser._id).then(successRemove, errorRemove);
           } else {
             WidgetItem.bookmarkItem = {
               data: {
@@ -378,7 +384,8 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem saving your data');
             };
-            UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+            if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+              UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
           }
         };
 
@@ -409,7 +416,7 @@
                 case TAG_NAMES.SEMINAR_ITEMS:
                   if (event.data) {
                     WidgetItem.item.data = event.data;
-                    $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
+                   // $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
                     if (WidgetItem.view) {
                       WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
                     }
@@ -445,7 +452,8 @@
           }, error = function (err) {
             console.log('================there was a problem deleting your data', err);
           };
-          UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(success, error)
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+            UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(success, error);
         };
 
         var tmrDelayForNote = null;
@@ -469,7 +477,9 @@
             }, 1000);
           }, err = function (err) {
           };
-          UserData.update(WidgetItem.isNoteInserted, WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(data, err)
+
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+            UserData.update(WidgetItem.isNoteInserted, WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(data, err);
         };
 
         var updateNoteWithDelay = function (note) {
@@ -504,7 +514,6 @@
           DataStore.clearListener();
         });
 
-
         WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
           if (type === 'POP') {
             DataStore.onUpdate().then(null, null, onUpdateCallback);
@@ -520,6 +529,7 @@
             });
           }
         });
+
         $scope.$watch(function () {
           return WidgetItem.Note;
         }, updateNoteWithDelay, true);

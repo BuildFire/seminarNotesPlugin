@@ -126,7 +126,8 @@
             console.log("===========search", result);
             WidgetSearch.bookmarks = result;
           };
-          UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+          if (WidgetSearch.currentLoggedInUser && WidgetSearch.currentLoggedInUser._id)
+            UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
         };
 
         WidgetSearch.getBookmarks = function () {
@@ -221,7 +222,9 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem removing your data');
             };
-            UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetSearch.currentLoggedInUser._id).then(successRemove, errorRemove)
+
+            if (WidgetSearch.currentLoggedInUser && WidgetSearch.currentLoggedInUser._id)
+              UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetSearch.currentLoggedInUser._id).then(successRemove, errorRemove)
           } else {
             Buildfire.spinner.show();
             WidgetSearch.bookmarkItem = {
@@ -252,7 +255,8 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem saving your data');
             };
-            UserData.insert(WidgetSearch.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetSearch.currentLoggedInUser._id).then(successItem, errorItem);
+            if (WidgetSearch.currentLoggedInUser && WidgetSearch.currentLoggedInUser._id)
+              UserData.insert(WidgetSearch.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetSearch.currentLoggedInUser._id).then(successItem, errorItem);
           }
         };
       }]);

@@ -80,6 +80,7 @@
                 WidgetBookmark.bookmarks = result;
                 WidgetBookmark.getBookmarks();
               };
+            if(WidgetBookmark.currentLoggedInUser && WidgetBookmark.currentLoggedInUser._id)
               UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
 
 
@@ -164,8 +165,8 @@
             Buildfire.spinner.hide();
             return console.error('There was a problem removing your data');
           };
-          console.log("****************,", item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id);
-          UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id).then(successRemove, errorRemove)
+          if (WidgetBookmark.currentLoggedInUser && WidgetBookmark.currentLoggedInUser._id)
+            UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id).then(successRemove, errorRemove)
         };
 
         $scope.$on("$destroy", function () {
