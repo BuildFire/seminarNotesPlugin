@@ -70,6 +70,7 @@
               Buildfire.spinner.hide();
               console.info('Searched data result:=================== ', result);
               WidgetSearch.items = result;
+
               WidgetSearch.getBookmarks();
             }
             , error = function (err) {
@@ -117,7 +118,7 @@
             }
           }
           DataStore.search(WidgetSearch.searchOptions, tag).then(success, error);
-          DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
+
           var err = function (error) {
             Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
@@ -125,6 +126,7 @@
             Buildfire.spinner.hide();
             console.log("===========search", result);
             WidgetSearch.bookmarks = result;
+
           };
           if (WidgetSearch.currentLoggedInUser && WidgetSearch.currentLoggedInUser._id)
             UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
@@ -238,7 +240,6 @@
               WidgetSearch.items[index].bookmarkId = result.id;
               console.log("Inserted", result);
               $scope.isClicked = itemId;
-           //   WidgetSearch.getBookmarks();
               if (!$scope.$$phase)
                 $scope.$digest();
               var addedBookmarkModal = $modal.open({
