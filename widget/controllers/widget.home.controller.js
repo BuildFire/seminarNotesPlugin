@@ -293,15 +293,10 @@
           Buildfire.spinner.show();
           var successAll = function (resultAll) {
             Buildfire.spinner.hide();
-            WidgetHome.busy = false; //TODO: Confirm this is correct
+            WidgetHome.busy = false;
             WidgetHome.items = WidgetHome.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
             searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
 
-              /*
-              if (resultAll.length == PAGINATION.itemCount) {
-                WidgetHome.busy = false;
-              }
-              */
               console.log("----------------------", WidgetHome.items);
               WidgetHome.setBookmarks();
               WidgetHome.readyToLoadItems = true;
