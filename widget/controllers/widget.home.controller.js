@@ -283,6 +283,13 @@
             return;
           }
 
+          var itemsCount = (WidgetHome.items && WidgetHome.items.length) ? WidgetHome.items.length : 0;
+
+          //If the items have loaded, and they are less than a page, don't try to load again
+          if(itemsCount > 0 && itemsCount < PAGINATION.itemCount){
+            return;
+          }
+
           if (WidgetHome.readyToLoadItems)
             WidgetHome.getItems();
         };
