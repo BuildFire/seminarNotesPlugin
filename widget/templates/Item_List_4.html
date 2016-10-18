@@ -4,9 +4,7 @@
 			 infinite-scroll-distance="1"
 			 data-infinite-container=".infinite-scroll-parent"
 			 infinite-scroll-disabled="WidgetHome.busy">
-			<!--<div class="plugin-slide">-->
-				<!--<img src="../../../styles/media/holder-16x9.png">-->
-			<!--</div>-->
+
 			<div id="carousel" ng-if="WidgetHome.data.content.carouselImages.length"
 				 build-fire-carousel=""
 				 ng-style="WidgetHome.data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
@@ -33,6 +31,9 @@
 						<span class="icon icon-bookmark2  " ng-class="item.isBookmarked?'text-primary':'whiteTheme'"></span>
 					</div>
 				</div>
+			</div>
+			<div class="text-center" ng-show="WidgetHome.busy">
+				<buildfire-spinner></buildfire-spinner>
 			</div>
 		</div>
 	</div>

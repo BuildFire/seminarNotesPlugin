@@ -1,6 +1,6 @@
 angular
     .module('seminarNotesPluginWidget')
-    .directive('spinner', spinner);
+    .directive('buildfireSpinner', spinner);
 
 function spinner() {
     var directive = {
@@ -11,6 +11,5 @@ function spinner() {
     return directive;
 
     function link(scope, element, attrs) {
-        /* */
     }
 }
