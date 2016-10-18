@@ -15,7 +15,7 @@
         WidgetHome.bookmarkItem = [];
         WidgetHome.bookmarks = {};
         $scope.isFetchedAllData = false;
-        WidgetHome.isFetched = true;
+        WidgetHome.readyToLoadItems = true;
         WidgetHome.listeners = {};
         var searchOptions = {
           skip: 0,
@@ -279,28 +279,36 @@
 
         WidgetHome.loadMore = function () {
           console.log("------------------------In loadmore");
-          if (WidgetHome.busy) return;
-          WidgetHome.busy = true;
-          if (WidgetHome.isFetched)
+          if (WidgetHome.busy){
+            return;
+          }
+
+          if (WidgetHome.readyToLoadItems)
             WidgetHome.getItems();
         };
 
         WidgetHome.getItems = function () {
-          WidgetHome.isFetched = false;
+          WidgetHome.busy = true;
+          WidgetHome.readyToLoadItems = false;
           Buildfire.spinner.show();
           var successAll = function (resultAll) {
-              Buildfire.spinner.hide();
-              WidgetHome.items = WidgetHome.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
-              searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
+            Buildfire.spinner.hide();
+            WidgetHome.busy = false; //TODO: Confirm this is correct
+            WidgetHome.items = WidgetHome.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
+            searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
+
+              /*
               if (resultAll.length == PAGINATION.itemCount) {
                 WidgetHome.busy = false;
               }
+              */
               console.log("----------------------", WidgetHome.items);
               WidgetHome.setBookmarks();
-              WidgetHome.isFetched = true;
+              WidgetHome.readyToLoadItems = true;
             },
             errorAll = function (error) {
               Buildfire.spinner.hide();
+              WidgetHome.busy = false;
               console.log("error", error)
             };
           if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.sortBy) {
