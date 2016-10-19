@@ -5,7 +5,7 @@ angular
 function spinner() {
     var directive = {
         link: link,
-        template: '<i class="fa fa-spinner fa-spin" style="font-family: FontAwesome !important;font-size:24px"></i>',
+        template: '<div class="spinner spinner-center"></div>',
         restrict: 'E'
     };
     return directive;
