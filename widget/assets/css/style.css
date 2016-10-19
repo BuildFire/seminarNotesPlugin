@@ -686,3 +686,23 @@ input[type="text"].search {
 .form-holder-custom .savedMessage.active{
 	bottom:-1px;
 }
+
+/* CSS Spinner */
+.lazy-spinner {
+    margin: 5px;
+    height: 28px;
+    width: 28px;
+    animation: rotate 0.8s infinite linear !important;
+    border: 4px solid #fff;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+
+.lazy-spinner-center{
+    margin: auto;
+}
+
+@keyframes rotate {
+    0%    { transform: rotate(0deg); }
+    100%  { transform: rotate(360deg); }
+}
