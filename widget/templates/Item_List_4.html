@@ -15,7 +15,7 @@
 				<div class="plugin-slide" ng-repeat="item in WidgetHome.items" ng-if="isFetchedAllData">
 					<img ng-hide="item.data.listImage" src="../../../styles/media/holder-16x9.png">
 					<img ng-show="item.data.listImage" class="border-radius-three" ng-if="item.data.listImage" load-image="16x9"
-                         crop-width="deviceWidth" crop-height="183" crop-type="crop"
+                         crop-width="{{deviceWidth}}" crop-height="183" crop-type="crop"
                          data-final-src="{{item.data.listImage}}">
 					<div class="blackLayer"></div>
 					<div ng-hide="item.data.listImage" class="backgroundLayer" style="background:url('../../../styles/media/holder-16x9.png');"></div>
