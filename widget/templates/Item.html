@@ -52,7 +52,7 @@
     </div>
 
 
-    <div class="col-xs-12 hidden-content infinite-scroll-parent infoBackgroundTheme" ng-show="toggleNoteList || toggleNoteAdd">
+    <div class="col-xs-12 hidden-content infinite-scroll-parent primaryBackgroundTheme" ng-show="toggleNoteList || toggleNoteAdd">
       <div class="content note-list clearfix" ng-class="showNoteList?'active':''">
         <div class="seminar-notes layout3">
           <div class="list-layout" infinite-scroll="WidgetItem.loadMore()"
@@ -64,7 +64,7 @@
                  ng-swipe-right="WidgetItem.swipeToDeleteNote($event, $index, false)" ng-if="!showNoteDescription">
               <div class="list-item-media text-left"
                    ng-class="{'edit' : WidgetItem.swiped[$index]}" ng-click=" WidgetItem.editNote(note.id)">
-                <div class="list-item-copy text-left padding-left-ten padding-right-ten white-background">
+                <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                   <p class="ellipsis margin-zero margin-top-five clearfix">
                     <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer" ng-if="note.data.noteTitle">{{note.data.noteTitle}}</span>
                     <span class="pull-left ellipsis" ng-if="!note.data.noteTitle">--</span>
