@@ -1,3 +1,6 @@
+.scroll-y{
+    overflow-y: scroll !important;
+}
 /* Link Items */
 .link-list {
     padding-top: 2px;

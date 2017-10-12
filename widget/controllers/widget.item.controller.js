@@ -87,6 +87,10 @@
               } else {
                 $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
               }
+
+              $timeout(function () {
+                  WidgetItem.forceScroll = true;
+              },0);
             }
             , error = function (err) {
               Buildfire.spinner.hide();
