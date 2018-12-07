@@ -18,7 +18,7 @@
           .publishDate | date}}</i></p>
                 <hr class="small" ng-if="WidgetItem.item.data.links.length">
                 <div class="text-center" ng-if="WidgetItem.item.data.links.length">
-                    <a class="text-primary" ng-click="WidgetItem.openLinks(WidgetItem.item.data.links)">Open
+                    <a class="text-primary" ng-click="WidgetItem.openLinks(WidgetItem.item.data.links, $event)">Open
             Menu Options</a>
                 </div>
                 <hr class="small">
