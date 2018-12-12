@@ -298,7 +298,7 @@
             UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
         };
 
-        WidgetItem.openLinks = function (actionItems) {
+        WidgetItem.openLinks = function (actionItems, $event) {
           if (actionItems && actionItems.length) {
             var options = {};
             var callback = function (error, result) {
@@ -306,7 +306,10 @@
                 console.error('Error:', error);
               }
             };
-            buildfire.actionItems.list(actionItems, options, callback);
+            $event.preventDefault();
+            $timeout(function(){
+                Buildfire.actionItems.list(actionItems, options, callback);	
+            });
           }
         };
 
