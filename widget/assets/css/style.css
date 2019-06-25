@@ -228,6 +228,10 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
     background: #09a3ee;
 }
 
+html[iOS="true"] .holder .bottom.fixed-bottom {
+    padding-bottom: env(safe-area-inset-bottom) !important;
+}
+
 .holder .bottom.fixed-bottom.has-content {
     bottom: -240px;
 }
