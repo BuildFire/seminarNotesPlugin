@@ -252,40 +252,13 @@
         ContentHome.itemSortableOptions = {
           handle: '> .cursor-grab',
           disabled: true,
-          stop: function (e, ui) {
-            var endIndex = ui.item.sortable.dropindex,
-              maxRank = 0,
-              draggedItem = ContentHome.items[endIndex];
-
-            if (draggedItem) {
-              var prev = ContentHome.items[endIndex - 1],
-                next = ContentHome.items[endIndex + 1];
-              var isRankChanged = false;
-              if (next) {
-                if (prev) {
-                  draggedItem.data.rank = ((prev.data.rank || 0) + (next.data.rank || 0)) / 2;
-                  isRankChanged = true;
-                } else {
-                  draggedItem.data.rank = (next.data.rank || 0) / 2;
-                  isRankChanged = true;
-                }
-              } else {
-                if (prev) {
-                  draggedItem.data.rank = (((prev.data.rank || 0) * 2) + 10) / 2;
-                  maxRank = draggedItem.data.rank;
-                  isRankChanged = true;
-                }
-              }
-              if (isRankChanged) {
-                DataStore.update(draggedItem.id, draggedItem.data, TAG_NAMES.SEMINAR_ITEMS).then(function (success) {
-                  if (ContentHome.data.content.rankOfLastItem < maxRank) {
-                    ContentHome.data.content.rankOfLastItem = maxRank;
-                    RankOfLastItem.setRank(maxRank);
-                  }
-                }, function (error) {
-                  console.error('Error during updating rank');
-                })
-              }
+          stop: function () {
+            let { items } = ContentHome;
+            for (let i = 0; i < items.length; i++) {
+              const { id, data } = items[i];
+              if (i == data.rank) continue;
+              data.rank = i;
+              DataStore.update(id, data, TAG_NAMES.SEMINAR_ITEMS);
             }
           }
         };
