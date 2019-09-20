@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "./node_modules/.bin/bower install",
-    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
+    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS",
+    "build": "cd .. && rm -rf seminarNotesPlugin2.zip && zip -r seminarNotesPlugin2.zip seminarNotesPlugin2/ -x \\*node_modules\\* \\*.git\\* \\*test\\*"
   },
   "license": "ISC",
   "dependencies": {
