@@ -6,11 +6,11 @@
   "scripts": {
     "postinstall": "./node_modules/.bin/bower install",
     "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS",
-    "build": "cd .. && rm -rf seminarNotesPlugin2.zip && zip -r seminarNotesPlugin2.zip seminarNotesPlugin2/ -x \\*node_modules\\* \\*.git\\* \\*test\\*"
+    "build": "cd .. && rm -rf seminarNotesPlugin.zip && zip -r seminarNotesPlugin.zip seminarNotesPlugin/ -x \\*node_modules\\* \\*.git\\* \\*test\\*"
   },
   "license": "ISC",
   "dependencies": {
-    "bower": "^1.5.3",
+    "bower": "^1.8.8",
     "karma-cli": "^0.1.0",
     "karma-coverage": "^0.5.0"
   },
