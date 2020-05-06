@@ -600,6 +600,8 @@ html[os="Windows"][browser="Chrome"] .seminar-notes .form-holder .clear-icon:aft
 
 .layout4 .plugin-slide .item-text p {
     line-height: 22px;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
 }
 
 .layout5 .plugin-slide .item-text p {
