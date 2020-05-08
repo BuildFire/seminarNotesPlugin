@@ -1,35 +1,32 @@
-<div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu" ng-controller="WidgetItemCtrl as WidgetItem">
+<div class="no-scroll holder load-in padding-zero has-bottom sticky-bottom-menu" ng-controller="WidgetItemCtrl as WidgetItem">
     <div class="scrollable">
 
-        <div class="seminar-notes layout3" ng-class="{'scroll-y' : WidgetItem.forceScroll}" style="padding-bottom:45px;" ng-if="WidgetItem.item.data">
+        <div class="seminar-notes" ng-class="{'scroll-y' : WidgetItem.forceScroll}" style="padding-bottom:45px;" ng-if="WidgetItem.item.data">
             <!--<div class="plugin-slide">-->
             <!--<img src="../../../styles/media/holder-16x9.png">-->
             <!--</div>-->
             <div id="carousel2" ng-if="WidgetItem.item.data.carouselImages.length" build-fire-carousel2="" ng-style="WidgetItem.item.data.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
 
-            <div class="padded">
-                <p class="margin-zero" style="font-size:15px;">{{WidgetItem.item.data .title}}
-                </p>
-
-                <p class="margin-zero">{{WidgetItem.item.data .summary}}
-                </p>
-
-                <p class="margin-zero small"><i>{{WidgetItem.item.data
-          .publishDate | date}}</i></p>
-                <hr class="small" ng-if="WidgetItem.item.data.links.length">
-                <div class="text-center" ng-if="WidgetItem.item.data.links.length">
-                    <a class="text-primary" ng-click="WidgetItem.openLinks(WidgetItem.item.data.links, $event)">Open
-            Menu Options</a>
+            <div class="item-main-header">
+                <div class="padded">
+                    <h5 class="margin-top-zero">{{WidgetItem.item.data .title}}</h5>
+                    <p>{{WidgetItem.item.data .summary}}</p>
+                    <p class="margin-zero caption"><i>{{WidgetItem.item.data.publishDate | date}}</i></p>
                 </div>
-                <hr class="small">
+                <div class="text-center menu-options" ng-if="WidgetItem.item.data.links.length" ng-click="WidgetItem.openLinks(WidgetItem.item.data.links, $event)">
+                    <a class="text-primary">Open Menu Options</a>
+                </div>
+            </div>
+            <div class="padded">
                 <p class="margin-zero" ng-bind-html="WidgetItem.safeHtml(WidgetItem.item.data.description)"></p>
             </div>
+
         </div>
     </div>
     <div class="bottom fixed-bottom primaryBackgroundTheme has-content open transition-third">
         <div class="extra-links" ng-if="WidgetItem.currentLoggedInUser">
             <!-- When Inactive, use these theme classes -->
-            <a class="bg-primary" ng-click="WidgetItem.addToBookmark(WidgetItem.item.id,WidgetItem.item, WidgetItem.item.isBookmarked )" ng-class="WidgetItem.item.isBookmarked?'bookmarked':''">
+            <a class="bg-primary btn-fab" ng-click="WidgetItem.addToBookmark(WidgetItem.item.id,WidgetItem.item, WidgetItem.item.isBookmarked )" ng-class="WidgetItem.item.isBookmarked?'bookmarked':''">
                 <span class="icon icon-bookmark2 whiteTheme"></span>
             </a>
         </div>
