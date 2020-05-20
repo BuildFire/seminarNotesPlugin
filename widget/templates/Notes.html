@@ -1,34 +1,29 @@
 <div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu" ng-controller="WidgetNotesCtrl as WidgetNotes">
     <div class="scrollable infinite-scroll-parent">
         <div class="seminar-notes layout3">
-            <div class="form-holder">
+            <div class="form-holder search-holder backgroundColorTheme bodyTextTheme">
                 <input type="text" class="border-none form-control bodyTextTheme search" placeholder="Search note titles and content" ng-model="WidgetNotes.search" ng-change="WidgetNotes.clearTextBox()">
                	<span class="clear-icon dangerBackgroundTheme" ng-if="WidgetNotes.search" ng-click="WidgetNotes.clearSearchResult()"></span>
-           		<hr class="small margin-zero" ng-if="WidgetNotes.noItemFound">
  			</div>
             <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center" ng-if="WidgetNotes.noItemFound">No notes added yet.</p>
-            <div class="list-layout" ng-hide="WidgetNotes.noItemFound"
+            <div class="list-layout search-list" ng-hide="WidgetNotes.noItemFound"
                  infinite-scroll="WidgetNotes.loadMore()"
                  infinite-scroll-distance="1"
                  data-infinite-container=".infinite-scroll-parent"
                  infinite-scroll-disabled="WidgetNotes.busy">
-                <div class="list-item" ng-repeat="note in WidgetNotes.Notes"
+                <div class="list-item swipe-item" ng-repeat="note in WidgetNotes.Notes"
                      ng-swipe-left="WidgetNotes.swipeToDeleteNote($event, $index, true)"
                      ng-swipe-right="WidgetNotes.swipeToDeleteNote($event, $index, false)">
                     <div class="list-item-media text-left" ng-class="{'edit' : WidgetNotes.swiped[$index]}"  ng-click="WidgetNotes.openDetails(note.data.itemID, note.id)">
-                        <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                            <p class="ellipsis margin-zero margin-top-five clearfix">
-                                <span class="pull-left ellipsis" style="max-width:65%; cursor: pointer">{{note.data.noteTitle}}</span>
-                                <span class="pull-right small opacity-seventy"><i>{{note.data.dateAdded|date}}</i></span>
-                            </p>
-                            <p class="ellipsis margin-zero bodyTextTheme">
-                                {{note.data.itemTitle}}
-                            </p>
-                            <p class="small ellipsis margin-zero bodyTextTheme">
-                                {{note.data.noteDescription}}
-                            </p>
+                        <div class="list-item-copy">
+                            <div class="note-details ellipsis">
+                                <p class="ellipsis caption">{{note.data.itemTitle}}</p>
+                                <p class="caption">{{note.data.dateAdded|date}}</p>
+                            </div>
+                            <h5 class="ellipsis">{{note.data.noteTitle}}</h5>
+                            <p class="ellipsis margin-zero bodyTextTheme">{{note.data.noteDescription}}</p>
                         </div>
-                        <div class="remove-btn text-center dangerBackgroundTheme" style="background:red; cursor: pointer" ng-click="WidgetNotes.deleteNote(note.id, $index)">
+                        <div class="remove-btn text-center dangerBackgroundTheme" ng-click="WidgetNotes.deleteNote(note.id, $index)">
                             <span class="whiteTheme">Delete</span>
                         </div>
                     </div>

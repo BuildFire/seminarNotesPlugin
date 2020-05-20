@@ -24,8 +24,8 @@
 						<div class="item-header">
 							<p class="item-date caption margin-zero  whiteTheme ellipsis">{{item.data.publishDate | date}}</p>
 							<!-- Use these theme classes when inactive/not selected -->
-							<div ng-if="WidgetHome.currentLoggedInUser" class="bookmark-icon btn-icon" ng-class="item.isBookmarked?'whiteBackgroundTheme':'primaryBackgroundTheme'" ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
-								<span class="icon icon-bookmark2" ng-class="item.isBookmarked?'text-primary':'whiteTheme'"></span>
+							<div ng-if="WidgetHome.currentLoggedInUser" class="bookmark-icon btn-icon" ng-class="item.isBookmarked?'transparent-background':'primaryBackgroundTheme'" ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
+								<span class="icon icon-bookmark2" ng-class="item.isBookmarked?'whiteTheme':'whiteTheme'"></span>
 							</div>
 						</div>
 						<div class="item-text">
