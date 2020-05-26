@@ -94,6 +94,8 @@ h5{
 .layout3 .list-item .list-media-holder{
     flex-shrink: 0;
     margin-right: .75rem;
+    width: 4rem;
+    height: 4rem;
 }
 .layout3 .list-item .list-media-holder{
     width: 3.5rem;
