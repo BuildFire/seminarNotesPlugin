@@ -1,4 +1,4 @@
-<div class=" holder padding-zero  has-bottom sticky-bottom-menu clearfix">
+<div class=" holder padding-zero load-in has-bottom sticky-bottom-menu clearfix">
 	<div class="scrollable infinite-scroll-parent" ng-if="WidgetHome.data.content" infinite-scroll="WidgetHome.loadMore()"
 		 infinite-scroll-distance="1"
 		 data-infinite-container=".infinite-scroll-parent"
@@ -10,26 +10,29 @@
 			<div id="carousel" ng-if="WidgetHome.data.content.carouselImages.length"
 				 build-fire-carousel=""
 				 ng-style="WidgetHome.data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
-			<div class="padded padding-bottom-five" ng-if="WidgetHome.showDescription(WidgetHome.data.content.description)">
+			<div class="main-header" ng-if="WidgetHome.showDescription(WidgetHome.data.content.description)">
 				<p class="margin-zero" ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
 			</div>
-			<div class="notes" >
-				<div class="plugin-banner col-xs-6 pull-left overflow-hidden padding-zero" ng-repeat="item in WidgetHome.items" ng-if="isFetchedAllData">
+			<div class="notes items-grid">
+				<div class="plugin-banner overflow-hidden grid-item" ng-repeat="item in WidgetHome.items" ng-if="isFetchedAllData">
 					<div class="plugin-slide">
 						<img  ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
 						<img ng-show="item.data.listImage" ng-if="item.data.listImage" load-image="1x1"
                              crop-width="162" crop-height="162" crop-type="crop"
                              data-final-src="{{item.data.listImage}}">
 						<div class="blackLayer"></div>
-						<div class="item-text" ng-click="WidgetHome.openDetails(item.id)">
-							<p class="item-title margin-zero whiteTheme text-center">{{item.data.title}}</p>
-							<p class="item-summary margin-zero whiteTheme text-center">{{item.data.summary}}</p>
-							<p class="item-date margin-zero whiteTheme text-center">{{item.data.publishDate | date}}</p>
+						<div class="item-header">
+							<p class="item-date caption margin-zero  whiteTheme ellipsis">{{item.data.publishDate | date}}</p>
+							<!-- Use these theme classes when inactive/not selected -->
+							<div ng-if="WidgetHome.currentLoggedInUser" class="bookmark-icon btn-icon" ng-class="item.isBookmarked?'transparent-background':'primaryBackgroundTheme'" ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
+								<span class="icon icon-bookmark2" ng-class="item.isBookmarked?'whiteTheme':'whiteTheme'"></span>
+							</div>
 						</div>
-						<!-- Use these theme classes when inactive/not selected -->
-						<div ng-if="WidgetHome.currentLoggedInUser" class="bookmark-icon" ng-class="item.isBookmarked?'whiteBackgroundTheme':'primaryBackgroundTheme'" ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
-							<span class="icon icon-bookmark2" ng-class="item.isBookmarked?'text-primary':'whiteTheme'"></span>
+						<div class="item-text">
+							<h5 class="item-title margin-zero whiteTheme ellipsis">{{item.data.title}}</h5>
+							<p class="item-summary margin-zero  whiteTheme ellipsis">{{item.data.summary}}</p>
 						</div>
+						<div class="item-click-holder" ng-click="WidgetHome.openDetails(item.id)"></div>
 					</div>
 				</div>
 			</div>

@@ -1,13 +1,13 @@
-<div class="holder padding-zero  has-bottom sticky-bottom-menu clearfix">
+<div class="holder padding-zero load-in has-bottom sticky-bottom-menu clearfix">
     <div class="scrollable infinite-scroll-parent" >
-        <div class="seminar-notes layout3">
+        <div class="seminar-notes layout2">
             <!--<div class="plugin-slide">-->
             <!--<img src="../../../styles/media/holder-16x9.png">-->
             <!--</div>-->
             <div id="carousel" ng-if="WidgetHome.data.content.carouselImages.length"
                  build-fire-carousel=""
                  ng-style="WidgetHome.data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
-            <div class="padded padding-bottom-five"  ng-if="WidgetHome.showDescription(WidgetHome.data.content.description)">
+            <div class="padded main-header"  ng-if="WidgetHome.showDescription(WidgetHome.data.content.description)">
                 <p class="margin-zero" ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
             </div>
             <div class="list-layout" ng-if="WidgetHome.data.content" infinite-scroll="WidgetHome.loadMore()"
@@ -15,33 +15,26 @@
                  data-infinite-container=".infinite-scroll-parent"
                  infinite-scroll-disabled="WidgetHome.busy">
                 <div class="list-item" ng-repeat="item in WidgetHome.items" ng-if="isFetchedAllData">
-                    <div class="list-item-media text-left overflow-hidden">
-                        <div class="list-media-holder pull-left"  ng-if="item.data.listImage">
+                    <div class="item-click-holder ellipsis" ng-click="WidgetHome.openDetails(item.id)">
+                        <div class="list-media-holder"  ng-if="item.data.listImage">
                             <img class="border-radius-three"
                                   load-image="16x9" crop-width="120" crop-height="70" crop-type="crop"
                                   data-final-src="{{item.data.listImage}}">
                         </div>
-                        <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                            <div class="copy-holder" ng-click="WidgetHome.openDetails(item.id)">
-                                <p class="ellipsis margin-zero text-primary margin-top-five">
-                                  {{item.data.title}}
-                                </p>
-
-                                <p class="ellipsis margin-zero bodyTextTheme">
-                                    {{item.data.summary}}
-                                </p>
-
-                                <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
-                                    <i>{{item.data.publishDate | date}}</i>
-                                </p>
-                            </div>
-                            <div ng-if="WidgetHome.currentLoggedInUser" class="bookmark-holder"
-                                      ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
-                                <span class="icon icon-bookmark2 " ng-class="!item.isBookmarked?'bodyTextTheme opacity-seventy':''"></span>
+                        <div class="list-item-copy ellipsis">
+                            <div class="copy-holder">
+                                <h5 class="ellipsis margin-zero">{{item.data.title}}</h5>
+                                <p class="ellipsis margin-zero bodyTextTheme">{{item.data.summary}}</p>
+                                <p class="caption ellipsis margin-zero"><i>{{item.data.publishDate | date}}</i></p>
                             </div>
                         </div>
                     </div>
+                    <div ng-if="WidgetHome.currentLoggedInUser" class="bookmark-holder"
+                                ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
+                        <span class="icon btn-icon icon-bookmark2 " ng-class="!item.isBookmarked?'':'primaryBackgroundTheme whiteTheme'"></span>
+                    </div>
                 </div>
+
                 <div class="text-center" ng-show="WidgetHome.busy">
                     <buildfire-spinner></buildfire-spinner>
                 </div>
