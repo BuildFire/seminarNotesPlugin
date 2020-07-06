@@ -7,32 +7,26 @@
          data-infinite-container=".infinite-scroll-parent"
          infinite-scroll-disabled="WidgetBookmark.busy">
       <div class="list-layout" ng-show="WidgetBookmark.hasAtleastOneBookmark">
-        <div class="list-item" ng-if="item.isBookmarked" ng-repeat="item in WidgetBookmark.items">
-          <div class="list-item-media text-left overflow-hidden" ng-if="isFetchedAllData">
-            <div class="square-icon list-media-holder pull-left">
-              <img ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
-              <img ng-show="item.data.listImage" class="border-radius-three" ng-if="item.data.listImage" load-image="1x1"
-                   crop-width="60" crop-height="60" crop-type="crop"
-                   data-final-src="{{item.data.listImage}}">
-            </div>
-            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-              <div class="copy-holder">
-                <p class="ellipsis margin-zero text-primary margin-top-five">
-                  <a ng-click="WidgetBookmark.openDetails(item.id)">{{item.data.title}}</a>
-                </p>
-                <p class="ellipsis margin-zero bodyTextTheme">
-                  {{item.data.summary}}
-                </p>
-                <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
-                  <i>{{item.data.publishDate | date}}</i>
-                </p>
+
+        <div class="list-item" ng-if="item.isBookmarked && isFetchedAllData" ng-repeat="item in WidgetBookmark.items">
+            <div class="item-click-holder ellipsis" ng-click="WidgetBookmark.openDetails(item.id)">
+              <div class="square-icon list-media-holder pull-left">
+                <img ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
+                <img ng-show="item.data.listImage" class="border-radius-three" ng-if="item.data.listImage" load-image="1x1"
+                     crop-width="60" crop-height="60" crop-type="crop"
+                     data-final-src="{{item.data.listImage}}">
               </div>
-              <div class="bookmark-holder" ng-click="WidgetBookmark.removeBookmark(item,$index)">
-                <span class="icon icon-bookmark2"></span>
+              <div class="copy-holder ellipsis">
+                <h5 class="ellipsis margin-zero">{{item.data.title}}</h5>
+                <p class="ellipsis margin-zero bodyTextTheme">{{item.data.summary}}</p>
+                <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy"><i>{{item.data.publishDate | date}}</i></p>
               </div>
             </div>
-          </div>
+            <div class="bookmark-holder btn-icon primaryBackgroundTheme " ng-click="WidgetBookmark.removeBookmark(item,$index)">
+              <span class="icon icon-bookmark2 whiteTheme"></span>
+            </div>
         </div>
+
       </div>
     </div>
   </div>

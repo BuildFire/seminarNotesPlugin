@@ -1,7 +1,7 @@
 <div class="no-scroll holder padding-zero has-bottom sticky-bottom-menu" ng-controller="WidgetSearchCtrl as WidgetSearch">
   <div class="scrollable">
     <div class="seminar-notes layout3">
-      <div class="form-holder">
+      <div class="form-holder search-holder backgroundColorTheme bodyTextTheme">
         <input type="text" class="border-none form-control bodyTextTheme search needsclick"
                placeholder="Enter keywords or phrase to search items"
                ng-model="WidgetSearch.keyword">
@@ -10,38 +10,30 @@
               ng-click="WidgetSearch.clearSearchResult()"></span>
         <hr class="small margin-zero" ng-if="WidgetSearch.items.length < 1 || !WidgetSearch.keyword">
       </div>
-      <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center" ng-if="WidgetSearch.items.length < 1 || !WidgetSearch.keyword">No search results.</p>
-      <div class="list-layout" ng-if="WidgetSearch.items.length && WidgetSearch.keyword">
-        <div class="list-item" ng-repeat="item in WidgetSearch.items" ng-if="isFetchedAllData">
-          <div class="list-item-media text-left overflow-hidden">
-            <div class="square-icon list-media-holder pull-left">
-              <img ng-if="!item.data.listImage"
-                   src="../../../styles/media/holder-1x1.png">
-              <img ng-if="item.data.listImage"
-                   load-image="1x1" crop-width="60" crop-height="60" crop-type="crop"
-                   data-final-src="{{item.data.listImage}}">
+      <div class="search-list">
+        <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center" ng-if="WidgetSearch.items.length < 1 || !WidgetSearch.keyword">No search results.</p>
+        <div class="list-layout" ng-if="WidgetSearch.items.length && WidgetSearch.keyword">
+
+          <div class="list-item" ng-repeat="item in WidgetSearch.items" ng-if="isFetchedAllData">
+            <div class="item-click-holder ellipsis" ng-click="WidgetSearch.openDetails(item.id)">
+              <div class="square-icon list-media-holder">
+                <img ng-if="!item.data.listImage"
+                    src="../../../styles/media/holder-1x1.png">
+                <img ng-if="item.data.listImage"
+                    load-image="1x1" crop-width="60" crop-height="60" crop-type="crop"
+                    data-final-src="{{item.data.listImage}}">
+              </div>
+              <div class="copy-holder ellipsis">
+                <h5 class="ellipsis margin-zero">{{item.data.title}}</h5>
+                <p class="ellipsis margin-zero">{{item.data.summary}}</p>
+                <p class="caption ellipsis margin-zero"><i>{{item.data.publishDate | date}}</i></p>
+              </div>
             </div>
-            <div
-                class="list-item-copy text-left padding-left-ten padding-right-ten">
-              <div class="copy-holder">
-                <p class="ellipsis margin-zero text-primary margin-top-five">
-                  <span><a ng-click="WidgetSearch.openDetails(item.id)">{{item.data
-                    .title}}</a></span>
-                </p>
-
-                <p class="ellipsis margin-zero bodyTextTheme">
-                  <span>{{item.data.summary}}</span>
-                </p>
-
-                <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
-                  <i>{{item.data.publishDate | date}}</i>
-                </p>
-              </div>
-              <div class="bookmark-holder" ng-click="WidgetSearch.addToBookmark(item.id, item.isBookmarked, $index, item)">
-                <span class="icon icon-bookmark2 " ng-class="item.isBookmarked?'text-primary':''"></span>
-              </div>
+            <div class="bookmark-holder" ng-click="WidgetSearch.addToBookmark(item.id, item.isBookmarked, $index, item)">
+              <span class="icon btn-icon icon-bookmark2 " ng-class="item.isBookmarked?'primaryBackgroundTheme whiteTheme':''"></span>
             </div>
           </div>
+
         </div>
       </div>
     </div>
