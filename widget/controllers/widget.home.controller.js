@@ -16,6 +16,7 @@
         WidgetHome.bookmarks = {};
         $scope.isFetchedAllData = false;
         WidgetHome.readyToLoadItems = true;
+        WidgetHome.seminarItemsInitialFetch = false;
         WidgetHome.listeners = {};
         var searchOptions = {
           skip: 0,
@@ -290,6 +291,9 @@
             return;
           }
 
+          //If there are 0 items loaded and initial fetch was done, don't try to load again.
+          if (itemsCount === 0 && WidgetHome.seminarItemsInitialFetch) return;
+
           if (WidgetHome.readyToLoadItems)
             WidgetHome.getItems();
         };
@@ -301,6 +305,7 @@
           var successAll = function (resultAll) {
             Buildfire.spinner.hide();
             WidgetHome.busy = false;
+            WidgetHome.seminarItemsInitialFetch = true;
             WidgetHome.items = WidgetHome.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
             searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
 
