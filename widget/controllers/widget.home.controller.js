@@ -299,7 +299,7 @@
         };
 
         WidgetHome.getItems = function () {
-          WidgetHome.busy = true;
+          //WidgetHome.busy = true;
           WidgetHome.readyToLoadItems = false;
           Buildfire.spinner.show();
           var successAll = function (resultAll) {
