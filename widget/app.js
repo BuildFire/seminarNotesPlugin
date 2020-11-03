@@ -23,6 +23,7 @@
               if (type === 'PUSH') {
                 console.log("VIEW_CHANGED>>>>>>>>", type, view);
                 currentView = ViewStack.getPreviousView();
+                buildfire.history.push(currentView, {showItemInTitlebar:true})
 
                 var newScope = $rootScope.$new();
                 var _newView = '<div  id="' + view.template + '" ><div class="slide content" data-back-img="{{itemDetailbackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
@@ -165,6 +166,7 @@
           ViewStack.pop();
         } else {
           buildfire.navigation._goBackOne();
+          buildfire.history.pop();
         }
       };
 

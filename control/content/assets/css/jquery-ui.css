@@ -1271,3 +1271,9 @@ body .ui-tooltip {
 	filter: Alpha(Opacity=30); /* support: IE8 */
 	border-radius: 8px;
 }
+
+.draggable-list-view.carousel-items .d-item span.title {
+	width: 40% !important;
+    max-width: 40% !important;
+    margin-right: 0;
+}
