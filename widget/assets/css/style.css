@@ -834,3 +834,8 @@ html[buildfire='widget'] .modal {
     0%    { transform: rotate(0deg); }
     100%  { transform: rotate(360deg); }
 }
+
+.whiteTheme {
+    height: 45px;
+    min-height: 45px;
+}
