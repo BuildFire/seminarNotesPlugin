@@ -80,6 +80,9 @@
         <span
             class="title pull-left ellipsis" ng-if="item.data.publishDate">Pub.
           Date: {{item.data.publishDate | date}}</span>
+          <span
+          class="title pull-left ellipsis" ng-if="item.data.releaseDate">
+          Release: {{item.data.releaseDate | date}}</span>
             </div>
             <div class="pull-right">
 	                <span class="btn-icon btn-delete-icon btn-danger"
@@ -88,6 +91,13 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <hr class="none">
+  <div class="item clearfix row">
+    <div class="col-md-12">
+      <input id="check" type="checkbox" ng-model="ContentHome.data.allowSharing" />
+      <label for="check">Allow Content Sharing</label>
     </div>
   </div>
 </div>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="socialPluginSettings">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Load helper.css to use our helper classes. -->
+    <link href="../../../../styles/helper.css" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="../../../../scripts/buildfire.js"></script>
+    <script src="../../../../scripts/angular/angular.min.js"></script>
+    <script src="../../../../scripts/angular/angular-route.min.js"></script>
+    <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
+    <!-- build:bundleSharedJSFiles  -->
+    <script src="../../widget/assets/js/shared/stringsConfig.js"></script>
+    <script src="../../widget/assets/js/shared/strings.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:bundleJSFiles  -->
+    <script src="controllers/stringsUI.js"></script>
+    <script src="app.js"></script>
+    <script src="controllers/languages.js"></script>
+    <!-- endbuild -->
+        <style>
+            .subTitle{
+                margin-bottom: 25px;
+                font-style: italic;
+            }
+    
+            textarea:invalid,input:invalid{
+                background-color:lightpink;
+            }
+    
+            .hidden{
+                display: none;
+            }
+    
+            #deleteButton{
+                padding-right: 25px;
+                margin-top: 5px;
+            }
+        </style>
+</head>
+<body class="scrollable">
+<div class="settings" ng-view></div>
+</body>
+</html>

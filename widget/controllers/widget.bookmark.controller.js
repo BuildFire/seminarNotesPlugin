@@ -22,7 +22,7 @@
             itemListLayout: LAYOUTS.itemListLayout[0].name
           }
         };
-        WidgetBookmark.hasAtleastOneBookmark = false;
+        WidgetBookmark.hasAtLeastOneBookmark = false;
 
 
         //Refresh list of bookmarks on pulling the tile bar
@@ -47,44 +47,60 @@
         WidgetBookmark.init = function () {
           Buildfire.spinner.show();
           var success = function (result) {
-              Buildfire.spinner.hide();
+            Buildfire.spinner.hide();
 
-              if (result && result.data) {
-                WidgetBookmark.data = result.data;
-              }
-
+            if (result && result.data) {
+              WidgetBookmark.data = result.data;
             }
+
+          }
             , error = function (err) {
               Buildfire.spinner.hide();
               console.error('Error while getting data', err);
             };
+
+          Buildfire.datastore.get("languages", (err, result) => {
+            if (err) return console.log(err)
+            let strings = {};
+            if (result.data && result.data.screenOne)
+              strings = result.data.screenOne;
+            else
+              strings = stringsConfig.screenOne.labels;
+
+            let languages = {};
+            Object.keys(strings).forEach(e => {
+              strings[e].value ? languages[e] = strings[e].value : languages[e] = strings[e].defaultValue;
+            });
+            WidgetBookmark.languages = languages;
+          });
+
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
         };
 
         WidgetBookmark.getItems = function () {
           Buildfire.spinner.show();
           var successAll = function (resultAll) {
+            Buildfire.spinner.hide();
+            WidgetBookmark.items = WidgetBookmark.items.length ? WidgetBookmark.items.concat(resultAll) : resultAll;
+            console.log("==============", WidgetBookmark.items);
+            searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
+            if (resultAll.length == PAGINATION.itemCount) {
+              WidgetBookmark.busy = false;
+            }
+            var err = function (error) {
               Buildfire.spinner.hide();
-              WidgetBookmark.items = WidgetBookmark.items.length ? WidgetBookmark.items.concat(resultAll) : resultAll;
-              console.log("==============", WidgetBookmark.items);
-              searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
-              if (resultAll.length == PAGINATION.itemCount) {
-                WidgetBookmark.busy = false;
-              }
-              var err = function (error) {
-                Buildfire.spinner.hide();
-                console.log("============ There is an error in getting data", error);
-              }, result = function (result) {
-                Buildfire.spinner.hide();
-                console.log("===========search", result);
-                WidgetBookmark.bookmarks = result;
-                WidgetBookmark.getBookmarks();
-              };
-            if(WidgetBookmark.currentLoggedInUser && WidgetBookmark.currentLoggedInUser._id)
+              console.log("============ There is an error in getting data", error);
+            }, result = function (result) {
+              Buildfire.spinner.hide();
+              console.log("===========search", result);
+              WidgetBookmark.bookmarks = result;
+              WidgetBookmark.getBookmarks();
+            };
+            if (WidgetBookmark.currentLoggedInUser && WidgetBookmark.currentLoggedInUser._id)
               UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
 
 
-            },
+          },
             errorAll = function (error) {
               Buildfire.spinner.hide();
               console.log("error", error)
@@ -97,7 +113,7 @@
             WidgetBookmark.items[item].isBookmarked = false;
             for (var bookmark in WidgetBookmark.bookmarks) {
               if (WidgetBookmark.items[item].id == WidgetBookmark.bookmarks[bookmark].data.itemId) {
-                WidgetBookmark.hasAtleastOneBookmark = true;
+                WidgetBookmark.hasAtLeastOneBookmark = true;
                 WidgetBookmark.items[item].isBookmarked = true;
                 WidgetBookmark.items[item].bookmarkId = WidgetBookmark.bookmarks[bookmark].id;
               }
@@ -152,10 +168,13 @@
             WidgetBookmark.getBookmarks();
             if (!$scope.$$phase)
               $scope.$digest();
+            WidgetBookmark.hasAtLeastOneBookmark = WidgetBookmark.items.some(x => x.isBookmarked);
+            $scope.text = WidgetBookmark.languages.itemRemovedFromBookmarks;
             var removeBookmarkModal = $modal.open({
               templateUrl: 'templates/Bookmark_Removed.html',
               size: 'sm',
-              backdropClass: "ng-hide"
+              backdropClass: "ng-hide",
+              scope: $scope
             });
             $timeout(function () {
               removeBookmarkModal.close();

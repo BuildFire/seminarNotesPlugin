@@ -64,6 +64,34 @@
         }
       };
     })
+    .directive('dateTimeRelease', function () {
+      return {
+        scope: {releaseDate: "="},
+        link: function (scope, elem, attrs) {
+          setTimeout(function () {
+            $(elem).datepicker({
+              dateFormat: "mm/dd/yy",
+              onSelect: function () {
+                var value = $(this).val();
+                scope.releaseDate = +new Date(value);
+                scope.$apply();
+                $(elem).datepicker("setDate", new Date(value));
+                document.activeElement.blur();
+              }
+            });
+            scope.hasDatePicker = true;
+            scope.$apply();
+          }, 0);
+
+          var unbindWatch = scope.$watch("releaseDate", function (newVal) {
+            if(newVal && scope.hasDatePicker) {
+              $(elem).datepicker("setDate", new Date(newVal));
+              unbindWatch();
+            }
+          });
+        }
+      };
+    })
     .run(['$location', '$rootScope',function ($location, $rootScope) {
       buildfire.messaging.onReceivedMessage = function (msg) {
         console.log("&&&&&&&&&&&&&&&&&&&&", msg);

@@ -14,9 +14,15 @@
   }
 , "settings":{
     "enabled":false
-  }
-}
-,"widget":{
+  },
+  "customTabs": [
+    {
+      "title": "Languages",
+      "url": "languages/index.html"
+    }
+  ]
+},
+"widget":{
 
 },
   "features" : [],

@@ -1,56 +1,61 @@
 <div class="holder padding-zero load-in has-bottom sticky-bottom-menu clearfix">
     <div class="scrollable infinite-scroll-parent">
         <div class="seminar-notes layout1">
-            <div id="carousel" ng-if="WidgetHome.data.content.carouselImages.length"
-                 build-fire-carousel=""
-                 ng-style="WidgetHome.data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
+            <div id="carousel" ng-if="WidgetHome.data.content.carouselImages.length" build-fire-carousel=""
+                ng-style="WidgetHome.data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}">
+            </div>
             <div class="main-header" ng-if="WidgetHome.showDescription(WidgetHome.data.content.description)">
                 <p class="margin-zero" ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
             </div>
-            <div class="list-layout" ng-if="WidgetHome.data.content"
-                 infinite-scroll="WidgetHome.loadMore()"
-                 infinite-scroll-distance="1"
-                 data-infinite-container=".infinite-scroll-parent"
-                 infinite-scroll-disabled="WidgetHome.busy">
-                <div class="list-item" ng-repeat="item in WidgetHome.items" ng-if="isFetchedAllData">
+            <div class="list-layout" ng-if="WidgetHome.data.content" infinite-scroll="WidgetHome.loadMore()"
+                infinite-scroll-distance="1" data-infinite-container=".infinite-scroll-parent"
+                infinite-scroll-disabled="WidgetHome.busy">
+                <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center"
+                    ng-if="!WidgetHome.items || WidgetHome.released.length == 0">{{WidgetHome.languages.noItems}}</p>
+                <div class="list-item" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData">
                     <div class="item-click-holder ellipsis" ng-click="WidgetHome.openDetails(item.id)">
-                        <div class="square-icon list-media-holder"  ng-if="item.data.listImage">
-                            <img class="border-radius-three" load-image="1x1"
-                                    crop-width="60" crop-height="60" crop-type="crop"
-                                    data-final-src="{{item.data.listImage}}">
+                        <div class="square-icon list-media-holder" ng-if="item.data.listImage">
+                            <img class="border-radius-three" load-image="1x1" crop-width="60" crop-height="60"
+                                crop-type="crop" data-final-src="{{item.data.listImage}}">
                         </div>
                         <div class="copy-holder ellipsis">
                             <h5 class="ellipsis margin-zero">{{item.data.title}}</h5>
                             <p class="ellipsis margin-zero bodyTextTheme">{{item.data.summary}}</p>
-                            <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy"><i>{{item.data.publishDate | date}}</i></p>
+                            <p class="small ellipsis margin-zero bodyTextTheme opacity-seventy">
+                                <i>{{item.data.publishDate | date}}</i></p>
                         </div>
                     </div>
+                    <!-- <div class="bookmark-holder" ng-if="WidgetHome.currentLoggedInUser && WidgetHome.allowSharing"
+                        ng-click="WidgetHome.shareContent(item, $index)">
+                        <span class="icon btn-icon icon-link2 min-45"></span>
+                    </div> -->
                     <div class="bookmark-holder" ng-if="WidgetHome.currentLoggedInUser"
-                                ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
-                        <span class="icon btn-icon icon-bookmark2 " ng-class="!item.isBookmarked?'':'primaryBackgroundTheme whiteTheme'"></span>
+                        ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
+                        <span class="icon btn-icon icon-bookmark2 min-45"
+                            ng-class="!item.isBookmarked?'':'primaryBackgroundTheme whiteTheme'"></span>
                     </div>
                 </div>
-
                 <div class="text-center" ng-show="WidgetHome.busy">
                     <buildfire-spinner></buildfire-spinner>
                 </div>
             </div>
         </div>
     </div>
-    <div class="bottom fixed-bottom primaryBackgroundTheme clearfix bottom-zero">
+    <div class="bottom fixed-bottom primaryBackgroundTheme clearfix bottom-zero height-45">
         <div class="col-xs-3 pull-left text-center">
-            <a class="whiteTheme stretch active">Items</a>
+            <a class="whiteTheme stretch active ellipsis">{{WidgetHome.languages.items}}</a>
         </div>
         <div class="col-xs-3 pull-left text-center">
-            <a class="whiteTheme stretch" ng-click="WidgetHome.showItemNotes()">My Notes</a>
+            <a class="whiteTheme stretch ellipsis"
+                ng-click="WidgetHome.showItemNotes()">{{WidgetHome.languages.myNotes}}</a>
         </div>
         <div class="col-xs-3 pull-left text-center">
-            <a class="whiteTheme stretch" ng-click="WidgetHome.showBookmarkItems()">Bookmarks</a>
+            <a class="whiteTheme stretch ellipsis"
+                ng-click="WidgetHome.showBookmarkItems()">{{WidgetHome.languages.bookmarks}}</a>
         </div>
         <div class="col-xs-3 pull-left text-center">
-            <a class="whiteTheme stretch"
-               ng-click="WidgetHome.showSearchPage()">
-              Search</a>
+            <a class="whiteTheme stretch ellipsis"
+                ng-click="WidgetHome.showSearchPage()">{{WidgetHome.languages.search}}</a>
         </div>
     </div>
 </div>

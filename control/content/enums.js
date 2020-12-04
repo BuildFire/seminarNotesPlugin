@@ -6,7 +6,8 @@
       SEMINAR_INFO: 'seminarInfo',
       SEMINAR_ITEMS: "seminarItems",
       SEMINAR_BOOKMARKS: "seminarBookmarks",
-      SEMINAR_NOTES: "seminarNotes"
+      SEMINAR_NOTES: "seminarNotes",
+      SEMINAR_TEMP_NOTES: "seminarTempNotes"
     })
     .constant('STATUS_CODE', {
       INSERTED: 'inserted',

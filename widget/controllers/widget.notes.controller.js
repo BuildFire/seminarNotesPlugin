@@ -17,6 +17,21 @@
         WidgetNotes.swiped = [];
         WidgetNotes.listeners = {};
 
+        Buildfire.datastore.get("languages", (err, result) => {
+          if (err) return console.log(err)
+          let strings = {};
+          if (result.data && result.data.screenOne)
+            strings = result.data.screenOne;
+          else
+            strings = stringsConfig.screenOne.labels;
+
+          let languages = {};
+          Object.keys(strings).forEach(e => {
+            strings[e].value ? languages[e] = strings[e].value : languages[e] = strings[e].defaultValue;
+          });
+          WidgetNotes.languages = languages;
+        });
+
         //Refresh list of notes on pulling the tile bar
 
         buildfire.datastore.onRefresh(function () {
