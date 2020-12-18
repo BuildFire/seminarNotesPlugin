@@ -39,7 +39,8 @@
           searchOptions.skip = 0;
           WidgetNotes.busy = false;
           WidgetNotes.loadMore();
-          $scope.$digest();
+          if (!$scope.$$phase)
+            $scope.$digest();
         });
 
 
@@ -123,8 +124,8 @@
           }, error = function (err) {
             console.log('================there was a problem deleting your data', err);
           };
-          if(WidgetNotes.currentLoggedInUser && WidgetNotes.currentLoggedInUser._id)
-          UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetNotes.currentLoggedInUser._id).then(success, error);
+          if (WidgetNotes.currentLoggedInUser && WidgetNotes.currentLoggedInUser._id)
+            UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetNotes.currentLoggedInUser._id).then(success, error);
         };
 
         /**
@@ -298,7 +299,8 @@
               searchOptions.skip = 0;
               WidgetNotes.busy = false;
               WidgetNotes.loadMore();
-              $scope.$digest();
+              if (!$scope.$$phase)
+                $scope.$digest();
             });
           }
         });

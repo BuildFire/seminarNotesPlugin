@@ -42,7 +42,8 @@
               searchOptions.skip = 0;
               WidgetHome.busy = false;
               WidgetHome.loadMore();
-              $scope.$digest();
+              if (!$scope.$$phase)
+                $scope.$digest();
             }
           });
         });
@@ -296,7 +297,8 @@
         var onUpdateCallback = function (event) {
           console.log(event);
           setTimeout(function () {
-            $scope.$digest();
+            if (!$scope.$$phase)
+              $scope.$digest();
             if (event && event.tag === TAG_NAMES.SEMINAR_INFO) {
               WidgetHome.data = event.data;
               if (!WidgetHome.data.design)
@@ -338,8 +340,11 @@
               }
             }
             currentListLayout = WidgetHome.data.design.itemListLayout;
-            $scope.$digest();
-            $rootScope.$digest();
+            if (!$scope.$$phase)
+              $scope.$digest();
+            if (!$rootScope.$$phase)
+              $rootScope.$digest();
+
           }, 0);
         };
         DataStore.onUpdate().then(null, null, onUpdateCallback);
@@ -585,7 +590,8 @@
               searchOptions.skip = 0;
               WidgetHome.busy = false;
               WidgetHome.loadMore();
-              $scope.$digest();
+              if (!$scope.$$phase)
+                $scope.$digest();
             });
           }
         });

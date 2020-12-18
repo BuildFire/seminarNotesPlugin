@@ -143,7 +143,7 @@
         /**
          * link and sortable options
          */
-        var linkOptions = {"icon": "true"};
+        var linkOptions = { "icon": "true" };
 
         ContentItem.linksSortableOptions = {
           handle: '> .cursor-grab'
@@ -172,11 +172,11 @@
             _data.rank = ContentItem.item.data.rank;
             RankOfLastItem.setRank(_rankOfLastItem);
             updateMasterItem(ContentItem.item);
-            ContentItem.item.data.deepLinkUrl = Buildfire.deeplink.createLink({id: result.id});
+            ContentItem.item.data.deepLinkUrl = Buildfire.deeplink.createLink({ id: result.id });
             if (ContentItem.item.id) {
               buildfire.messaging.sendMessageToWidget({
                 id: ContentItem.item.id,
-                type: 'AddNewItem'
+                type: 'OpenItem'
               });
             }
           }, errorItem = function () {
@@ -210,8 +210,8 @@
             }
             _data.dateCreated = result.data.dateCreated;
             _data.rank = result.data.rank;
-            if(result && result.data && !result.data.deepLinkUrl) {
-              ContentItem.item.data.deepLinkUrl = Buildfire.deeplink.createLink({id: result.id});
+            if (result && result.data && !result.data.deepLinkUrl) {
+              ContentItem.item.data.deepLinkUrl = Buildfire.deeplink.createLink({ id: result.id });
             }
             updateMasterItem(ContentItem.item);
           }, errorItem = function () {
@@ -227,7 +227,7 @@
          */
 
         ContentItem.addLink = function () {
-          var options = {showIcons: false};
+          var options = { showIcons: false };
           var callback = function (error, result) {
             if (error) {
               return console.error('Error:', error);
@@ -272,8 +272,8 @@
         };
 
         ContentItem.goToHome = function () {
-            buildfire.messaging.sendMessageToWidget({});
           $location.path('#/');
+          buildfire.messaging.sendMessageToWidget({ type: 'BackToHome' });
         };
 
         var tmrDelayForItem = null;

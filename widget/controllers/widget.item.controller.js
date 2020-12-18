@@ -60,7 +60,8 @@
         buildfire.datastore.onRefresh(function () {
           if (currentView.params && currentView.params.noteId)
             WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
-          $scope.$digest();
+          if (!$scope.$$phase)
+            $scope.$digest();
         });
 
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
@@ -460,7 +461,8 @@
 
         var onUpdateCallback = function (event) {
           setTimeout(function () {
-            $scope.$digest();
+            if (!$scope.$$phase)
+              $scope.$digest();
             if (event && event.tag) {
               console.log("_____________________________", event);
               switch (event.tag) {
@@ -484,8 +486,10 @@
                   }
                   break;
               }
-              $scope.$digest();
-              $rootScope.$apply();
+              if (!$scope.$$phase)
+                $scope.$digest();
+              if (!$rootScope.$$phase)
+                $rootScope.$apply();
             }
           }, 500);
         };
@@ -495,9 +499,11 @@
         WidgetItem.shareContent = function () {
           buildfire.notifications.confirm({
             title: WidgetItem.languages.areYouSureTitle,
-            message: WidgetItem.languages.areYouSureMessage,
+            message: WidgetItem.languages.areYouSureMessage
+            , confirmButton: { text: 'Yes', key: 'confirm', type: 'danger' }
+            , cancelButton: { text: 'No', key: 'cancel', type: 'default' }
           }, (errorOrConfirmed, result) => {
-            if (errorOrConfirmed === true || (result && result.selectedButton && result.selectedButton.key === 'confirm')) {
+            if (errorOrConfirmed == 1 || result.selectedButton.key == 'confirm') {
               Buildfire.spinner.show();
               WidgetItem.getAllNotes((allNotes) => {
                 if (allNotes.length > 0) {
@@ -514,16 +520,16 @@
                     }
                   }
                   TempPublicDataCopy.insert(publicDataCopy, TAG_NAMES.SEMINAR_TEMP_NOTES).then((result) => {
-                    console.dir(result);
                     let link = {
                       title: WidgetItem.languages.shareTitle,
                       type: "website",
-                      description: WidgetItem.languages.shareDescription + WidgetItem.item.noteTitle,
-                      data: {
+                      description: WidgetItem.languages.shareDescription + WidgetItem.item.data.title
+                    };
 
-                        "itemId": WidgetItem.item.id,
-                        "dataId": result.id
-                      }
+                    link.data = {
+
+                      "itemId": WidgetItem.item.id,
+                      "dataId": result.id
                     };
 
                     buildfire.deeplink.generateUrl(link, (err, result) => {
@@ -644,7 +650,8 @@
             buildfire.datastore.onRefresh(function () {
               if (currentView.params && currentView.params.noteId) {
                 WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
-                $scope.$digest();
+                if (!$scope.$$phase)
+                  $scope.$digest();
               }
             });
           }
