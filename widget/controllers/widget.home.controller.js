@@ -254,7 +254,7 @@
               WidgetHome.items = [];
               searchOptions.skip = 0;
               WidgetHome.busy = false;
-              WidgetHome.loadMore();
+              WidgetHome.loadMore({ triggeredFromOnUpdate: true });
             }
 
             if (!WidgetHome.data.design.itemListLayout) {
@@ -278,11 +278,13 @@
         };
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
-        WidgetHome.loadMore = function () {
+        WidgetHome.loadMore = function (params = { triggeredFromOnUpdate: false }) {
           console.log("------------------------In loadmore");
           if (WidgetHome.busy){
             return;
           }
+
+          if (params && params.triggeredFromOnUpdate) return WidgetHome.getItems();
 
           var itemsCount = (WidgetHome.items && WidgetHome.items.length) ? WidgetHome.items.length : 0;
 
