@@ -166,6 +166,7 @@
 
           var successItem = function (result) {
             console.log("Inserted", result.id);
+            ContentItem.saveDeeplink(result);
             ContentItem.isUpdating = false;
             ContentItem.item.id = result.id;
             _data.dateCreated = ContentItem.item.data.dateCreated;
@@ -186,7 +187,17 @@
           DataStore.insert(ContentItem.item.data, TAG_NAMES.SEMINAR_ITEMS).then(successItem, errorItem);
         };
 
+        ContentItem.saveDeeplink = function(result){
+          new Deeplink({
+            deeplinkId:result.id,
+            name:result.data.title,
+            deeplinkData:{id:result.id},
+            imageUrl:(result.data.listImage)?result.data.listImage:null
+          }).save();
+        }
+
         ContentItem.updateItemData = function () {
+          ContentItem.saveDeeplink(ContentItem.item);
           DataStore.update(ContentItem.item.id, ContentItem.item.data, TAG_NAMES.SEMINAR_ITEMS, function (err) {
             ContentItem.isUpdating = false;
             if (err)

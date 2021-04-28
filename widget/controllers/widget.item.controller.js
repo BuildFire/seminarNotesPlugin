@@ -534,7 +534,7 @@
 
                     buildfire.deeplink.generateUrl(link, (err, result) => {
                       if (err) {
-                        buildfire.components.toast.showToastMessage({ text: WidgetItem.languages.errorSharing }, () => { });
+                        buildfire.dialog.toast({ message: WidgetItem.languages.errorSharing});
                       } else {
                         buildfire.device.share({
                           subject: link.title,
@@ -542,18 +542,18 @@
                           link: result.url
                         }, (err, result) => {
                           if (err)
-                            buildfire.components.toast.showToastMessage({ text: WidgetItem.languages.errorSharing }, () => { });
+                          buildfire.dialog.toast({ message: WidgetItem.languages.errorSharing});
                           else
                             console.dir(result);
-                          buildfire.components.toast.showToastMessage({ text: WidgetItem.languages.expireWarning }, () => { });
+                            buildfire.dialog.toast({ message: WidgetItem.languages.expireWarning});
                         });
                       }
                     });
                   }, () => {
-                    buildfire.components.toast.showToastMessage({ text: WidgetItem.languages.errorSharing }, () => { });
+                    buildfire.dialog.toast({ message: WidgetItem.languages.errorSharing });
                   });
                 } else {
-                  buildfire.components.toast.showToastMessage({ text: WidgetItem.languages.errorSharingNoNotes }, () => { });
+                  buildfire.dialog.toast({ message: WidgetItem.languages.errorSharingNoNotes });
                 }
                 Buildfire.spinner.hide();
               });

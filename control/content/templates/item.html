@@ -85,9 +85,11 @@
       </div>
     </div>
     <hr class="none">
-    <div class="item clearfix row">
-      <div class="col-md-3 main pull-right">
-        <a class="btn btn-primary stretch"  ng-click="ContentItem.goToHome()"
+	  <div id="actionItems" style="margin-bottom:50px;"></div>
+	  <hr class="none">
+    <div class="item clearfix row" style="width:100%; position:fixed; background-color:white; bottom:0px; z-index:0; margin-left: 0px !important;">
+      <div class="main pull-right" style="margin-right: 15px; margin-top: 5px;">
+        <a class="btn btn-primary stretch"  style="width:100px;" ng-click="ContentItem.goToHome()"
            ng-disabled="!ContentItem.isValidItem(ContentItem.item.data)">Done
         </a>
       </div>

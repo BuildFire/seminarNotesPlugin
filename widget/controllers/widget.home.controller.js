@@ -20,6 +20,7 @@
         WidgetHome.seminarItemsInitialFetch = false;
         WidgetHome.imported = false;
         WidgetHome.listeners = {};
+        $rootScope.deeplinkingDone = false;//it makes bug if its not rootscope with cp
         var searchOptions = {
           skip: 0,
           limit: PAGINATION.itemCount
@@ -48,11 +49,42 @@
           });
         });
 
+        WidgetHome.openDetails = function (itemId) {
+          ViewStack.push({
+            template: 'Item',
+            params: {
+              controller: "WidgetItemCtrl as WidgetItem",
+              itemId: itemId
+            }
+          });
+
+          //buildfire.messaging.sendMessageToControl({
+          //  type: 'OpenItem',
+          //  data: {"id": itemId}
+          //});
+        };
+
         WidgetHome.importDeepLinkData = function () {
-          if (WidgetHome.imported) return;
-          WidgetHome.imported = true;
+      //  if (WidgetHome.imported) return;
+         // WidgetHome.imported = true;
           buildfire.deeplink.getData(function (data) {
-            if (data && data.itemId && data.dataId) {
+            if(data && data.id && !$rootScope.deeplinkingDone){
+              $rootScope.deeplinkingDone=true;
+              var notFound = function(){
+                var text=WidgetHome.languages.deeplinkNoteNotFound?WidgetHome.languages.deeplinkNoteNotFound:'Item does not exist!';
+                buildfire.dialog.toast({
+                  message: text
+                });
+              }
+              var successAll = function (result) {
+                if(!result || !result.data || !result.data.title)notFound();
+                else WidgetHome.openDetails(data.id);
+              };
+              var errorAll = function (err) {
+                  notFound();
+              };
+              DataStore.getById(data.id, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
+            }else if (data && data.itemId && data.dataId) {
               TempPublicDataCopy.getById(data.dataId, TAG_NAMES.SEMINAR_TEMP_NOTES).then((tempCopyResult) => {
                 if (tempCopyResult && tempCopyResult.data.notes) {
                   buildfire.notifications.confirm({
@@ -406,20 +438,6 @@
           DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
         };
 
-        WidgetHome.openDetails = function (itemId) {
-          ViewStack.push({
-            template: 'Item',
-            params: {
-              controller: "WidgetItemCtrl as WidgetItem",
-              itemId: itemId
-            }
-          });
-
-          //buildfire.messaging.sendMessageToControl({
-          //  type: 'OpenItem',
-          //  data: {"id": itemId}
-          //});
-        };
 
         WidgetHome.currentLoggedInUser = null;
 

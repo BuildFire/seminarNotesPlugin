@@ -183,6 +183,12 @@ const stringsConfig = {
 				, maxLength: 60
 				, defaultValue: "Error sharing notes: item doesn't contain notes"
 			},
+			deeplinkNoteNotFound: {
+				title: "Deep link to Item that does not exist",
+				placeholder: "Item does not exist!",
+				maxLength: 50,
+				defaultValue: "Item does not exist!",
+			},
 		}
 	}
 };

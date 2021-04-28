@@ -85,6 +85,7 @@
           modalInstance.result.then(function (message) {
             if (message === 'yes') {
               var item = ContentHome.items[_index];
+              Deeplink.deleteById(item.id);
               DataStore.deleteById(item.id, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
                 ContentHome.items.splice(_index, 1);
                 searchOptionUserData.filter ={"$or": [{"$json.itemID": {"$eq": item.id}}]};
