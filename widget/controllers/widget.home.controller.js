@@ -420,7 +420,7 @@
             console.log("----------------------", WidgetHome.items);
             WidgetHome.setBookmarks();
             WidgetHome.readyToLoadItems = true;
-            $scope.$apply();
+            $scope.$applyAsync();
             if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
               WidgetHome.importDeepLinkData();
             } else {
