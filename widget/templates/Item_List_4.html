@@ -9,7 +9,12 @@
 			<div class="main-header" ng-if="WidgetHome.showDescription(WidgetHome.data.content.description)">
 				<p class="margin-zero" ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
 			</div>
-			<p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center" ng-if="!WidgetHome.items || WidgetHome.released.length == 0">{{WidgetHome.languages.noItems}}</p>
+			<p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center ver-center" ng-if="!WidgetHome.items || WidgetHome.released.length == 0"
+			ng-style="WidgetHome.data.content.carouselImages.length > 0 ? {'top': '60%' } : {}"
+			>
+				{{WidgetHome.languages.noItems}}
+				<img style="margin-top: 35px;" src="./images/empty_page.svg"/>
+			</p>
 
 			<div class="plugin-banner hasBackground">
 				<div class="plugin-slide" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData">

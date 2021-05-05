@@ -9,9 +9,13 @@
                     ng-click="WidgetNotes.clearSearchResult()"></span>
             </div>
             <div class="list-layout search-list" infinite-scroll="WidgetNotes.loadMore()" infinite-scroll-distance="1"
-                data-infinite-container=".infinite-scroll-parent" infinite-scroll-disabled="WidgetNotes.busy">
-                <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center"
-                    ng-if="WidgetNotes.noItemFound">{{WidgetNotes.languages.noNotesAddedYet}}</p>
+            ng-style="WidgetNotes.noItemFound ? {'position': 'unset' } : {}"     
+            data-infinite-container=".infinite-scroll-parent" infinite-scroll-disabled="WidgetNotes.busy">
+                <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center ver-center"
+                    ng-if="WidgetNotes.noItemFound">
+                    {{WidgetNotes.languages.noNotesAddedYet}}
+                    <img style="margin-top: 35px;" src="./images/empty_page.svg"/>
+                </p>
                 <div class="list-item swipe-item" ng-hide="WidgetNotes.noItemFound"
                     ng-repeat="note in WidgetNotes.Notes"
                     ng-swipe-left="WidgetNotes.swipeToDeleteNote($event, $index, true)"

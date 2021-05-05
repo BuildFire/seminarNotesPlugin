@@ -339,9 +339,10 @@
                 WidgetHome.data.content = {};
               if (event.data.content.sortBy && currentSortOrder != event.data.content.sortBy) {
                 WidgetHome.data.content.sortBy = event.data.content.sortBy;
-                WidgetHome.items = [];
                 searchOptions.skip = 0;
                 WidgetHome.busy = false;
+                WidgetHome.items = [];
+                WidgetHome.seminarItemsInitialFetch=false;
                 WidgetHome.loadMore();
               }
               if (!WidgetHome.data.design.itemListBgImage) {
@@ -351,9 +352,10 @@
               }
             }
             else if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {
-              WidgetHome.items = [];
               searchOptions.skip = 0;
               WidgetHome.busy = false;
+              WidgetHome.items = [];
+              WidgetHome.seminarItemsInitialFetch=false;
               WidgetHome.loadMore();
             }
 
@@ -376,7 +378,6 @@
               $scope.$digest();
             if (!$rootScope.$$phase)
               $rootScope.$digest();
-
           }, 0);
         };
         DataStore.onUpdate().then(null, null, onUpdateCallback);
@@ -393,10 +394,8 @@
           if (itemsCount > 0 && itemsCount < PAGINATION.itemCount) {
             return;
           }
-
           //If there are 0 items loaded and initial fetch was done, don't try to load again.
           if (itemsCount === 0 && WidgetHome.seminarItemsInitialFetch) return;
-
           if (WidgetHome.readyToLoadItems)
             WidgetHome.getItems();
         };
@@ -410,7 +409,7 @@
             Buildfire.spinner.hide();
             WidgetHome.busy = false;
             WidgetHome.seminarItemsInitialFetch = true;
-            WidgetHome.items = WidgetHome.items.length ? WidgetHome.items.concat(resultAll) : resultAll;
+            WidgetHome.items = WidgetHome.items.length != 0 ? WidgetHome.items.concat(resultAll) : resultAll;
             var released = WidgetHome.items.filter(result => {
               return !result.data.releaseDate || result.data.releaseDate < Date.now();
             });

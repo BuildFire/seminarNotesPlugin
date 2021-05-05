@@ -1023,3 +1023,17 @@ html[buildfire='widget'] .modal {
     height:0px;
     border-radius:0px;
 }
+
+.ver-center{
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    width:210px;
+    z-index: -1;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.plugin-slide, .plugin-slide img{
+    width:100% !important;
+}

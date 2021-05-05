@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    	
-	<!-- Load helper.css to use our helper classes.
-	<link href="../../../../styles/helper.css" rel="stylesheet">
-	-->
-	
-	<!-- JS -->
-	<script src="../../../../scripts/buildfire.js"></script>
-   
- 	<!--
-    <script src="../../../../scripts/angular/angular.min.js"></script>
-    <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
+<html ng-app="seminarSettings">
+<head lang="en">
+  <!-- CSS -->
+  <link href="../../../../styles/helper.css" rel="stylesheet">
+  <link href="../../../../styles/siteIcons.css" rel="stylesheet">
+  <link href="./assets/css/control.settings.css" rel="stylesheet">
 
-    <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
-    -->
+  <!-- JS -->
+  <script src="../../../../scripts/buildfire.js"></script>
+  <script src="../../../../scripts/angular/angular.min.js"></script>
+  <script src="../../../../scripts/angular/angular-route.min.js"></script>
+  <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
+  <script src="../../../../scripts/buildfire/components/images/thumbnail.js"></script>
+  <script src="app.js"></script>
+  <script src="app.services.js"></script>
+  <script src="enums.js"></script>
+  <script src="controllers/settings.home.controller.js"></script>
+
+  <meta charset="UTF-8">
 </head>
 <body>
-    <span>Settings - Hello world!</span>
+<div class="content" ng-view=""></div>
 </body>
 </html>

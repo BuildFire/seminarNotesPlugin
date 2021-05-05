@@ -11,7 +11,10 @@
         <hr class="small margin-zero" ng-if="WidgetSearch.released.length == 0 || !WidgetSearch.keyword">
       </div>
       <div class="search-list">
-        <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center" ng-if="WidgetSearch.released.length == 0 || !WidgetSearch.keyword">{{WidgetSearch.languages.noSearchResults}}</p>
+        <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center ver-center" ng-if="WidgetSearch.released.length == 0 || !WidgetSearch.keyword">
+          {{WidgetSearch.languages.noSearchResults}}
+          <img style="margin-top: 35px;" src="./images/empty_page.svg"/>
+        </p>
         <div class="list-layout" ng-if="WidgetSearch.items.length && WidgetSearch.keyword">
 
           <div class="list-item" ng-repeat="item in WidgetSearch.released" ng-if="isFetchedAllData">

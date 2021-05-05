@@ -3,11 +3,16 @@
     
     <div class="seminar-notes layout3"
          infinite-scroll="WidgetBookmark.loadMore()"
-         infinite-scroll-distance="1"
+         infinite-scroll-distance="1"    
          data-infinite-container=".infinite-scroll-parent"
          infinite-scroll-disabled="WidgetBookmark.busy">
-      <div class="list-layout">
-        <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center" ng-if="!WidgetBookmark.hasAtLeastOneBookmark">{{WidgetBookmark.languages.noBookmarksAddedYet}}</p>
+      <div class="list-layout"
+      ng-style="!WidgetBookmark.hasAtLeastOneBookmark ? {'position': 'unset' } : {}" 
+      >
+        <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center ver-center" ng-if="!WidgetBookmark.hasAtLeastOneBookmark">
+          {{WidgetBookmark.languages.noBookmarksAddedYet}}
+          <img style="margin-top: 35px;" src="./images/empty_page.svg"/>
+        </p>
         <div class="list-item" ng-if="item.isBookmarked && isFetchedAllData" ng-repeat="item in WidgetBookmark.items">
             <div class="item-click-holder ellipsis" ng-click="WidgetBookmark.openDetails(item.id)">
               <div class="square-icon list-media-holder pull-left">

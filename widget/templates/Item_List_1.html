@@ -10,8 +10,12 @@
             <div class="list-layout" ng-if="WidgetHome.data.content" infinite-scroll="WidgetHome.loadMore()"
                 infinite-scroll-distance="1" data-infinite-container=".infinite-scroll-parent"
                 infinite-scroll-disabled="WidgetHome.busy">
-                <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center"
-                    ng-if="!WidgetHome.items || WidgetHome.released.length == 0">{{WidgetHome.languages.noItems}}</p>
+                <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center ver-center"
+                ng-style="WidgetHome.data.content.carouselImages.length > 0 ? {'top': '60%' } : {}"
+                    ng-if="!WidgetHome.items || WidgetHome.released.length == 0">
+                    {{WidgetHome.languages.noItems}}
+                    <img style="margin-top: 35px;" src="./images/empty_page.svg"/>
+                </p>
                 <div class="list-item" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData">
                     <div class="item-click-holder ellipsis" ng-click="WidgetHome.openDetails(item.id)">
                         <div class="square-icon list-media-holder" ng-if="item.data.listImage">
