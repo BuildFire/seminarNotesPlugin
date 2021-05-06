@@ -201,9 +201,10 @@
             }
             if (!WidgetHome.data.content)
               WidgetHome.data.content = {};
-            if (WidgetHome.data.content.sortBy) {
-              currentSortOrder = WidgetHome.data.content.sortBy;
-            }
+              
+            if (typeof WidgetHome.data.content.sortBy == "undefined")
+                WidgetHome.data.content.sortBy=SORT.MANUALLY;
+              currentSortOrder=WidgetHome.data.content.sortBy;
 
             if (!WidgetHome.data.design.itemListBgImage) {
               $rootScope.itemListbackgroundImage = "";
