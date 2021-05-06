@@ -191,6 +191,8 @@
                 else
                   editor.loadItems(ContentHome.data.content.carouselImages);
               }
+              if(typeof ContentHome.data.content.sortBy == "undefined")
+                ContentHome.data.content.sortBy=SORT.MANUALLY;
               ContentHome.itemSortableOptions.disabled = !(ContentHome.data.content.sortBy === SORT.MANUALLY);
               RankOfLastItem.setRank(ContentHome.data.content.rankOfLastItem || 0);
               updateMasterItem(ContentHome.data);
