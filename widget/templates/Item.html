@@ -1,20 +1,26 @@
-<div class="no-scroll holder load-in padding-zero has-bottom sticky-bottom-menu" ng-controller="WidgetItemCtrl as WidgetItem">
+<div class="no-scroll holder load-in padding-zero has-bottom sticky-bottom-menu"
+    ng-controller="WidgetItemCtrl as WidgetItem">
     <div class="scrollable">
 
-        <div class="seminar-notes" ng-class="{'scroll-y' : WidgetItem.forceScroll}" style="padding-bottom:45px;" ng-if="WidgetItem.item.data">
+        <div class="seminar-notes" ng-class="{'scroll-y' : WidgetItem.forceScroll}" style="padding-bottom:45px;"
+            ng-if="WidgetItem.item.data">
             <!--<div class="plugin-slide">-->
             <!--<img src="../../../styles/media/holder-16x9.png">-->
             <!--</div>-->
-            <div id="carousel2" ng-if="WidgetItem.item.data.carouselImages.length" build-fire-carousel2="" ng-style="WidgetItem.item.data.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
+            <div id="carousel2" ng-if="WidgetItem.item.data.carouselImages.length" build-fire-carousel2=""
+                ng-style="WidgetItem.item.data.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}">
+            </div>
 
             <div class="item-main-header">
                 <div class="padded word-break">
-                    <h5 class="margin-zero">{{WidgetItem.item.data .title}}</h5>
-                    <p class="margin-zero margin-bottom-fifteen caption"><i>{{WidgetItem.item.data.publishDate | date}}</i></p>
-                    <p class="word-break">{{WidgetItem.item.data .summary}}</p>
+                    <h5 class="margin-zero">{{WidgetItem.item.data.title}}</h5>
+                    <p class="margin-zero margin-bottom-fifteen caption">
+                        <i>{{WidgetItem.item.data.publishDate | date}}</i></p>
+                    <p class="word-break">{{WidgetItem.item.data.summary}}</p>
                 </div>
-                <div class="text-center menu-options" ng-if="WidgetItem.item.data.links.length" ng-click="WidgetItem.openLinks(WidgetItem.item.data.links, $event)">
-                    <a class="text-primary">Open Menu Options</a>
+                <div class="text-center menu-options" ng-if="WidgetItem.item.data.links.length"
+                    ng-click="WidgetItem.openLinks(WidgetItem.item.data.links, $event)">
+                    <a class="text-primary">{{WidgetItem.languages.openMenuOptions}}</a>
                 </div>
             </div>
             <div class="padded word-break">
@@ -23,57 +29,84 @@
 
         </div>
     </div>
-    <div class="bottom fixed-bottom primaryBackgroundTheme has-content open transition-third">
+    <div class="bottom fixed-bottom has-content open transition-third">
         <div class="extra-links" ng-if="WidgetItem.currentLoggedInUser">
             <!-- When Inactive, use these theme classes -->
-            <a class="bg-primary btn-fab" ng-click="WidgetItem.addToBookmark(WidgetItem.item.id,WidgetItem.item, WidgetItem.item.isBookmarked )" ng-class="WidgetItem.item.isBookmarked?'bookmarked':''">
+            <a class="bg-primary btn-fab"
+                ng-click="WidgetItem.addToBookmark(WidgetItem.item.id,WidgetItem.item, WidgetItem.item.isBookmarked )"
+                ng-class="WidgetItem.item.isBookmarked?'bookmarked':''">
                 <span class="icon icon-bookmark2 whiteTheme"></span>
             </a>
+            <a ng-if="WidgetItem.currentLoggedInUser && WidgetItem.allowSharing"
+                class="bg-success btn-fab bookmarked" ng-click="WidgetItem.shareContent()">
+                <span class="icon icon-link2 whiteTheme"></span>
+            </a>
         </div>
-        <div class="pull-left text-center" disable-animate ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12':'col-xs-6'">
-            <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-hide="toggleNoteList">Open Item Notes</a>
-            <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()" ng-show="toggleNoteList && !showNoteDescription">Close Note List </a>
-            <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showNoteList()" ng-show="showNoteDescription">Back to Note List</a>
+        <div class="button-placeholder pull-left text-center primaryBackgroundTheme height-45" disable-animate
+            ng-hide="toggleNoteAdd" ng-class="toggleNoteList?'col-xs-12 rounded-top padding-bottom-8':'col-xs-6'">
+            <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()"
+                ng-hide="toggleNoteList">{{WidgetItem.languages.openItemNotes}}</a>
+            <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideNoteList()"
+                ng-show="toggleNoteList && !showNoteDescription">{{WidgetItem.languages.closeNoteList}}</a>
+            <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showNoteList()"
+                ng-show="showNoteDescription">{{WidgetItem.languages.backToNoteList}}</a>
         </div>
-        <div class="pull-left text-center" disable-animate ng-hide="toggleNoteList" ng-class="toggleNoteAdd?'col-xs-12':'col-xs-6'">
-            <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()" ng-hide="toggleNoteAdd">Add
-        New Note</a>
-            <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()" ng-show="toggleNoteAdd">
-        Done</a>
+        <div class="button-placeholder pull-left text-center primaryBackgroundTheme height-45" disable-animate
+            ng-hide="toggleNoteList" ng-class="toggleNoteAdd?'col-xs-12 rounded-top padding-bottom-8':'col-xs-6'">
+            <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()"
+                ng-hide="toggleNoteAdd">{{WidgetItem.languages.addNewNote}}</a>
+            <a class="whiteTheme stretch" disable-animate ng-click="WidgetItem.showHideAddNote()"
+                ng-show="toggleNoteAdd">{{WidgetItem.languages.done}}</a>
         </div>
 
 
-        <div class="col-xs-12 hidden-content infinite-scroll-parent backgroundColorTheme" ng-show="toggleNoteList || toggleNoteAdd">
+        <div class="col-xs-12 hidden-content infinite-scroll-parent backgroundColorTheme"
+            ng-class="toggleNoteList || toggleNoteAdd?'hidden-content-show':'hidden-content-hide'">
             <div class="content note-list clearfix" ng-class="showNoteList?'active':''">
                 <div class="seminar-notes layout3">
-                    <div class="list-layout" infinite-scroll="WidgetItem.loadMore()" infinite-scroll-distance="1" data-infinite-container=".infinite-scroll-parent" infinite-scroll-disabled="WidgetItem.busy">
-                        <div class="list-item swipe-item" ng-repeat="note in WidgetItem.ItemNoteList" ng-swipe-left="WidgetItem.swipeToDeleteNote($event, $index, true)" ng-swipe-right="WidgetItem.swipeToDeleteNote($event, $index, false)" ng-if="!showNoteDescription">
-                            <div class="list-item-media text-left" ng-class="{'edit' : WidgetItem.swiped[$index]}" ng-click=" WidgetItem.editNote(note.id)">
+                    <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center"
+                        ng-if="!WidgetItem.ItemNoteList || WidgetItem.ItemNoteList.length == 0">
+                        {{WidgetItem.languages.noNotesAddedYet}}</p>
+                    <div class="list-layout" infinite-scroll="WidgetItem.loadMore()" infinite-scroll-distance="1"
+                        data-infinite-container=".infinite-scroll-parent" infinite-scroll-disabled="WidgetItem.busy">
+                        <div class="list-item swipe-item" ng-repeat="note in WidgetItem.ItemNoteList"
+                            ng-swipe-left="WidgetItem.swipeToDeleteNote($event, $index, true)"
+                            ng-swipe-right="WidgetItem.swipeToDeleteNote($event, $index, false)"
+                            ng-if="!showNoteDescription">
+                            <div class="list-item-media text-left" ng-class="{'edit' : WidgetItem.swiped[$index]}"
+                                ng-click=" WidgetItem.editNote(note.id)">
                                 <div class="list-item-copy">
                                     <div class="note-details ellipsis">
                                         <p class="caption">{{note.data.dateAdded | date}}</p>
                                     </div>
                                     <h5 class="ellipsis" ng-if="note.data.noteTitle">{{note.data.noteTitle}}</span>
-                                    <h5 class="ellipsis" ng-if="!note.data.noteTitle">--</h5>
-                                    <p class="ellipsis margin-zero">{{note.data.noteDescription}}</p>
+                                        <h5 class="ellipsis" ng-if="!note.data.noteTitle">--</h5>
+                                        <p class="ellipsis margin-zero">{{note.data.noteDescription}}</p>
                                 </div>
-                                <div class="remove-btn text-center dangerBackgroundTheme" ng-click="WidgetItem.deleteNote(note.id, $index)">
+                                <div class="remove-btn text-center dangerBackgroundTheme"
+                                    ng-click="WidgetItem.deleteNote(note.id, $index)">
                                     <span>Delete</span>
                                 </div>
                             </div>
                         </div>
                         <div class="add-note clearfix" ng-if="showNoteDescription">
                             <div class="form-holder form-holder-custom edit-note">
+                                <div class="save-point "
+                                    ng-class="WidgetItem.isNoteSaved?'successBackgroundTheme':'whiteBackgroundTheme .save-point-disabled'">
+                                </div>
                                 <div class="headerTextTheme">
-                                    <input type="text" name="note-title" placeholder="Enter Note Title" class="form-control" ng-model="WidgetItem.Note.noteTitle">
+                                    <input type="text" name="note-title"
+                                        placeholder="{{WidgetItem.languages.enterNoteTitle}}" class="form-control"
+                                        ng-model="WidgetItem.Note.noteTitle">
                                 </div>
                                 <div class="bodyTextTheme">
-                                    <textarea placeholder="Enter note content" class="form-control" ng-model="WidgetItem.Note.noteDescription"></textarea>
+                                    <textarea placeholder="{{WidgetItem.languages.enterNoteContent}}"
+                                        class="form-control" ng-model="WidgetItem.Note.noteDescription"></textarea>
                                 </div>
                                 <!--<a class="btn btn-primary stretch" ng-click="WidgetItem.addNoteToItem(WidgetItem.item.id)">Add Note</a>-->
-                                <div class="savedMessage successBackgroundTheme" ng-class="{'active': WidgetItem.isNoteSaved}">
-                                    <p class="text-success whiteTheme margin-zero">Saved</p>
-                                </div>
+                                <!-- <div class="savedMessage successBackgroundTheme" ng-class="{'active': WidgetItem.isNoteSaved}">
+                                    <p class="text-success whiteTheme margin-zero">{{WidgetItem.languages.saved}}</p>
+                                </div> -->
                             </div>
                             <!--<p class="ellipsis margin-zero margin-top-five clearfix">-->
                             <!--<span class="pull-left" style="max-width:65%; cursor: pointer;" ng-click="WidgetItem.editNote(WidgetItem.noteDetail.id)">{{WidgetItem.noteDetail.data.noteTitle}}</span>-->
@@ -90,16 +123,21 @@
 
             <div class="content add-note clearfix" ng-class="showNoteAdd ?'active':''">
                 <div class="form-holder form-holder-custom edit-note">
+                    <div class="save-point "
+                        ng-class="WidgetItem.isNoteSaved?'successBackgroundTheme':'whiteBackgroundTheme .save-point-disabled'">
+                    </div>
                     <div class="headerTextTheme">
-                        <input type="text" name="note-title" placeholder="Enter Note Title" class="form-control" ng-model="WidgetItem.Note.noteTitle">
+                        <input type="text" name="note-title" placeholder="{{WidgetItem.languages.enterNoteTitle}}"
+                            class="form-control" ng-model="WidgetItem.Note.noteTitle">
                     </div>
                     <div class="bodyTextTheme">
-                        <textarea placeholder="Enter note content" class="form-control" ng-model="WidgetItem.Note.noteDescription"></textarea>
+                        <textarea placeholder="{{WidgetItem.languages.enterNoteContent}}" class="form-control"
+                            ng-model="WidgetItem.Note.noteDescription"></textarea>
                     </div>
                     <!--<a class="btn btn-primary stretch" ng-click="WidgetItem.addNoteToItem(WidgetItem.item.id)">Add Note</a>-->
-                    <div class="savedMessage successBackgroundTheme text-center" ng-class="{'active': WidgetItem.isNoteSaved}">
-                        <p class="text-success whiteTheme margin-zero">Saved</p>
-                    </div>
+                    <!-- <div class="savedMessage successBackgroundTheme text-center" ng-class="{'active': WidgetItem.isNoteSaved}">
+                        <p class="text-success whiteTheme margin-zero">{{WidgetItem.languages.saved}}</p>
+                    </div> -->
                 </div>
             </div>
         </div>

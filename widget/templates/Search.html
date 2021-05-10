@@ -3,18 +3,21 @@
     <div class="seminar-notes layout3">
       <div class="form-holder search-holder backgroundColorTheme bodyTextTheme">
         <input type="text" class="border-none form-control bodyTextTheme search needsclick"
-               placeholder="Enter keywords or phrase to search items"
+               placeholder="{{WidgetSearch.languages.enterKeywordsOrPhraseToSearchItems}}"
                ng-model="WidgetSearch.keyword">
         <span class="clear-icon dangerBackgroundTheme"
               ng-if="WidgetSearch.keyword"
               ng-click="WidgetSearch.clearSearchResult()"></span>
-        <hr class="small margin-zero" ng-if="WidgetSearch.items.length < 1 || !WidgetSearch.keyword">
+        <hr class="small margin-zero" ng-if="WidgetSearch.released.length == 0 || !WidgetSearch.keyword">
       </div>
       <div class="search-list">
-        <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center" ng-if="WidgetSearch.items.length < 1 || !WidgetSearch.keyword">No search results.</p>
+        <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center ver-center" ng-if="WidgetSearch.released.length == 0 || !WidgetSearch.keyword">
+          {{WidgetSearch.languages.noSearchResults}}
+          <img style="margin-top: 35px;" src="./images/empty_page.svg"/>
+        </p>
         <div class="list-layout" ng-if="WidgetSearch.items.length && WidgetSearch.keyword">
 
-          <div class="list-item" ng-repeat="item in WidgetSearch.items" ng-if="isFetchedAllData">
+          <div class="list-item" ng-repeat="item in WidgetSearch.released" ng-if="isFetchedAllData">
             <div class="item-click-holder ellipsis" ng-click="WidgetSearch.openDetails(item.id)">
               <div class="square-icon list-media-holder">
                 <img ng-if="!item.data.listImage"
@@ -38,18 +41,18 @@
       </div>
     </div>
   </div>
-  <div class="bottom fixed-bottom primaryBackgroundTheme">
+  <div class="bottom fixed-bottom primaryBackgroundTheme bottom-zero height-45">
     <div class="col-xs-3 pull-left text-center">
-      <a class="whiteTheme stretch" ng-click="WidgetSearch.showItemList()">Items</a>
+      <a class="whiteTheme stretch ellipsis" ng-click="WidgetSearch.showItemList()">{{WidgetSearch.languages.items}}</a>
     </div>
     <div class="col-xs-3 pull-left text-center">
-      <a class="whiteTheme stretch" ng-click="WidgetSearch.showNotesList()">My Notes</a>
+      <a class="whiteTheme stretch ellipsis" ng-click="WidgetSearch.showNotesList()">{{WidgetSearch.languages.myNotes}}</a>
     </div>
     <div class="col-xs-3 pull-left text-center">
-      <a class="whiteTheme stretch" ng-click="WidgetSearch.showBookmarkList()">Bookmarks</a>
+      <a class="whiteTheme stretch ellipsis" ng-click="WidgetSearch.showBookmarkList()">{{WidgetSearch.languages.bookmarks}}</a>
     </div>
     <div class="col-xs-3 pull-left text-center">
-      <a class="whiteTheme stretch active">Search</a>
+      <a class="whiteTheme stretch active ellipsis">{{WidgetSearch.languages.search}}</a>
     </div>
   </div>
 </div>

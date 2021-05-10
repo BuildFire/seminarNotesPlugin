@@ -32,13 +32,27 @@
     <hr class="none">
     <div class="item clearfix row">
       <div class="col-md-3 labels pull-left">
-        <span>Publication Date</span>
+        <span>Publication Date</span> <span title="Date of the publication, displayed on the list and on individual items"><i
+          class="material-icons">info</i></span>
       </div>
       <div class="col-md-9 main pull-right">
         <input type="text" class="form-control" date-time=""
                placeholder="MM/DD/YYYY"
                data-publish-date="ContentItem.item.data.publishDate"
                ng-model="ContentItem.item.data.publishDate">
+      </div>
+    </div>
+    <hr class="none">
+    <div class="item clearfix row">
+      <div class="col-md-3 labels pull-left">
+        <span>Release Date</span> <span title="Prior to release date, the item will not be shown in the list. Leave this field empty to always show."><i
+          class="material-icons">info</i></span>
+      </div>
+      <div class="col-md-9 main pull-right">
+        <input type="text" class="form-control" date-time-release=""
+               placeholder="MM/DD/YYYY"
+               data-release-date="ContentItem.item.data.releaseDate"
+               ng-model="ContentItem.item.data.releaseDate">
       </div>
     </div>
     <hr class="none">
@@ -71,9 +85,11 @@
       </div>
     </div>
     <hr class="none">
-    <div class="item clearfix row">
-      <div class="col-md-3 main pull-right">
-        <a class="btn btn-primary stretch"  ng-click="ContentItem.goToHome()"
+	  <div id="actionItems" style="margin-bottom:50px;"></div>
+	  <hr class="none">
+    <div class="item clearfix row" style="width:100%; position:fixed; background-color:white; bottom:0px; z-index:0; margin-left: 0px !important;">
+      <div class="main pull-right" style="margin-right: 15px; margin-top: 5px;">
+        <a class="btn btn-primary stretch"  style="width:100px;" ng-click="ContentItem.goToHome()"
            ng-disabled="!ContentItem.isValidItem(ContentItem.item.data)">Done
         </a>
       </div>

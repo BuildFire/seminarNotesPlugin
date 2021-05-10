@@ -23,6 +23,7 @@
   <script src="../../../../scripts/jquery/jquery-ui.min.js"></script>
   <script src="../../../../scripts/angular/angular-ui-sortable.js"></script>
   <script src="../../../../scripts/angular/ng-infinite-scroll.custom.js"></script>
+  <script src="../../widget/assets/js/shared/Deeplink.js"></script>
   <script src="app.js"></script>
   <script src="enums.js"></script>
   <script src="app.services.js"></script>
@@ -31,13 +32,25 @@
   <script src="controllers/modal.remove.controller.js"></script>
   <link rel="stylesheet" href="../../../../styles/transitionAnimation.css">
   <script src="../../../../scripts/angular/angular-animate.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
   <style>
+      .material-icons {
+          font-family: 'Material Icons' !important;
+          -webkit-font-feature-settings: 'liga' !important;
+          font-size: 20px;
+          color: #00a1f1;
+          padding-top:3px;
+          padding-right:45px;
+          float:right;
+          cursor: pointer;
+      }
     .padding-content-top {
       padding-top: 20px;
     }
   </style>
 </head>
-<body>
-<div class="content relative slide padding-content-top" ng-view=""></div>
+<body style="overflow:auto; overflow:initial;">
+<div class="content padding-content-top" ng-view=""></div>
 </body>
 </html>

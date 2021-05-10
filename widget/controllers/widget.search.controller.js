@@ -8,11 +8,15 @@
 
         WidgetSearch.items = [];
 
+        WidgetSearch.released = [];
+
         WidgetSearch.searchOptions = {};
 
         WidgetSearch.bookmarks = [];
 
         WidgetSearch.currentLoggedInUser = null;
+
+        WidgetSearch.languages = [];
 
         var tmrDelay = null;
 
@@ -25,13 +29,29 @@
           });
         };
 
+        Buildfire.datastore.get("languages", (err, result) => {
+          if (err) return console.log(err)
+          let strings = {};
+          if (result.data && result.data.screenOne)
+            strings = result.data.screenOne;
+          else
+            strings = stringsConfig.screenOne.labels;
+
+          let languages = {};
+          Object.keys(strings).forEach(e => {
+            strings[e].value ? languages[e] = strings[e].value : languages[e] = strings[e].defaultValue;
+          });
+          WidgetSearch.languages = languages;
+          $scope.$apply();
+        });
+
         var loginCallback = function () {
           buildfire.auth.getCurrentUser(function (err, user) {
             console.log("=========User", user);
             if (user) {
               WidgetSearch.currentLoggedInUser = user;
               $scope.$apply();
-             // WidgetSearch.getBookMarkData(true);
+              // WidgetSearch.getBookMarkData(true);
             }
           });
         };
@@ -66,13 +86,17 @@
           if (typeof newValue === 'undefined') {
             return;
           }
-          var success = function (result) {
-              Buildfire.spinner.hide();
-              console.info('Searched data result:=================== ', result);
-              WidgetSearch.items = result;
+          var success = function (resultAll) {
+            var released = resultAll.filter(result => {
+              return !result.data.releaseDate || result.data.releaseDate < Date.now();
+            });
+            Buildfire.spinner.hide();
+            console.info('Searched data result:=================== ', resultAll);
+            WidgetSearch.items = resultAll;
+            WidgetSearch.released=released;
 
-              WidgetSearch.getBookmarks();
-            }
+            WidgetSearch.getBookmarks();
+          }
             , error = function (err) {
               Buildfire.spinner.hide();
               console.error('Error while searching data : ', err);
@@ -113,7 +137,7 @@
                     "$regex": searchTerm,
                     "$options": "i"
                   }
-                }, {"$json.summary": {"$regex": searchTerm, "$options": "i"}}]
+                }, { "$json.summary": { "$regex": searchTerm, "$options": "i" } }]
               };
             }
           }
@@ -207,14 +231,16 @@
           if (isBookmarked && item.bookmarkId) {
             var successRemove = function (result) {
               Buildfire.spinner.hide();
-              WidgetSearch.items[index].isBookmarked = false;
-              WidgetSearch.items[index].bookmarkId = null;
+              WidgetSearch.released[index].isBookmarked = false;
+              WidgetSearch.released[index].bookmarkId = null;
               if (!$scope.$$phase)
                 $scope.$digest();
+              $scope.text = WidgetSearch.languages.itemRemovedFromBookmarks;
               var removeBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Removed.html',
                 size: 'sm',
-                backdropClass: "ng-hide"
+                backdropClass: "ng-hide",
+                scope: $scope
               });
               $timeout(function () {
                 removeBookmarkModal.close();
@@ -236,16 +262,18 @@
             };
             var successItem = function (result) {
               Buildfire.spinner.hide();
-              WidgetSearch.items[index].isBookmarked = true;
-              WidgetSearch.items[index].bookmarkId = result.id;
+              WidgetSearch.released[index].isBookmarked = true;
+              WidgetSearch.released[index].bookmarkId = result.id;
               console.log("Inserted", result);
               $scope.isClicked = itemId;
               if (!$scope.$$phase)
                 $scope.$digest();
+              $scope.text = WidgetSearch.languages.itemBookmarked;
               var addedBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Confirm.html',
                 size: 'sm',
-                backdropClass: "ng-hide"
+                backdropClass: "ng-hide",
+                scope: $scope
               });
               $timeout(function () {
                 addedBookmarkModal.close();

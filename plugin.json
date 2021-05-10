@@ -1,7 +1,7 @@
 {
   "author":"BuildFire"
 ,"pluginName":"Seminar and Lecture Notes"
-,"pluginDescription":"This plugin allows users or students to take and save personal notes on your seminar, lecture, and sermon notes. You can even embed images and videos, and include links to PDFs, webpages, other resources, and more.Related Topics: Seminar Notes,Bible, Blog. "
+,"pluginDescription":"This feature allows your students to create, save, and share notes on your class, seminar, lecture, or sermon. You can even embed images and videos and include links to PDFs, webpages, and other resources. Settings can allow content to be time released by date. Related Topics: Seminar Notes, Bible, Blog."
 ,"supportEmail":"support@buildfire.com"
 , "supportSite":"http://learn.appdocumentation.com/plugin-tutorials/seminar-and-lecture-notes-plugin-tutorial"
 ,"offlineModeEnabled": true
@@ -13,13 +13,19 @@
     "enabled":true
   }
 , "settings":{
-    "enabled":false
-  }
-}
-,"widget":{
+    "enabled":true
+  },
+  "customTabs": [
+    {
+      "title": "Languages",
+      "url": "languages/index.html"
+    }
+  ]
+},
+"widget":{
 
 },
-  "features" : [],
+  "features" : [{"name" : "sharing"}],
   "languages" : ["en"],
   "media": [
     { "type": "image-resource", "path": "marketplacegif.gif" },

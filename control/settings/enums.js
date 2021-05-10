@@ -1,13 +1,11 @@
 'use strict';
 
 (function (angular) {
-  angular.module('seminarNotesPluginWidget')
+  angular.module('seminarSettings')
     .constant('TAG_NAMES', {
       SEMINAR_INFO: 'seminarInfo',
       SEMINAR_ITEMS: "seminarItems",
-      SEMINAR_BOOKMARKS: "seminarBookmarks",
-      SEMINAR_NOTES: "seminarNotes",
-      SEMINAR_TEMP_NOTES: "seminarTempNotes"
+      SEMINAR_BOOKMARKS: "seminarBookmarks"
     })
     .constant('STATUS_CODE', {
       INSERTED: 'inserted',
@@ -34,21 +32,5 @@
         {name: "Item_List_4"},
         {name: "Item_List_5"}
       ]
-    })
-    .constant('PAGINATION', {
-      itemCount: 30,
-      noteCount: 30
-    })
-    .constant('SORT', {
-      MANUALLY: 'Manually',
-      ITEM_TITLE_A_Z: 'Item title A-Z',
-      ITEM_TITLE_Z_A: 'Item title Z-A',
-      NEWEST_PUBLICATION_DATE: 'Newest pub. date first',
-      OLDEST_PUBLICATION_DATE: 'Oldest pub. date first',
-      NEWEST_FIRST: 'Newest entry first',
-      OLDEST_FIRST: 'Oldest entry first',
-      _limit: 10,
-      _maxLimit: 19,
-      _skip: 0
     });
 })(window.angular);

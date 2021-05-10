@@ -23,7 +23,7 @@
               if (type === 'PUSH') {
                 console.log("VIEW_CHANGED>>>>>>>>", type, view);
                 currentView = ViewStack.getPreviousView();
-                buildfire.history.push(currentView, {showItemInTitlebar:true})
+                buildfire.history.push(currentView, { showItemInTitlebar: true })
 
                 var newScope = $rootScope.$new();
                 var _newView = '<div  id="' + view.template + '" ><div class="slide content" data-back-img="{{itemDetailbackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
@@ -125,33 +125,33 @@
         link: function (scope, element, attrs) {
           element.attr("src", "../../../styles/media/holder-" + attrs.loadImage + ".gif");
 
-            var _img = attrs.finalSrc;
-            if (attrs.cropType == 'resize') {
-                Buildfire.imageLib.local.resizeImage(_img, {
-                    width: attrs.cropWidth,
-                    height: attrs.cropHeight
-                }, function (err, imgUrl) {
-                    _img = imgUrl;
-                    replaceImg(_img);
-                });
-            } else {
-                Buildfire.imageLib.local.cropImage(_img, {
-                    width: attrs.cropWidth,
-                    height: attrs.cropHeight
-                }, function (err, imgUrl) {
-                    _img = imgUrl;
-                    replaceImg(_img);
-                });
-            }
+          var _img = attrs.finalSrc;
+          if (attrs.cropType == 'resize') {
+            Buildfire.imageLib.local.resizeImage(_img, {
+              width: attrs.cropWidth,
+              height: attrs.cropHeight
+            }, function (err, imgUrl) {
+              _img = imgUrl;
+              replaceImg(_img);
+            });
+          } else {
+            Buildfire.imageLib.local.cropImage(_img, {
+              width: attrs.cropWidth,
+              height: attrs.cropHeight
+            }, function (err, imgUrl) {
+              _img = imgUrl;
+              replaceImg(_img);
+            });
+          }
 
-            function replaceImg(finalSrc) {
-                var elem = $("<img>");
-                elem[0].onload = function () {
-                    element.attr("src", finalSrc);
-                    elem.remove();
-                };
-                elem.attr("src", finalSrc);
-            }
+          function replaceImg(finalSrc) {
+            var elem = $("<img>");
+            elem[0].onload = function () {
+              element.attr("src", finalSrc);
+              elem.remove();
+            };
+            elem.attr("src", finalSrc);
+          }
         }
       };
     }])
@@ -181,7 +181,8 @@
                 stopSwitch: true
               }
             });
-            $rootScope.$apply();
+            if (!$rootScope.$$phase)
+              $rootScope.$apply();
 
             break;
           case 'OpenItem':
@@ -194,8 +195,12 @@
                   itemId: msg.id
                 }
               });
-              $rootScope.$apply();
+              if (!$rootScope.$$phase)
+                $rootScope.$apply();
             }
+            break;
+          case 'BackToHome':
+            location.reload();
             break;
           default:
             ViewStack.popAllViews(true);

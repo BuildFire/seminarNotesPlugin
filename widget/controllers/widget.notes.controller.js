@@ -17,6 +17,21 @@
         WidgetNotes.swiped = [];
         WidgetNotes.listeners = {};
 
+        Buildfire.datastore.get("languages", (err, result) => {
+          if (err) return console.log(err)
+          let strings = {};
+          if (result.data && result.data.screenOne)
+            strings = result.data.screenOne;
+          else
+            strings = stringsConfig.screenOne.labels;
+
+          let languages = {};
+          Object.keys(strings).forEach(e => {
+            strings[e].value ? languages[e] = strings[e].value : languages[e] = strings[e].defaultValue;
+          });
+          WidgetNotes.languages = languages;
+        });
+
         //Refresh list of notes on pulling the tile bar
 
         buildfire.datastore.onRefresh(function () {
@@ -24,7 +39,8 @@
           searchOptions.skip = 0;
           WidgetNotes.busy = false;
           WidgetNotes.loadMore();
-          $scope.$digest();
+          if (!$scope.$$phase)
+            $scope.$digest();
         });
 
 
@@ -108,8 +124,8 @@
           }, error = function (err) {
             console.log('================there was a problem deleting your data', err);
           };
-          if(WidgetNotes.currentLoggedInUser && WidgetNotes.currentLoggedInUser._id)
-          UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetNotes.currentLoggedInUser._id).then(success, error);
+          if (WidgetNotes.currentLoggedInUser && WidgetNotes.currentLoggedInUser._id)
+            UserData.delete(noteId, TAG_NAMES.SEMINAR_NOTES, WidgetNotes.currentLoggedInUser._id).then(success, error);
         };
 
         /**
@@ -283,7 +299,8 @@
               searchOptions.skip = 0;
               WidgetNotes.busy = false;
               WidgetNotes.loadMore();
-              $scope.$digest();
+              if (!$scope.$$phase)
+                $scope.$digest();
             });
           }
         });

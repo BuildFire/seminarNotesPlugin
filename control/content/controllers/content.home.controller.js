@@ -69,22 +69,18 @@
         ContentHome.removeListItem = function (_index) {
 
           buildfire.navigation.scrollTop();
-
-          var modalInstance = $modal.open({
-            templateUrl: 'templates/deleteItemModal.html',
-            controller: 'RemovePopupCtrl',
-            controllerAs: 'RemovePopup',
-            size: 'sm',
-            resolve: {
-              itemInfo: function () {
-                return ContentHome.items[_index];
-              }
+          buildfire.dialog.confirm({
+            message: `Are you sure you want to delete this item?`,
+            confirmButton: {
+                text: "Delete",
+                type: "danger"
             }
-          });
-          var searchOptionUserData = {};
-          modalInstance.result.then(function (message) {
-            if (message === 'yes') {
+        }, (err, data) => {
+            if(err) console.error(err);
+            
+            if(data) {
               var item = ContentHome.items[_index];
+              Deeplink.deleteById(item.id);
               DataStore.deleteById(item.id, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
                 ContentHome.items.splice(_index, 1);
                 searchOptionUserData.filter ={"$or": [{"$json.itemID": {"$eq": item.id}}]};
@@ -106,10 +102,10 @@
               }, function (error) {
                 console.log("Error deleting item :", error);
               });
+            } else {
+                //Prevent action
             }
-          }, function (data) {
-            //do something on cancel
-          });
+        })
         };
 
         /**
@@ -195,6 +191,8 @@
                 else
                   editor.loadItems(ContentHome.data.content.carouselImages);
               }
+              if(typeof ContentHome.data.content.sortBy == "undefined")
+                ContentHome.data.content.sortBy=SORT.MANUALLY;
               ContentHome.itemSortableOptions.disabled = !(ContentHome.data.content.sortBy === SORT.MANUALLY);
               RankOfLastItem.setRank(ContentHome.data.content.rankOfLastItem || 0);
               updateMasterItem(ContentHome.data);

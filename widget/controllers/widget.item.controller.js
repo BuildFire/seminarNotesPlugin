@@ -2,8 +2,8 @@
 
 (function (angular, buildfire, window) {
   angular.module('seminarNotesPluginWidget')
-    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'PAGINATION', '$modal', '$timeout','$location',
-      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, PAGINATION, $modal, $timeout,$location) {
+    .controller('WidgetItemCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'LAYOUTS', '$routeParams', '$sce', '$rootScope', 'Buildfire', 'ViewStack', 'UserData', 'TempPublicDataCopy', 'PAGINATION', '$modal', '$timeout', '$location',
+      function ($scope, DataStore, TAG_NAMES, LAYOUTS, $routeParams, $sce, $rootScope, Buildfire, ViewStack, UserData, TempPublicDataCopy, PAGINATION, $modal, $timeout, $location) {
         var WidgetItem = this;
         $scope.toggleNoteList = 0;
         $scope.toggleNoteAdd = 0;
@@ -60,7 +60,8 @@
         buildfire.datastore.onRefresh(function () {
           if (currentView.params && currentView.params.noteId)
             WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
-          $scope.$digest();
+          if (!$scope.$$phase)
+            $scope.$digest();
         });
 
         WidgetItem.swipeToDeleteNote = function (e, i, toggle) {
@@ -77,21 +78,21 @@
           Buildfire.spinner.show();
           var success = function (result) {
 
-              Buildfire.spinner.hide();
-              WidgetItem.item = result;
-              //$rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
-              console.log("========ingeteventdetails", result);
+            Buildfire.spinner.hide();
+            WidgetItem.item = result;
+            //$rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
+            console.log("========ingeteventdetails", result);
 
-              if (!WidgetItem.item.data.itemListBgImage) {
-                $rootScope.itemDetailbackgroundImage = "";
-              } else {
-                $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
-              }
-
-              $timeout(function () {
-                  WidgetItem.forceScroll = true;
-              },0);
+            if (!WidgetItem.item.data.itemListBgImage) {
+              $rootScope.itemDetailbackgroundImage = "";
+            } else {
+              $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
             }
+
+            $timeout(function () {
+              WidgetItem.forceScroll = true;
+            }, 0);
+          }
             , error = function (err) {
               Buildfire.spinner.hide();
               console.error('Error In Fetching Event', err);
@@ -159,17 +160,32 @@
           }
           Buildfire.spinner.show();
           var success = function (result) {
-              Buildfire.spinner.hide();
-              WidgetItem.data = result.data;
-              if (!WidgetItem.data.design)
-                WidgetItem.data.design = {};
-              getEventDetails();
-              WidgetItem.getBookmarkedItems();
-            }
+            Buildfire.spinner.hide();
+            WidgetItem.data = result.data;
+            WidgetItem.allowSharing = result.data.allowSharing;
+            if (!WidgetItem.data.design)
+              WidgetItem.data.design = {};
+            getEventDetails();
+            WidgetItem.getBookmarkedItems();
+          }
             , error = function (err) {
               Buildfire.spinner.hide();
               console.error('Error while getting data', err);
             };
+          Buildfire.datastore.get("languages", (err, result) => {
+            if (err) return console.log(err)
+            let strings = {};
+            if (result.data && result.data.screenOne)
+              strings = result.data.screenOne;
+            else
+              strings = stringsConfig.screenOne.labels;
+
+            let languages = {};
+            Object.keys(strings).forEach(e => {
+              strings[e].value ? languages[e] = strings[e].value : languages[e] = strings[e].defaultValue;
+            });
+            WidgetItem.languages = languages;
+          });
           DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
         };
 
@@ -279,9 +295,39 @@
           }
         });
 
+        WidgetItem.getAllNotes = function (cb) {
+          searchOptions.filter = { "$or": [{ "$json.itemID": { "$eq": WidgetItem.item.id } }] };
+
+          _searchAll(searchOptions, tracks => {
+            cb(tracks);
+          });
+
+          function _searchAll(searchOptions, cb) {
+
+            get(0, cb, []);
+            function get(skip, cb, res) {
+              searchOptions.skip = skip;
+              UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(r => {
+                res = res.concat(r);
+                if (r.length == PAGINATION.noteCount) {
+                  get(skip + PAGINATION.noteCount, cb, res);
+                } else {
+                  cb(res);
+                };
+              });
+
+            }
+
+          }
+        };
+
+
+
+
+
         WidgetItem.getNoteList = function () {
           Buildfire.spinner.show();
-          searchOptions.filter = {"$or": [{"$json.itemID": {"$eq": WidgetItem.item.id}}]};
+          searchOptions.filter = { "$or": [{ "$json.itemID": { "$eq": WidgetItem.item.id } }] };
           var err = function (error) {
             Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
@@ -307,8 +353,8 @@
               }
             };
             $event.preventDefault();
-            $timeout(function(){
-                Buildfire.actionItems.list(actionItems, options, callback);	
+            $timeout(function () {
+              Buildfire.actionItems.list(actionItems, options, callback);
             });
           }
         };
@@ -349,10 +395,12 @@
               WidgetItem.item.bookmarkId = null;
               if (!$scope.$$phase)
                 $scope.$digest();
+              $scope.text = WidgetItem.languages.itemRemovedFromBookmarks;
               var removeBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Removed.html',
                 size: 'sm',
-                backdropClass: "ng-hide"
+                backdropClass: "ng-hide",
+                scope: $scope
               });
               $timeout(function () {
                 removeBookmarkModal.close();
@@ -378,10 +426,12 @@
               console.log("Inserted", result);
               $scope.isClicked = itemId;
               //  WidgetItem.getBookmarks();
+              $scope.text = WidgetItem.languages.itemBookmarked;
               var addedBookmarkModal = $modal.open({
                 templateUrl: 'templates/Bookmark_Confirm.html',
                 size: 'sm',
-                backdropClass: "ng-hide"
+                backdropClass: "ng-hide",
+                scope: $scope
               });
               $timeout(function () {
                 addedBookmarkModal.close();
@@ -411,7 +461,8 @@
 
         var onUpdateCallback = function (event) {
           setTimeout(function () {
-            $scope.$digest();
+            if (!$scope.$$phase)
+              $scope.$digest();
             if (event && event.tag) {
               console.log("_____________________________", event);
               switch (event.tag) {
@@ -423,7 +474,7 @@
                 case TAG_NAMES.SEMINAR_ITEMS:
                   if (event.data) {
                     WidgetItem.item.data = event.data;
-                   // $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
+                    // $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
                     if (WidgetItem.view) {
                       WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
                     }
@@ -435,13 +486,81 @@
                   }
                   break;
               }
-              $scope.$digest();
-              $rootScope.$apply();
+              if (!$scope.$$phase)
+                $scope.$digest();
+              if (!$rootScope.$$phase)
+                $rootScope.$apply();
             }
           }, 500);
         };
 
         DataStore.onUpdate().then(null, null, onUpdateCallback);
+
+        WidgetItem.shareContent = function () {
+          buildfire.notifications.confirm({
+            title: WidgetItem.languages.areYouSureTitle,
+            message: WidgetItem.languages.areYouSureMessage
+            , confirmButton: { text: 'Yes', key: 'confirm', type: 'danger' }
+            , cancelButton: { text: 'No', key: 'cancel', type: 'default' }
+          }, (errorOrConfirmed, result) => {
+            if (errorOrConfirmed == 1 || result.selectedButton.key == 'confirm') {
+              Buildfire.spinner.show();
+              WidgetItem.getAllNotes((allNotes) => {
+                if (allNotes.length > 0) {
+                  let timeStamp = Date.now(),
+                    id = WidgetItem.item.id;
+                  let publicDataCopy = {
+                    notes: allNotes,
+                    timeStamp: timeStamp,
+                    itemId: id,
+                    _buildfire: {
+                      index: {
+                        date1: timeStamp
+                      }
+                    }
+                  }
+                  TempPublicDataCopy.insert(publicDataCopy, TAG_NAMES.SEMINAR_TEMP_NOTES).then((result) => {
+                    let link = {
+                      title: WidgetItem.languages.shareTitle,
+                      type: "website",
+                      description: WidgetItem.languages.shareDescription + WidgetItem.item.data.title
+                    };
+
+                    link.data = {
+
+                      "itemId": WidgetItem.item.id,
+                      "dataId": result.id
+                    };
+
+                    buildfire.deeplink.generateUrl(link, (err, result) => {
+                      if (err) {
+                        buildfire.dialog.toast({ message: WidgetItem.languages.errorSharing});
+                      } else {
+                        buildfire.device.share({
+                          subject: link.title,
+                          text: link.description,
+                          link: result.url
+                        }, (err, result) => {
+                          if (err)
+                          buildfire.dialog.toast({ message: WidgetItem.languages.errorSharing});
+                          else
+                            console.dir(result);
+                            buildfire.dialog.toast({ message: WidgetItem.languages.expireWarning});
+                        });
+                      }
+                    });
+                  }, () => {
+                    buildfire.dialog.toast({ message: WidgetItem.languages.errorSharing });
+                  });
+                } else {
+                  buildfire.dialog.toast({ message: WidgetItem.languages.errorSharingNoNotes });
+                }
+                Buildfire.spinner.hide();
+              });
+            }
+          });
+        };
+
 
         WidgetItem.loadMore = function () {
           console.log("===============In loadmore Note");
@@ -531,7 +650,8 @@
             buildfire.datastore.onRefresh(function () {
               if (currentView.params && currentView.params.noteId) {
                 WidgetItem.getNoteDetailFromItem(currentView.params.noteId);
-                $scope.$digest();
+                if (!$scope.$$phase)
+                  $scope.$digest();
               }
             });
           }
