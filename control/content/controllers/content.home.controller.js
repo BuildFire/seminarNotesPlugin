@@ -81,6 +81,7 @@
             if(data) {
               var item = ContentHome.items[_index];
               Deeplink.deleteById(item.id);
+              buildfire.analytics.unregisterEvent(item.id);
               DataStore.deleteById(item.id, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
                 ContentHome.items.splice(_index, 1);
                 searchOptionUserData.filter ={"$or": [{"$json.itemID": {"$eq": item.id}}]};
@@ -191,8 +192,10 @@
                 else
                   editor.loadItems(ContentHome.data.content.carouselImages);
               }
-              if(typeof ContentHome.data.content.sortBy == "undefined")
-                ContentHome.data.content.sortBy=SORT.MANUALLY;
+              if(typeof ContentHome.data.content.sortBy == "undefined"){ 
+                // ContentHome.data.content.sortBy=SORT.MANUALLY;
+                ContentHome.sortItemBy(SORT.OLDEST_FIRST)
+               }
               ContentHome.itemSortableOptions.disabled = !(ContentHome.data.content.sortBy === SORT.MANUALLY);
               RankOfLastItem.setRank(ContentHome.data.content.rankOfLastItem || 0);
               updateMasterItem(ContentHome.data);
@@ -357,7 +360,6 @@
             ContentHome.loadMore();
           }
         };
-
 
         /*
          * Call the datastore to save the data object

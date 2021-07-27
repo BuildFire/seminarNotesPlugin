@@ -106,6 +106,7 @@
         };
 
         WidgetNotes.openDetails = function (itemId, noteId) {
+          buildfire.analytics.trackAction(itemId);
           ViewStack.push({
             template: 'Item',
             params: {

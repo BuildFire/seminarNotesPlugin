@@ -124,15 +124,81 @@
         };
         WidgetBookmark.init();
 
-        WidgetBookmark.openDetails = function (itemId) {
-          ViewStack.push({
-            template: 'Item',
-            params: {
-              controller: "WidgetItemCtrl as WidgetItem",
-              itemId: itemId
+        $scope.shouldLockItem = (rank) => {
+          if ($rootScope.data && $rootScope.data.content && $rootScope.data.content.seminarDelay && $rootScope.data.content.seminarDelay.value) {
+            if (rank <= $rootScope.seminarOptions.rank) {
+              return ''
+            } else if ((rank === ($rootScope.seminarOptions.rank + 1)) && $rootScope.seminarOptions.nextOpenIn && $rootScope.seminarOptions.nextOpenIn <= Date.now()) {
+              return ''
             }
-          });
+            return $rootScope.data.content.lockedClass;
+          } else return '';
+        }
+
+        const seminarDelayHandler = (itemRank, callback) => {
+          if (
+              // If item rank is bigger the current rank and nextOpenIn has not been set, exit
+              (itemRank > $rootScope.seminarOptions.rank &&
+                  !$rootScope.seminarOptions.nextOpenIn) ||
+              // If If item rank is bigger the current rank and the item open time has not been reached, exit
+              (itemRank > $rootScope.seminarOptions.rank &&
+                  Date.now() < $rootScope.seminarOptions.nextOpenIn)
+          ) {
+              // set navigate to false to not allow to navigate to the item
+              return callback(false);
+          }
+
+          // If the item is the same rank as the current rank
+          if ($rootScope.seminarOptions.rank === itemRank) {
+            // if the next item open time have not been initialized, initialize it.
+            if (!$rootScope.seminarOptions.nextOpenIn) {
+              $rootScope.seminarOptions.nextOpenIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
+              buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+            }
+          } 
+          // If item rank is bigger than the current rank by one and it reached it's open time
+          else if (($rootScope.seminarOptions.rank + 1) === itemRank && Date.now() >= $rootScope.seminarOptions.nextOpenIn) {
+            // Change the current rank to the item rank
+            $rootScope.seminarOptions.rank = itemRank; 
+            // Set the time for when the next item will open
+            $rootScope.seminarOptions.nextOpenIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
+            buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+          }
+          // Set navigate to true, to allow the user to navigate to the item
+          callback(true);
+        }
+
+        WidgetBookmark.openDetails = function (itemId) {
+          if ($rootScope.data && $rootScope.data.content && $rootScope.data.content.seminarDelay && $rootScope.data.content.seminarDelay.value) {
+            seminarDelayHandler(itemRank, navigate => {
+              if (navigate) {
+                buildfire.analytics.trackAction(itemId);
+                ViewStack.push({
+                  template: 'Item',
+                  params: {
+                    controller: "WidgetItemCtrl as WidgetItem",
+                    itemId: itemId
+                  }
+                });
+              } else {
+                buildfire.dialog.toast({
+                  message: $rootScope.languages.seminarNotAvailable ? $rootScope.languages.seminarNotAvailable : "This seminar is not available at this time",
+                  type: "danger",
+                });
+              }
+            });
+          } else {
+            buildfire.analytics.trackAction(itemId);
+            ViewStack.push({
+              template: 'Item',
+              params: {
+                controller: "WidgetItemCtrl as WidgetItem",
+                itemId: itemId
+              }
+            });
+          }
         };
+
         WidgetBookmark.showItemNotes = function () {
           ViewStack.push({
             template: 'Notes',

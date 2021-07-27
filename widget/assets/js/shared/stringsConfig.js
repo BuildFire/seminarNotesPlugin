@@ -189,6 +189,18 @@ const stringsConfig = {
 				maxLength: 50,
 				defaultValue: "Item does not exist!",
 			},
+			nextSeminarOpen: {
+				title: "Next seminar is open",
+				placeholder: "The next seminar is now open",
+				maxLength: 160,
+				defaultValue: "The next seminar is now open",
+			},
+			seminarNotAvailable: {
+				title: "Seminar not available",
+				placeholder: "This seminar is not available at this time",
+				maxLength: 60,
+				defaultValue: "This seminar is not available at this time",
+			},
 		}
 	}
 };

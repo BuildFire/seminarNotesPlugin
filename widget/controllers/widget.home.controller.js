@@ -23,7 +23,8 @@
         $rootScope.deeplinkingDone = false;//it makes bug if its not rootscope with cp
         var searchOptions = {
           skip: 0,
-          limit: PAGINATION.itemCount
+          limit: PAGINATION.itemCount,
+          recordCount: true
         };
 
         //Refresh list of items on pulling the tile bar
@@ -49,14 +50,101 @@
           });
         });
 
-        WidgetHome.openDetails = function (itemId) {
-          ViewStack.push({
-            template: 'Item',
-            params: {
-              controller: "WidgetItemCtrl as WidgetItem",
-              itemId: itemId
+        const seminarDelayHandler = (itemRank, itemIndex, callback) => {
+            if (
+                // If item rank is bigger the current rank and nextOpenIn has not been set, exit
+                (itemRank > $rootScope.seminarOptions.rank &&
+                    !$rootScope.seminarOptions.nextOpenIn) ||
+                // If If item rank is bigger the current rank and the item open time has not been reached, exit
+                (itemRank > $rootScope.seminarOptions.rank &&
+                    Date.now() < $rootScope.seminarOptions.nextOpenIn)
+            ) {
+                // set navigate to false to not allow to navigate to the item
+                return callback(false);
             }
-          });
+
+            // If the item is the same rank as the current rank
+            if ($rootScope.seminarOptions.rank === itemRank) {
+              // if the next item open time have not been initialized, initialize it.
+              if (!$rootScope.seminarOptions.nextOpenIn) {
+                $rootScope.seminarOptions.nextOpenIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
+                buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+              }
+              // create a timeout function to unlock the next item if it's time reached.
+              let openAfter =  (Date.now() + ((WidgetHome.data.content.seminarDelay.value) * 60 * 1000)) - Date.now();
+              setTimeout(() => {
+                // Remove next item locked status after the time is reached 
+                let nextItem = document.getElementById(`seminarItem${$rootScope.seminarOptions.rank + 1}`);
+                if (nextItem) {
+                  nextItem.classList.remove(WidgetHome.data.content.lockedClass);
+                }
+              }, openAfter);
+
+            } 
+            // If item rank is bigger than the current rank by one and it reached it's open time
+            else if (($rootScope.seminarOptions.rank + 1) === itemRank && Date.now() >= $rootScope.seminarOptions.nextOpenIn) {
+              // Change the current rank to the item rank
+              $rootScope.seminarOptions.rank = itemRank; 
+              // Set the time for when the next item will open
+              $rootScope.seminarOptions.nextOpenIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
+
+              // If not last item 
+              if (itemIndex !== ($rootScope.totalItemsCount - 1)) {
+                // Schedule a notification for the next Item
+                buildfire.notifications.pushNotification.schedule({
+                  at: $rootScope.seminarOptions.nextOpenIn,
+                  title: "Push notification",
+                  text: WidgetHome.languages.nextSeminarOpen ? WidgetHome.languages.nextSeminarOpen : 'The next seminar is now open!'
+                })
+                
+                let openAfter =  $rootScope.seminarOptions.nextOpenIn - Date.now();
+                buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {
+                  // Remove next item locked status after the time is reached 
+                  setTimeout(() => {
+                    // Remove item locked status after the time is reached 
+                    let nextItem = document.getElementById(`seminarItem${$rootScope.seminarOptions.rank + 1}`);
+                    if (nextItem) {
+                      nextItem.classList.remove(WidgetHome.data.content.lockedClass);
+                      $rootScope.seminarOptions.rank++;
+                      buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+                    }
+                  }, openAfter);
+                });
+              }
+            }
+            // Set navigate to true, to allow the user to navigate to the item
+            callback(true);
+        }
+
+        WidgetHome.openDetails = function (itemId, itemRank, index) {
+          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
+            seminarDelayHandler(itemRank, index, navigate => {
+              if (navigate) {
+                buildfire.analytics.trackAction(itemId);
+                ViewStack.push({
+                  template: 'Item',
+                  params: {
+                    controller: "WidgetItemCtrl as WidgetItem",
+                    itemId: itemId
+                  }
+                });
+              } else {
+                buildfire.dialog.toast({
+                  message: WidgetHome.languages.seminarNotAvailable ? WidgetHome.languages.seminarNotAvailable : "This seminar is not available at this time",
+                  type: "danger",
+                });
+              }
+            });
+          } else {
+            buildfire.analytics.trackAction(itemId);
+            ViewStack.push({
+              template: 'Item',
+              params: {
+                controller: "WidgetItemCtrl as WidgetItem",
+                itemId: itemId
+              }
+            });
+          }
 
           //buildfire.messaging.sendMessageToControl({
           //  type: 'OpenItem',
@@ -212,11 +300,13 @@
               $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
             }
             console.log("==============", WidgetHome.data.design);
+            $rootScope.data = WidgetHome.data;
             cb();
           }
             , error = function (err) {
               Buildfire.spinner.hide();
               WidgetHome.data = { design: { itemListLayout: LAYOUTS.itemListLayout[0].name } };
+              $rootScope.data = WidgetHome.data
               console.error('Error while getting data', err);
               cb(err);
             };
@@ -327,6 +417,7 @@
             WidgetHome.openLogin();
           }
         };
+        
         var onUpdateCallback = function (event) {
           console.log(event);
           setTimeout(function () {
@@ -338,7 +429,16 @@
                 WidgetHome.data.design = {};
               if (!WidgetHome.data.content)
                 WidgetHome.data.content = {};
-              if (event.data.content.sortBy && currentSortOrder != event.data.content.sortBy) {
+
+              if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
+                WidgetHome.init(() => {
+                  searchOptions.skip = 0;
+                  WidgetHome.busy = false;
+                  WidgetHome.items = [];
+                  WidgetHome.seminarItemsInitialFetch=false;
+                  WidgetHome.loadMore();
+                });
+              } else if (event.data.content.sortBy && currentSortOrder != event.data.content.sortBy) {
                 WidgetHome.data.content.sortBy = event.data.content.sortBy;
                 searchOptions.skip = 0;
                 WidgetHome.busy = false;
@@ -351,6 +451,7 @@
               } else {
                 $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
               }
+              $rootScope.data = WidgetHome.data;
             }
             else if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {
               searchOptions.skip = 0;
@@ -395,10 +496,10 @@
           if (itemsCount > 0 && itemsCount < PAGINATION.itemCount) {
             return;
           }
+
           //If there are 0 items loaded and initial fetch was done, don't try to load again.
           if (itemsCount === 0 && WidgetHome.seminarItemsInitialFetch) return;
-          if (WidgetHome.readyToLoadItems)
-            WidgetHome.getItems();
+          if (WidgetHome.readyToLoadItems) WidgetHome.getItems();
         };
 
         WidgetHome.getItems = function () {
@@ -406,16 +507,18 @@
           WidgetHome.readyToLoadItems = false;
           Buildfire.spinner.show();
           var successAll = function (resultAll) {
-
             Buildfire.spinner.hide();
             WidgetHome.busy = false;
             WidgetHome.seminarItemsInitialFetch = true;
-            WidgetHome.items = WidgetHome.items.length != 0 ? WidgetHome.items.concat(resultAll) : resultAll;
+            WidgetHome.items = WidgetHome.items.length != 0 ? WidgetHome.items.concat(resultAll.result) : resultAll.result;
             var released = WidgetHome.items.filter(result => {
               return !result.data.releaseDate || result.data.releaseDate < Date.now();
             });
             WidgetHome.released = released;
             searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
+
+            // Set the total items count globally
+            $rootScope.totalItemsCount = resultAll.totalRecord;
 
             console.log("----------------------", WidgetHome.items);
             WidgetHome.setBookmarks();
@@ -435,18 +538,87 @@
           if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.sortBy) {
             searchOptions = WidgetHome.getSearchOptions(WidgetHome.data.content.sortBy);
           }
-          DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
+
+          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
+            if (!WidgetHome.currentLoggedInUser) {
+              WidgetHome.openLogin(() => {
+                seminarDelayInit(() => {
+                  DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
+                });
+              });
+            } else {
+              seminarDelayInit(() => {
+                DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
+              });
+            }
+          } else {
+            // Removed saved data if there delay option is turned off
+            buildfire.userData.save({}, "seminarOptions", false, () => {});
+            DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
+          }
         };
 
+        const seminarDelayInit = (callback) => {
+          buildfire.userData.get("seminarOptions", (err, result) => {
+            if (err) {
+              console.error("Error while retrieving your data", err)
+              return callback();
+            };
+            
+            $rootScope.seminarOptions = result.data;
+            
+            if (typeof $rootScope.seminarOptions.rank === 'undefined') {
+              $rootScope.seminarOptions.rank = 0;
+              buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+            }
+            
+            if ($rootScope.seminarOptions.nextOpenIn) {
+              if ($rootScope.seminarOptions.nextOpenIn <= Date.now()) {
+                $rootScope.seminarOptions.rank++;
+                $rootScope.seminarOptions.nextOpenIn = null;
+                buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+              } else {
+                setTimeout(() => {
+                  // Remove item locked status after the time is reached 
+                  let nextItem = document.getElementById(`seminarItem${$rootScope.seminarOptions.rank + 1}`);
+                  if (nextItem) {
+                    nextItem.classList.remove(WidgetHome.data.content.lockedClass);
+                    $rootScope.seminarOptions.rank++;
+                    buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+                  }
+                }, $rootScope.seminarOptions.nextOpenIn - Date.now());
+              } 
+            }
+
+            callback();
+          });
+        }
+
+        $scope.shouldLockItem = (rank) => {
+          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
+            if (rank <= $rootScope.seminarOptions.rank) {
+              return ''
+            } else if ((rank === ($rootScope.seminarOptions.rank + 1)) && $rootScope.seminarOptions.nextOpenIn && $rootScope.seminarOptions.nextOpenIn <= Date.now()) {
+              return ''
+            }
+            return WidgetHome.data.content.lockedClass;
+          } else return '';
+        }
 
         WidgetHome.currentLoggedInUser = null;
 
         /**
          * Method to open buildfire auth login pop up and allow user to login using credentials.
          */
-        WidgetHome.openLogin = function () {
-          buildfire.auth.login({}, function () {
-          });
+        WidgetHome.openLogin = function (callback) {
+          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
+            buildfire.auth.login({ allowCancel: false }, () => {
+              if (callback) callback();
+            });
+          } else {
+            buildfire.auth.login({}, function () {
+            });
+          }
         };
 
         var loginCallback = function () {
@@ -465,6 +637,9 @@
 
         var logoutCallback = function () {
           WidgetHome.currentLoggedInUser = null;
+          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
+            WidgetHome.openLogin(() => {});
+          }
           $scope.$apply();
         };
 

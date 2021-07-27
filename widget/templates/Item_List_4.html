@@ -17,7 +17,7 @@
 			</p>
 
 			<div class="plugin-banner hasBackground">
-				<div class="plugin-slide" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData">
+				<div class="plugin-slide" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData" ng-class="shouldLockItem(item.data.rank)" id="{{ 'seminarItem' + item.data.rank }}">
 					<img ng-hide="item.data.listImage" src="../../../styles/media/holder-16x9.png">
 					<img ng-show="item.data.listImage" class="border-radius-three" ng-if="item.data.listImage"
 						load-image="16x9" crop-width="{{deviceWidth}}" crop-height="183" crop-type="crop"
@@ -29,7 +29,7 @@
 					<div ng-show="item.data.listImage" class="backgroundLayer"
 						style="background:url({{item.data.listImage}});"></div>
 
-					<div class="item-text" ng-click="WidgetHome.openDetails(item.id)">
+					<div class="item-text" ng-click="WidgetHome.openDetails(item.id, item.data.rank, $index)">
 						<h5 class="ellipsis item-title whiteTheme">{{item.data.title}}</h5>
 						<p class="ellipsis item-summary margin-zero whiteTheme">{{item.data.summary}} </p>
 						<p class="ellipsis caption item-date margin-zero whiteTheme">{{item.data.publishDate | date}}
@@ -46,7 +46,7 @@
 						ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
 						<span class="icon icon-bookmark2 whiteTheme"></span>
 					</div>
-					<div class="item-click-holder" ng-click="WidgetHome.openDetails(item.id)"></div>
+					<div class="item-click-holder" ng-click="WidgetHome.openDetails(item.id, item.data.rank, $index)"></div>
 				</div>
 			</div>
 

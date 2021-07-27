@@ -1037,3 +1037,10 @@ html[buildfire='widget'] .modal {
 .plugin-slide, .plugin-slide img{
     width:100% !important;
 }
+
+.hidden .bookmark-holder,
+.hidden .bookmark-icon,
+.locked .bookmark-holder,
+.locked .bookmark-icon {
+    display: none !important;
+}

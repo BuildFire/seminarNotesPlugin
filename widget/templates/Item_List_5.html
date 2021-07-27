@@ -20,7 +20,7 @@
 			</p>
 			<div class="notes items-grid">
 				<div class="plugin-banner overflow-hidden grid-item" ng-repeat="item in WidgetHome.released"
-					ng-if="isFetchedAllData">
+					ng-if="isFetchedAllData" ng-class="shouldLockItem(item.data.rank)" id="{{ 'seminarItem' + item.data.rank }}">
 					<div class="plugin-slide">
 						<img ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
 						<img ng-show="item.data.listImage" ng-if="item.data.listImage" load-image="1x1" crop-width="162"
@@ -45,7 +45,7 @@
 							<h5 class="item-title margin-zero whiteTheme ellipsis">{{item.data.title}}</h5>
 							<p class="item-summary margin-zero  whiteTheme ellipsis">{{item.data.summary}}</p>
 						</div>
-						<div class="item-click-holder" ng-click="WidgetHome.openDetails(item.id)"></div>
+						<div class="item-click-holder" ng-click="WidgetHome.openDetails(item.id, item.data.rank, $index)"></div>
 					</div>
 				</div>
 			</div>

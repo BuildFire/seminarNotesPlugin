@@ -19,8 +19,8 @@
                     {{WidgetHome.languages.noItems}}
                     <img style="margin-top: 35px;" src="./images/empty_page.svg"/>
                 </p>
-                <div class="list-item" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData">
-                    <div class="item-click-holder ellipsis" ng-click="WidgetHome.openDetails(item.id)">
+                <div class="list-item" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData" ng-class="shouldLockItem(item.data.rank)" id="{{ 'seminarItem' + item.data.rank }}">
+                    <div class="item-click-holder ellipsis" ng-click="WidgetHome.openDetails(item.id, item.data.rank, $index)">
                         <div class="list-media-holder" ng-if="item.data.listImage">
                             <img class="border-radius-three" load-image="16x9" crop-width="120" crop-height="70"
                                 crop-type="crop" data-final-src="{{item.data.listImage}}">
