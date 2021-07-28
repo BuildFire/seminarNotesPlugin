@@ -54,6 +54,38 @@
           });
         }
 
+        const seminarDelayHandler = (itemRank, callback) => {
+          if (
+              // If item rank is bigger the current rank and nextOpenIn has not been set, exit
+              (itemRank > $rootScope.seminarLastDocument.rank &&
+                  !$rootScope.seminarLastDocument.nextOpenIn) ||
+              // If If item rank is bigger the current rank and the item open time has not been reached, exit
+              (itemRank > $rootScope.seminarLastDocument.rank &&
+                  Date.now() < $rootScope.seminarLastDocument.nextOpenIn)
+          ) {
+              // set navigate to false to not allow to navigate to the item
+              return callback(false);
+          }
+
+          // If the item is the same rank as the current rank
+          if ($rootScope.seminarLastDocument.rank === itemRank) {
+            // if the next item open time have not been initialized, initialize it.
+            if (!$rootScope.seminarLastDocument.nextOpenIn) {
+              $rootScope.seminarLastDocument.nextOpenIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
+              buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
+            }
+          } 
+          // If item rank is bigger than the current rank by one and it reached it's open time
+          else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextOpenIn) {
+            // Change the current rank to the item rank
+            $rootScope.seminarLastDocument.rank = itemRank; 
+            // Set the time for when the next item will open
+            $rootScope.seminarLastDocument.nextOpenIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
+            buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
+          }
+          // Set navigate to true, to allow the user to navigate to the item
+          callback(true);
+        }
 
         //Refresh item details on pulling the tile bar
 
@@ -77,21 +109,33 @@
         var getEventDetails = function () {
           Buildfire.spinner.show();
           var success = function (result) {
-
-            Buildfire.spinner.hide();
-            WidgetItem.item = result;
-            //$rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
-            console.log("========ingeteventdetails", result);
-
-            if (!WidgetItem.item.data.itemListBgImage) {
-              $rootScope.itemDetailbackgroundImage = "";
-            } else {
-              $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
-            }
-
-            $timeout(function () {
-              WidgetItem.forceScroll = true;
-            }, 0);
+            seminarDelayHandler(result.data.rank, allow => {
+              if (!allow) {
+                buildfire.dialog.toast({
+                  message: WidgetItem.languages.seminarNotAvailable ? WidgetItem.languages.seminarNotAvailable : "This seminar is not available at this time",
+                  type: "danger",
+                });
+                setTimeout(() => {
+                  window.location.reload();
+                }, 2000);
+              } else  {
+                Buildfire.spinner.hide();
+                WidgetItem.item = result;
+    
+                //$rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
+                console.log("========ingeteventdetails", result);
+    
+                if (!WidgetItem.item.data.itemListBgImage) {
+                  $rootScope.itemDetailbackgroundImage = "";
+                } else {
+                  $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
+                }
+    
+                $timeout(function () {
+                  WidgetItem.forceScroll = true;
+                }, 0);
+              }
+            });
           }
             , error = function (err) {
               Buildfire.spinner.hide();

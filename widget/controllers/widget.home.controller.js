@@ -53,28 +53,28 @@
         const seminarDelayHandler = (itemRank, itemIndex, callback) => {
             if (
                 // If item rank is bigger the current rank and nextOpenIn has not been set, exit
-                (itemRank > $rootScope.seminarOptions.rank &&
-                    !$rootScope.seminarOptions.nextOpenIn) ||
+                (itemRank > $rootScope.seminarLastDocument.rank &&
+                    !$rootScope.seminarLastDocument.nextOpenIn) ||
                 // If If item rank is bigger the current rank and the item open time has not been reached, exit
-                (itemRank > $rootScope.seminarOptions.rank &&
-                    Date.now() < $rootScope.seminarOptions.nextOpenIn)
+                (itemRank > $rootScope.seminarLastDocument.rank &&
+                    Date.now() < $rootScope.seminarLastDocument.nextOpenIn)
             ) {
                 // set navigate to false to not allow to navigate to the item
                 return callback(false);
             }
 
             // If the item is the same rank as the current rank
-            if ($rootScope.seminarOptions.rank === itemRank) {
+            if ($rootScope.seminarLastDocument.rank === itemRank) {
               // if the next item open time have not been initialized, initialize it.
-              if (!$rootScope.seminarOptions.nextOpenIn) {
-                $rootScope.seminarOptions.nextOpenIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
-                buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+              if (!$rootScope.seminarLastDocument.nextOpenIn) {
+                $rootScope.seminarLastDocument.nextOpenIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
+                buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
               }
               // create a timeout function to unlock the next item if it's time reached.
               let openAfter =  (Date.now() + ((WidgetHome.data.content.seminarDelay.value) * 60 * 1000)) - Date.now();
               setTimeout(() => {
                 // Remove next item locked status after the time is reached 
-                let nextItem = document.getElementById(`seminarItem${$rootScope.seminarOptions.rank + 1}`);
+                let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                 if (nextItem) {
                   nextItem.classList.remove(WidgetHome.data.content.lockedClass);
                 }
@@ -82,31 +82,31 @@
 
             } 
             // If item rank is bigger than the current rank by one and it reached it's open time
-            else if (($rootScope.seminarOptions.rank + 1) === itemRank && Date.now() >= $rootScope.seminarOptions.nextOpenIn) {
+            else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextOpenIn) {
               // Change the current rank to the item rank
-              $rootScope.seminarOptions.rank = itemRank; 
+              $rootScope.seminarLastDocument.rank = itemRank; 
               // Set the time for when the next item will open
-              $rootScope.seminarOptions.nextOpenIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
+              $rootScope.seminarLastDocument.nextOpenIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
 
               // If not last item 
               if (itemIndex !== ($rootScope.totalItemsCount - 1)) {
                 // Schedule a notification for the next Item
                 buildfire.notifications.pushNotification.schedule({
-                  at: $rootScope.seminarOptions.nextOpenIn,
+                  at: $rootScope.seminarLastDocument.nextOpenIn,
                   title: "Push notification",
                   text: WidgetHome.languages.nextSeminarOpen ? WidgetHome.languages.nextSeminarOpen : 'The next seminar is now open!'
                 })
                 
-                let openAfter =  $rootScope.seminarOptions.nextOpenIn - Date.now();
-                buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {
+                let openAfter =  $rootScope.seminarLastDocument.nextOpenIn - Date.now();
+                buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {
                   // Remove next item locked status after the time is reached 
                   setTimeout(() => {
                     // Remove item locked status after the time is reached 
-                    let nextItem = document.getElementById(`seminarItem${$rootScope.seminarOptions.rank + 1}`);
+                    let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                     if (nextItem) {
                       nextItem.classList.remove(WidgetHome.data.content.lockedClass);
-                      $rootScope.seminarOptions.rank++;
-                      buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+                      $rootScope.seminarLastDocument.rank++;
+                      buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
                     }
                   }, openAfter);
                 });
@@ -120,7 +120,7 @@
           if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
             seminarDelayHandler(itemRank, index, navigate => {
               if (navigate) {
-                buildfire.analytics.trackAction(itemId);
+                buildfire.analytics.trackAction(`DOCUMENT_${itemId}_OPENED`);
                 ViewStack.push({
                   template: 'Item',
                   params: {
@@ -136,7 +136,7 @@
               }
             });
           } else {
-            buildfire.analytics.trackAction(itemId);
+            buildfire.analytics.trackAction(`DOCUMENT_${itemId}_OPENED`);
             ViewStack.push({
               template: 'Item',
               params: {
@@ -552,41 +552,39 @@
               });
             }
           } else {
-            // Removed saved data if there delay option is turned off
-            buildfire.userData.save({}, "seminarOptions", false, () => {});
             DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
           }
         };
 
         const seminarDelayInit = (callback) => {
-          buildfire.userData.get("seminarOptions", (err, result) => {
+          buildfire.userData.get("seminarLastDocument", (err, result) => {
             if (err) {
               console.error("Error while retrieving your data", err)
               return callback();
             };
             
-            $rootScope.seminarOptions = result.data;
+            $rootScope.seminarLastDocument = result.data;
             
-            if (typeof $rootScope.seminarOptions.rank === 'undefined') {
-              $rootScope.seminarOptions.rank = 0;
-              buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+            if (typeof $rootScope.seminarLastDocument.rank === 'undefined') {
+              $rootScope.seminarLastDocument.rank = 0;
+              buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
             }
             
-            if ($rootScope.seminarOptions.nextOpenIn) {
-              if ($rootScope.seminarOptions.nextOpenIn <= Date.now()) {
-                $rootScope.seminarOptions.rank++;
-                $rootScope.seminarOptions.nextOpenIn = null;
-                buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+            if ($rootScope.seminarLastDocument.nextOpenIn) {
+              if ($rootScope.seminarLastDocument.nextOpenIn <= Date.now()) {
+                $rootScope.seminarLastDocument.rank++;
+                $rootScope.seminarLastDocument.nextOpenIn = null;
+                buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
               } else {
                 setTimeout(() => {
                   // Remove item locked status after the time is reached 
-                  let nextItem = document.getElementById(`seminarItem${$rootScope.seminarOptions.rank + 1}`);
+                  let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                   if (nextItem) {
                     nextItem.classList.remove(WidgetHome.data.content.lockedClass);
-                    $rootScope.seminarOptions.rank++;
-                    buildfire.userData.save($rootScope.seminarOptions, "seminarOptions", false, () => {});
+                    $rootScope.seminarLastDocument.rank++;
+                    buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
                   }
-                }, $rootScope.seminarOptions.nextOpenIn - Date.now());
+                }, $rootScope.seminarLastDocument.nextOpenIn - Date.now());
               } 
             }
 
@@ -596,9 +594,9 @@
 
         $scope.shouldLockItem = (rank) => {
           if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
-            if (rank <= $rootScope.seminarOptions.rank) {
+            if (rank <= $rootScope.seminarLastDocument.rank) {
               return ''
-            } else if ((rank === ($rootScope.seminarOptions.rank + 1)) && $rootScope.seminarOptions.nextOpenIn && $rootScope.seminarOptions.nextOpenIn <= Date.now()) {
+            } else if ((rank === ($rootScope.seminarLastDocument.rank + 1)) && $rootScope.seminarLastDocument.nextOpenIn && $rootScope.seminarLastDocument.nextOpenIn <= Date.now()) {
               return ''
             }
             return WidgetHome.data.content.lockedClass;

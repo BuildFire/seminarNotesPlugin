@@ -81,7 +81,7 @@
             if(data) {
               var item = ContentHome.items[_index];
               Deeplink.deleteById(item.id);
-              buildfire.analytics.unregisterEvent(item.id);
+              buildfire.analytics.unregisterEvent(`DOCUMENT_${item.id}_OPENED`);
               DataStore.deleteById(item.id, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
                 ContentHome.items.splice(_index, 1);
                 searchOptionUserData.filter ={"$or": [{"$json.itemID": {"$eq": item.id}}]};

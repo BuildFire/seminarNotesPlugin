@@ -177,7 +177,7 @@
             buildfire.analytics.registerEvent(
               {
                 title: ContentItem.item.data.title,
-                key: result.id,
+                key: `DOCUMENT_${result.id}_OPENED`,
                 description: "Number of times this item has been opened",
               },
               { silentNotification: true }
