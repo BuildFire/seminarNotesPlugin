@@ -27,6 +27,16 @@
           recordCount: true
         };
 
+        // Subscribe to notifications on the device
+        buildfire.notifications.pushNotification.subscribe(
+          {},
+          (err, subscribed) => {
+            if (err) return console.error(err);
+        
+            console.log("User subscribed to group", subscribed);
+          }
+        );
+
         //Refresh list of items on pulling the tile bar
 
         buildfire.datastore.onRefresh(function () {

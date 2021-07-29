@@ -21,7 +21,7 @@
                     ng-swipe-left="WidgetNotes.swipeToDeleteNote($event, $index, true)"
                     ng-swipe-right="WidgetNotes.swipeToDeleteNote($event, $index, false)">
                     <div class="list-item-media text-left" ng-class="{'edit' : WidgetNotes.swiped[$index]}"
-                        ng-click="WidgetNotes.openDetails(note.data.itemID, note.id)">
+                        ng-click="WidgetNotes.openDetails(note.data.itemID, note.id, note.data.itemRank)">
                         <div class="list-item-copy">
                             <div class="note-details ellipsis">
                                 <p class="ellipsis caption">{{note.data.itemTitle}}</p>

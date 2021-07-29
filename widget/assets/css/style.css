@@ -1038,6 +1038,11 @@ html[buildfire='widget'] .modal {
     width:100% !important;
 }
 
+.hidden,
+.locked {
+    pointer-events: none !important;
+}
+
 .hidden .bookmark-holder,
 .hidden .bookmark-icon,
 .locked .bookmark-holder,

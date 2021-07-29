@@ -168,7 +168,7 @@
           callback(true);
         }
 
-        WidgetBookmark.openDetails = function (itemId) {
+        WidgetBookmark.openDetails = function (itemId, itemRank) {
           if ($rootScope.data && $rootScope.data.content && $rootScope.data.content.seminarDelay && $rootScope.data.content.seminarDelay.value) {
             seminarDelayHandler(itemRank, navigate => {
               if (navigate) {
@@ -182,7 +182,7 @@
                 });
               } else {
                 buildfire.dialog.toast({
-                  message: $rootScope.languages.seminarNotAvailable ? $rootScope.languages.seminarNotAvailable : "This seminar is not available at this time",
+                  message: WidgetBookmark.languages.seminarNotAvailable ? WidgetBookmark.languages.seminarNotAvailable : "This seminar is not available at this time",
                   type: "danger",
                 });
               }

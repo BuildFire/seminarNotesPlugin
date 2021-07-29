@@ -192,10 +192,6 @@
                 else
                   editor.loadItems(ContentHome.data.content.carouselImages);
               }
-              if(typeof ContentHome.data.content.sortBy == "undefined"){ 
-                // ContentHome.data.content.sortBy=SORT.MANUALLY;
-                ContentHome.sortItemBy(SORT.OLDEST_FIRST)
-               }
               ContentHome.itemSortableOptions.disabled = !(ContentHome.data.content.sortBy === SORT.MANUALLY);
               RankOfLastItem.setRank(ContentHome.data.content.rankOfLastItem || 0);
               updateMasterItem(ContentHome.data);
@@ -224,10 +220,13 @@
             return;
           }
 
+          ContentHome.searchOptions.limit = 99999; 
+
           ContentHome.busy = true;
           if (ContentHome.data && ContentHome.data.content.sortBy && !search) {
             ContentHome.searchOptions = getSearchOptions(ContentHome.data.content.sortBy);
           }
+          
           DataStore.search(ContentHome.searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
             if (result.length <= SORT._limit) {// to indicate there are more
               ContentHome.noMore = true;
@@ -237,8 +236,22 @@
               ContentHome.searchOptions.skip = ContentHome.searchOptions.skip + SORT._limit;
               ContentHome.noMore = false;
             }
+
+            
             ContentHome.items = ContentHome.items ? ContentHome.items.concat(result) : result;
-            ContentHome.busy = false;
+            // Make sure Items are sorted
+            if(typeof ContentHome.data.content.sortBy == "undefined"){ 
+              ContentHome.busy = false;
+              return ContentHome.sortItemBy(SORT.OLDEST_FIRST)
+             } else {
+              // Make sure Items are ranked correctly;
+               for(let i = 0; i < ContentHome.items.length; i++) {
+                 if (ContentHome.items[i].data.rank !== i) {
+                   ContentHome.items[i].data.rank = i;
+                   DataStore.update(ContentHome.items[i].id, ContentHome.items[i].data, TAG_NAMES.SEMINAR_ITEMS, () => {});
+                 }  
+               }
+            }
             Buildfire.spinner.hide();
           }, function (error) {
             Buildfire.spinner.hide();

@@ -14,7 +14,7 @@
           <img style="margin-top: 35px;" src="./images/empty_page.svg"/>
         </p>
         <div class="list-item" ng-if="item.isBookmarked && isFetchedAllData" ng-repeat="item in WidgetBookmark.items">
-            <div class="item-click-holder ellipsis" ng-click="WidgetBookmark.openDetails(item.id)" ng-class="shouldLockItem(item.data.rank)">
+            <div class="item-click-holder ellipsis" ng-click="WidgetBookmark.openDetails(item.id, item.data.rank)" ng-class="shouldLockItem(item.data.rank)">
               <div class="square-icon list-media-holder pull-left">
                 <img ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
                 <img ng-show="item.data.listImage" class="border-radius-three" ng-if="item.data.listImage" load-image="1x1"

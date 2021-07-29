@@ -270,7 +270,7 @@
                 });
               } else {
                 buildfire.dialog.toast({
-                  message: $rootScope.languages.seminarNotAvailable ? $rootScope.languages.seminarNotAvailable : "This seminar is not available at this time",
+                  message: WidgetSearch.languages.seminarNotAvailable ? WidgetSearch.languages.seminarNotAvailable : "This seminar is not available at this time",
                   type: "danger",
                 });
               }
