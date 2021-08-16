@@ -323,10 +323,6 @@
           }
         };
 
-
-
-
-
         WidgetItem.getNoteList = function () {
           Buildfire.spinner.show();
           searchOptions.filter = { "$or": [{ "$json.itemID": { "$eq": WidgetItem.item.id } }] };

@@ -128,7 +128,7 @@
           if ($rootScope.data && $rootScope.data.content && $rootScope.data.content.seminarDelay && $rootScope.data.content.seminarDelay.value) {
             if (rank <= $rootScope.seminarLastDocument.rank) {
               return ''
-            } else if ((rank === ($rootScope.seminarLastDocument.rank + 1)) && $rootScope.seminarLastDocument.nextOpenIn && $rootScope.seminarLastDocument.nextOpenIn <= Date.now()) {
+            } else if ((rank === ($rootScope.seminarLastDocument.rank + 1)) && $rootScope.seminarLastDocument.nextAvailableIn && $rootScope.seminarLastDocument.nextAvailableIn <= Date.now()) {
               return ''
             }
             return $rootScope.data.content.lockedClass;
@@ -137,12 +137,12 @@
 
         const seminarDelayHandler = (itemRank, callback) => {
           if (
-              // If item rank is bigger the current rank and nextOpenIn has not been set, exit
+              // If item rank is bigger the current rank and nextAvailableIn has not been set, exit
               (itemRank > $rootScope.seminarLastDocument.rank &&
-                  !$rootScope.seminarLastDocument.nextOpenIn) ||
+                  !$rootScope.seminarLastDocument.nextAvailableIn) ||
               // If If item rank is bigger the current rank and the item open time has not been reached, exit
               (itemRank > $rootScope.seminarLastDocument.rank &&
-                  Date.now() < $rootScope.seminarLastDocument.nextOpenIn)
+                  Date.now() < $rootScope.seminarLastDocument.nextAvailableIn)
           ) {
               // set navigate to false to not allow to navigate to the item
               return callback(false);
@@ -151,17 +151,17 @@
           // If the item is the same rank as the current rank
           if ($rootScope.seminarLastDocument.rank === itemRank) {
             // if the next item open time have not been initialized, initialize it.
-            if (!$rootScope.seminarLastDocument.nextOpenIn) {
-              $rootScope.seminarLastDocument.nextOpenIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
+            if (!$rootScope.seminarLastDocument.nextAvailableIn) {
+              $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
               buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
             }
           } 
           // If item rank is bigger than the current rank by one and it reached it's open time
-          else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextOpenIn) {
+          else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextAvailableIn) {
             // Change the current rank to the item rank
             $rootScope.seminarLastDocument.rank = itemRank; 
             // Set the time for when the next item will open
-            $rootScope.seminarLastDocument.nextOpenIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
+            $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
             buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
           }
           // Set navigate to true, to allow the user to navigate to the item

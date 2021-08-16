@@ -25,16 +25,27 @@
 						<img ng-hide="item.data.listImage" src="../../../styles/media/holder-1x1.png">
 						<img ng-show="item.data.listImage" ng-if="item.data.listImage" load-image="1x1" crop-width="162"
 							crop-height="162" crop-type="crop" data-final-src="{{item.data.listImage}}">
-						<div class="blackLayer"></div>
+						<div class="blackLayer">
+							<div class="image-overlay">
+                                <div>
+                                    <i class="glyphicon glyphicon-lock"></i>
+                                </div>
+                            </div>
+						</div>
 						<div class="item-header">
-							<p class="item-date caption margin-zero whiteTheme ellipsis min-width-30">
+							<p class="published-at item-date caption margin-zero whiteTheme ellipsis min-width-30">
 								{{item.data.publishDate | date}}&nbsp;</p>
-							<!-- <div class="bookmark-icon btn-icon transparent-background"
-								ng-if="WidgetHome.currentLoggedInUser && WidgetHome.allowSharing"
-								ng-click="WidgetHome.shareContent(item, $index)">
-								<span class="icon icon-link2 whiteTheme margin-top-25"></span>
-							</div> -->
-							<!-- Use these theme classes when inactive/not selected -->
+							<div class="countdown available-in" ng-hide="hideCountdown" ng-if="(seminarLastDocument.rank + 1) === item.data.rank && seminarLastDocument.nextAvailableIn">
+								<div class="timer small ellipsis">
+									Available In:<br>
+									<b>
+										<span id="timer-days" ng-if="days && days !== '00'">{{days || '00'}}d</span>
+										<span id="timer-hours" ng-if="(days && days !== '00') || (hours && hours !== '00')">{{hours || '00'}}h</span>
+										<span id="timer-mins">{{minutes || '00'}}m</span>
+										<span id="timer-secs">{{seconds || '00'}}s</span>
+									</b>
+								</div>
+							</div>
 							<div ng-if="WidgetHome.currentLoggedInUser" class="bookmark-icon btn-icon"
 								ng-class="item.isBookmarked?'primaryBackgroundTheme':'transparent-background'"
 								ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">

@@ -6,6 +6,7 @@
       function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData, TempPublicDataCopy, SORT, $modal, $timeout) {
         var WidgetHome = this;
         var currentListLayout, currentSortOrder = null;
+        let nextSeminarTimout;
 
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth || 320;
@@ -62,12 +63,12 @@
 
         const seminarDelayHandler = (itemRank, itemIndex, callback) => {
             if (
-                // If item rank is bigger the current rank and nextOpenIn has not been set, exit
+                // If item rank is bigger the current rank and nextAvailableIn has not been set, exit
                 (itemRank > $rootScope.seminarLastDocument.rank &&
-                    !$rootScope.seminarLastDocument.nextOpenIn) ||
+                    !$rootScope.seminarLastDocument.nextAvailableIn) ||
                 // If If item rank is bigger the current rank and the item open time has not been reached, exit
                 (itemRank > $rootScope.seminarLastDocument.rank &&
-                    Date.now() < $rootScope.seminarLastDocument.nextOpenIn)
+                    Date.now() < $rootScope.seminarLastDocument.nextAvailableIn)
             ) {
                 // set navigate to false to not allow to navigate to the item
                 return callback(false);
@@ -76,13 +77,16 @@
             // If the item is the same rank as the current rank
             if ($rootScope.seminarLastDocument.rank === itemRank) {
               // if the next item open time have not been initialized, initialize it.
-              if (!$rootScope.seminarLastDocument.nextOpenIn) {
-                $rootScope.seminarLastDocument.nextOpenIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
+              if (!$rootScope.seminarLastDocument.nextAvailableIn) {
+                $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
                 buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
               }
               // create a timeout function to unlock the next item if it's time reached.
               let openAfter =  (Date.now() + ((WidgetHome.data.content.seminarDelay.value) * 60 * 1000)) - Date.now();
-              setTimeout(() => {
+              // Show countdown timer
+              countdown();
+              clearTimeout(nextSeminarTimout);
+              nextSeminarTimout = setTimeout(() => {
                 // Remove next item locked status after the time is reached 
                 let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                 if (nextItem) {
@@ -92,30 +96,34 @@
 
             } 
             // If item rank is bigger than the current rank by one and it reached it's open time
-            else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextOpenIn) {
+            else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextAvailableIn) {
               // Change the current rank to the item rank
               $rootScope.seminarLastDocument.rank = itemRank; 
               // Set the time for when the next item will open
-              $rootScope.seminarLastDocument.nextOpenIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
+              $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
 
               // If not last item 
               if (itemIndex !== ($rootScope.totalItemsCount - 1)) {
                 // Schedule a notification for the next Item
                 buildfire.notifications.pushNotification.schedule({
-                  at: $rootScope.seminarLastDocument.nextOpenIn,
+                  at: $rootScope.seminarLastDocument.nextAvailableIn,
                   title: "Push notification",
                   text: WidgetHome.languages.nextSeminarOpen ? WidgetHome.languages.nextSeminarOpen : 'The next seminar is now open!'
                 })
                 
-                let openAfter =  $rootScope.seminarLastDocument.nextOpenIn - Date.now();
+                let openAfter =  $rootScope.seminarLastDocument.nextAvailableIn - Date.now();
                 buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {
+                  // Show countdown timer
+                  countdown();
                   // Remove next item locked status after the time is reached 
-                  setTimeout(() => {
+                  clearTimeout(nextSeminarTimout)
+                  nextSeminarTimout = setTimeout(() => {
                     // Remove item locked status after the time is reached 
                     let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                     if (nextItem) {
                       nextItem.classList.remove(WidgetHome.data.content.lockedClass);
                       $rootScope.seminarLastDocument.rank++;
+                      $rootScope.seminarLastDocument.nextAvailableIn = null;
                       buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
                     }
                   }, openAfter);
@@ -428,11 +436,12 @@
           }
         };
         
+        var updateTimeout;
         var onUpdateCallback = function (event) {
-          console.log(event);
+          if (updateTimeout) clearTimeout(updateTimeout);
+
           setTimeout(function () {
-            if (!$scope.$$phase)
-              $scope.$digest();
+            if (!$scope.$$phase) $scope.$digest();
             if (event && event.tag === TAG_NAMES.SEMINAR_INFO) {
               WidgetHome.data = event.data;
               if (!WidgetHome.data.design)
@@ -441,20 +450,16 @@
                 WidgetHome.data.content = {};
 
               if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
-                WidgetHome.init(() => {
-                  searchOptions.skip = 0;
-                  WidgetHome.busy = false;
-                  WidgetHome.items = [];
-                  WidgetHome.seminarItemsInitialFetch=false;
-                  WidgetHome.loadMore();
-                });
+                searchOptions.skip = 0;
+                WidgetHome.busy = false;
+                WidgetHome.items = [];
+                WidgetHome.seminarItemsInitialFetch=false;
               } else if (event.data.content.sortBy && currentSortOrder != event.data.content.sortBy) {
                 WidgetHome.data.content.sortBy = event.data.content.sortBy;
                 searchOptions.skip = 0;
                 WidgetHome.busy = false;
                 WidgetHome.items = [];
                 WidgetHome.seminarItemsInitialFetch=false;
-                WidgetHome.loadMore();
               }
               if (!WidgetHome.data.design.itemListBgImage) {
                 $rootScope.itemListbackgroundImage = "";
@@ -468,7 +473,6 @@
               WidgetHome.busy = false;
               WidgetHome.items = [];
               WidgetHome.seminarItemsInitialFetch=false;
-              WidgetHome.loadMore();
             }
 
             if (!WidgetHome.data.design.itemListLayout) {
@@ -485,11 +489,19 @@
                 console.log("==========2")
               }
             }
+
             currentListLayout = WidgetHome.data.design.itemListLayout;
-            if (!$scope.$$phase)
-              $scope.$digest();
-            if (!$rootScope.$$phase)
-              $rootScope.$digest();
+
+            updateTimeout = setTimeout(() => {
+              if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
+                WidgetHome.init(() => { WidgetHome.loadMore() });
+              } else {
+                WidgetHome.loadMore();
+              }
+            }, 500);
+
+            if (!$scope.$$phase) $scope.$digest();
+            if (!$rootScope.$$phase) $rootScope.$digest();
           }, 0);
         };
         DataStore.onUpdate().then(null, null, onUpdateCallback);
@@ -539,6 +551,8 @@
             } else {
               WidgetHome.openLogin();
             }
+            if (!$scope.$$phase) $scope.$digest();
+            if (!$rootScope.$$phase) $rootScope.$digest();
           },
             errorAll = function (error) {
               Buildfire.spinner.hide();
@@ -579,22 +593,27 @@
               $rootScope.seminarLastDocument.rank = 0;
               buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
             }
-            
-            if ($rootScope.seminarLastDocument.nextOpenIn) {
-              if ($rootScope.seminarLastDocument.nextOpenIn <= Date.now()) {
+
+            if ($rootScope.seminarLastDocument.nextAvailableIn) {
+              if ($rootScope.seminarLastDocument.nextAvailableIn <= Date.now()) {
                 $rootScope.seminarLastDocument.rank++;
-                $rootScope.seminarLastDocument.nextOpenIn = null;
+                $rootScope.seminarLastDocument.nextAvailableIn = null;
                 buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
               } else {
-                setTimeout(() => {
+                let openAfter = $rootScope.seminarLastDocument.nextAvailableIn - Date.now();
+                // Show countdown timer
+                countdown();
+                clearTimeout(nextSeminarTimout);
+                nextSeminarTimout = setTimeout(() => {
                   // Remove item locked status after the time is reached 
                   let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                   if (nextItem) {
                     nextItem.classList.remove(WidgetHome.data.content.lockedClass);
                     $rootScope.seminarLastDocument.rank++;
+                    $rootScope.seminarLastDocument.nextAvailableIn = null;
                     buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
                   }
-                }, $rootScope.seminarLastDocument.nextOpenIn - Date.now());
+                }, openAfter);
               } 
             }
 
@@ -606,7 +625,7 @@
           if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
             if (rank <= $rootScope.seminarLastDocument.rank) {
               return ''
-            } else if ((rank === ($rootScope.seminarLastDocument.rank + 1)) && $rootScope.seminarLastDocument.nextOpenIn && $rootScope.seminarLastDocument.nextOpenIn <= Date.now()) {
+            } else if ((rank === ($rootScope.seminarLastDocument.rank + 1)) && $rootScope.seminarLastDocument.nextAvailableIn && $rootScope.seminarLastDocument.nextAvailableIn <= Date.now()) {
               return ''
             }
             return WidgetHome.data.content.lockedClass;
@@ -791,10 +810,42 @@
               searchOptions.skip = 0;
               WidgetHome.busy = false;
               WidgetHome.loadMore();
-              if (!$scope.$$phase)
-                $scope.$digest();
+              if (!$scope.$$phase) $scope.$digest();
             });
           }
         });
+
+      let countdownInterval;
+      const countdown = () => {
+        clearInterval(countdownInterval);
+          countdownInterval = setInterval(() => {
+               let endDate  = $rootScope.seminarLastDocument.nextAvailableIn - Date.now();
+
+              if (endDate >= 0) {
+                  let days = Math.floor(endDate / (1000 * 60 * 60 * 24));
+                  let hours = Math.floor(
+                      (endDate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+                  );
+                  let mins = Math.floor(
+                      (endDate % (1000 * 60 * 60)) / (1000 * 60)
+                  );
+                  let secs = Math.floor((endDate % (1000 * 60)) / 1000);
+
+                  $scope.days = days;
+                  $scope.hours = ("0" + hours).slice(-2);
+                  $scope.minutes = ("0" + mins).slice(-2);
+                  $scope.seconds = ("0" + secs).slice(-2);
+                  $scope.hideCountdown = false;
+                  if (!$scope.$$phase) $scope.$digest();
+              } else {
+                  $scope.hours = "";
+                  $scope.minutes = "";
+                  $scope.seconds = "";
+                  clearInterval(countdownInterval);
+                  $scope.hideCountdown = true;
+                  if (!$scope.$$phase) $scope.$digest();
+              }
+          }, 1000);
+      };
       }])
 })(window.angular, window.buildfire);

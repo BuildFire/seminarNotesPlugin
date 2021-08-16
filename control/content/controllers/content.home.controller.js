@@ -220,13 +220,14 @@
             return;
           }
 
-          ContentHome.searchOptions.limit = 99999; 
+          // Make sure to get all the items to be able to rank them
+          ContentHome.searchOptions.limit = 999999; 
 
           ContentHome.busy = true;
           if (ContentHome.data && ContentHome.data.content.sortBy && !search) {
             ContentHome.searchOptions = getSearchOptions(ContentHome.data.content.sortBy);
           }
-          
+
           DataStore.search(ContentHome.searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
             if (result.length <= SORT._limit) {// to indicate there are more
               ContentHome.noMore = true;
@@ -244,7 +245,7 @@
               ContentHome.busy = false;
               return ContentHome.sortItemBy(SORT.OLDEST_FIRST)
              } else {
-              // Make sure Items are ranked correctly;
+              // Make sure Items are sorted (ranked) correctly, since the items are ranked only on manual
                for(let i = 0; i < ContentHome.items.length; i++) {
                  if (ContentHome.items[i].data.rank !== i) {
                    ContentHome.items[i].data.rank = i;
