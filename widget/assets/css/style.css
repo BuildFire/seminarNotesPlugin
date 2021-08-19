@@ -1085,14 +1085,42 @@ html[buildfire='widget'] .modal {
     align-items: center;
 }
 
-.locked .list-media-holder .image-overlay > div > i {
-    color: white !important;
-    font-size: 18px !important;
+.locked .list-media-holder .image-overlay > div > img {
+    filter: invert(0.9);
+    width: 25px !important;
+    height: auto;
 }
 
-.locked .blackLayer .image-overlay > div > i {
-    color: white !important;
-    font-size: 24px !important;
+.locked .blackLayer .image-overlay > div > img {
+    filter: invert(0.9);
+    width: 42px !important;
+    height: auto;
+}
+.locked div.copy-holder.ellipsis > h5,
+.locked div.list-item-copy.ellipsis > div > h5,
+.locked p.ellipsis.margin-zero.bodyTextTheme {
+    color:  #ACACAC !important;
+}
+/* #seminarItem1 >  */
+.layout4 .locked div.countdown.available-in > div.timer span,
+.layout4 .locked div.countdown.available-in > div > b span,
+.layout5 .locked div.countdown.available-in > div.timer span,
+.layout5 .locked div.countdown.available-in > div > b span {
+    color: #ffffff !important;
+}
+
+.layout4 .locked div.countdown.available-in > div.timer,
+.layout5 .locked div.countdown.available-in > div.timer {
+    text-align: left !important;
+}
+
+.layout4 .locked div.item-text > *,
+.layout5 .locked div.item-text > * {
+    color: #ACACAC !important;
+}
+
+.locked div.copy-holder.ellipsis > div.countdown.available-in {
+    color: inherit;
 }
 
 .published-at {
