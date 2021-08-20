@@ -498,7 +498,7 @@
               } else {
                 WidgetHome.loadMore();
               }
-            }, 500);
+            }, 700);
 
             if (!$scope.$$phase) $scope.$digest();
             if (!$rootScope.$$phase) $rootScope.$digest();
@@ -507,7 +507,6 @@
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
         WidgetHome.loadMore = function () {
-          console.log("------------------------In loadmore");
           if (WidgetHome.busy) {
             return;
           }
@@ -515,7 +514,9 @@
           var itemsCount = (WidgetHome.items && WidgetHome.items.length) ? WidgetHome.items.length : 0;
 
           //If the items have loaded, and they are less than a page, don't try to load again
-          if (itemsCount > 0 && itemsCount < PAGINATION.itemCount) {
+          if (itemsCount > 0 && (typeof $rootScope.totalItemsCount !== undefined && itemsCount === $rootScope.totalItemsCount)) {
+            WidgetHome.busy = false;
+            Buildfire.spinner.hide();
             return;
           }
 
@@ -551,6 +552,7 @@
             } else {
               WidgetHome.openLogin();
             }
+            WidgetHome.loadMore();
             if (!$scope.$$phase) $scope.$digest();
             if (!$rootScope.$$phase) $rootScope.$digest();
           },

@@ -22,7 +22,7 @@
         ContentHome.searchOptions = {
           filter: {"$json.title": {"$regex": '/*'}},
           skip: SORT._skip,
-          limit: SORT._limit + 1 // the plus one is to check if there are any more
+          limit: SORT._limit // the plus one is to check if there are any more
         };
 
         /**
@@ -220,32 +220,30 @@
             return;
           }
 
-          // Make sure to get all the items to be able to rank them
-          ContentHome.searchOptions.limit = 999999; 
-
           ContentHome.busy = true;
           if (ContentHome.data && ContentHome.data.content.sortBy && !search) {
             ContentHome.searchOptions = getSearchOptions(ContentHome.data.content.sortBy);
           }
+          
+          DataStore.search(ContentHome.searchOptions, TAG_NAMES.SEMINAR_ITEMS).then((result) => {
 
-          DataStore.search(ContentHome.searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
-            if (result.length <= SORT._limit) {// to indicate there are more
+            ContentHome.items = ContentHome.items ? ContentHome.items.concat(result) : result;
+            ContentHome.busy = false;
+
+            if (result.length < SORT._limit) {// to indicate there are more
               ContentHome.noMore = true;
               Buildfire.spinner.hide();
             } else {
-              result.pop();
               ContentHome.searchOptions.skip = ContentHome.searchOptions.skip + SORT._limit;
               ContentHome.noMore = false;
+              return ContentHome.loadMore(search);
             }
-
             
-            ContentHome.items = ContentHome.items ? ContentHome.items.concat(result) : result;
             // Make sure Items are sorted
             if(typeof ContentHome.data.content.sortBy == "undefined"){ 
-              ContentHome.busy = false;
               return ContentHome.sortItemBy(SORT.OLDEST_FIRST)
              } else {
-              // Make sure Items are sorted (ranked) correctly, since the items are ranked only on manual
+              // Make sure Items are ranked correctly;
                for(let i = 0; i < ContentHome.items.length; i++) {
                  if (ContentHome.items[i].data.rank !== i) {
                    ContentHome.items[i].data.rank = i;
@@ -253,6 +251,8 @@
                  }  
                }
             }
+
+            if (!$scope.$$phase && !$scope.$root.$$phase) $scope.$apply();
             Buildfire.spinner.hide();
           }, function (error) {
             Buildfire.spinner.hide();
