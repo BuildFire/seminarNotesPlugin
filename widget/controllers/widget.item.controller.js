@@ -54,7 +54,6 @@
           });
         }
 
-
         //Refresh item details on pulling the tile bar
 
         buildfire.datastore.onRefresh(function () {
@@ -77,9 +76,9 @@
         var getEventDetails = function () {
           Buildfire.spinner.show();
           var success = function (result) {
-
             Buildfire.spinner.hide();
             WidgetItem.item = result;
+
             //$rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
             console.log("========ingeteventdetails", result);
 
@@ -252,13 +251,16 @@
         WidgetItem.addNoteToItem = function () {
           WidgetItem.inInsertNote = true;
           Buildfire.spinner.show();
+          
           WidgetItem.itemNote = {
             noteTitle: WidgetItem.Note.noteTitle,
             noteDescription: WidgetItem.Note.noteDescription,
             itemID: WidgetItem.item.id,
             itemTitle: WidgetItem.item.data.title,
-            dateAdded: new Date()
+            dateAdded: new Date(),
+            itemRank: WidgetItem.item.data.rank
           };
+          
           var successItem = function (result) {
             Buildfire.spinner.hide();
             console.log("Inserted Item Note", result);
@@ -320,10 +322,6 @@
 
           }
         };
-
-
-
-
 
         WidgetItem.getNoteList = function () {
           Buildfire.spinner.show();

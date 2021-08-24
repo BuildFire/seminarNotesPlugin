@@ -282,7 +282,7 @@ h5 {
     left: 0;
     padding: .5rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
     z-index: 3;
     pointer-events: none;
@@ -1035,5 +1035,118 @@ html[buildfire='widget'] .modal {
 }
 
 .plugin-slide, .plugin-slide img{
-    width:100% !important;
+    width: 100% !important;
+}
+
+.image-overlay {
+    display: none;
+}
+
+.hidden,
+.locked {
+    pointer-events: none !important;
+}
+
+.hidden .bookmark-holder,
+.hidden .bookmark-icon,
+.locked .bookmark-holder,
+.locked .bookmark-icon {
+    display: none !important;
+}
+
+.list-media-holder img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.locked .list-media-holder {
+    position: relative;
+    z-index: 10;
+}
+
+.locked .list-media-holder .image-overlay,
+.locked .blackLayer .image-overlay {
+    display: block !important;
+    height: 100%;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .5);
+    width: 100%;
+}
+
+.locked .list-media-holder .image-overlay > div,
+.locked .blackLayer .image-overlay > div {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.locked .list-media-holder .image-overlay > div > img {
+    filter: invert(0.9);
+    width: 25px !important;
+    height: auto;
+}
+
+.locked .blackLayer .image-overlay > div > img {
+    filter: invert(0.9);
+    width: 42px !important;
+    height: auto;
+}
+.locked div.copy-holder.ellipsis > h5,
+.locked div.list-item-copy.ellipsis > div > h5,
+.locked p.ellipsis.margin-zero.bodyTextTheme {
+    color:  #ACACAC !important;
+}
+/* #seminarItem1 >  */
+.layout4 .locked div.countdown.available-in > div.timer span,
+.layout4 .locked div.countdown.available-in > div > b span,
+.layout5 .locked div.countdown.available-in > div.timer span,
+.layout5 .locked div.countdown.available-in > div > b span {
+    color: #ffffff !important;
+}
+
+.layout4 .locked div.countdown.available-in > div.timer,
+.layout5 .locked div.countdown.available-in > div.timer {
+    text-align: left !important;
+}
+
+.layout4 .locked div.item-text > *,
+.layout5 .locked div.item-text > * {
+    color: #ACACAC !important;
+}
+
+.locked div.copy-holder.ellipsis > div.countdown.available-in {
+    color: inherit;
+}
+
+.published-at {
+    display: block;
+}
+
+.available-in {
+    display: none;
+}
+
+.locked .published-at {
+    display: none !important;
+}
+
+.locked .available-in {
+    display: block !important;
+}
+
+.layout4 .locked .available-in {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: #fff;
+    z-index: 7;
+    padding: .75rem;
+    text-align: left;
+    font-size: 15px;
 }
