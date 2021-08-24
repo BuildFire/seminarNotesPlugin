@@ -1,54 +1,20 @@
-<div>
-    <div class="setting-toggle">
-    <p class="setting-label">
-        Allow Content Sharing
-    </p>
-    <div class="buttons">
-        <button ng-class="{'active': Settings.data.allowSharing}" ng-click="Settings.setAllowShare(true)">On</button>
-        <button class="toLeft" ng-class="{'active': !Settings.data.allowSharing}" ng-click="Settings.setAllowShare(false)">Off</button>
-    </div>
-    </div>
-    <div class="setting-toggle-children">
-    </div>
-</div>
-<div class="setting-toggle">
-    <p class="setting-label">
-        Next Seminar Delay
-        <span class="customTooltipBox btn-primary">
-            <span class="customTooltipText">
-                Turning this feature on will require the users to be logged in.
-            </span>
-        </span>
-    </p>
-    <div class="col-md-4 pull-left padding-left-zero">
-        <div class="dropdown" dropdown>
-            <button class="btn btn-default text-left dropdown-toggle" data-toggle="dropdown" dropdown-toggle aria-expanded="true">
-                <span class="pull-left">{{Settings.data.content.seminarDelay.label}}</span>
-                <span class="chevron icon-chevron-down pull-right"></span>
-            </button>
-            <ul class="dropdown-menu extended" role="menu">
-                <li ng-repeat="option in Settings.seminarDelayOptions" ng-click="Settings.setSeminarSettings('seminarDelay', option)">
-                    <a tabindex="-1" class="ellipsis transition-third">{{option.label}}</a>
-                </li>
-            </ul>
+<!-- <div class="settings-screen"> -->
+<!--     <div class="tabs">
+        <button type="button" class="active">General</button>
+    </div> -->
+ <!--    <div class="general-screen"> -->
+    <div>
+        <div class="setting-toggle">
+        <p class="setting-label">
+            Allow Content Sharing
+        </p>
+        <div class="buttons">
+            <button ng-class="{'active': Settings.data.allowSharing}" ng-click="Settings.setAllowShare(true)">On</button>
+            <button class="toLeft" ng-class="{'active': !Settings.data.allowSharing}" ng-click="Settings.setAllowShare(false)">Off</button>
+        </div>
+        </div>
+        <div class="setting-toggle-children">
         </div>
     </div>
-</div>
-<div class="setting-toggle" ng-if="Settings.data.content.seminarDelay.value">
-    <p class="setting-label">
-        Locked Seminars Style
-    </p>
-    <div class="col-md-4 pull-left padding-left-zero">
-        <div class="dropdown" dropdown>
-            <button class="btn btn-default text-left dropdown-toggle" data-toggle="dropdown" dropdown-toggle aria-expanded="true">
-                <span class="pull-left" style="text-transform: capitalize;">{{Settings.data.content.lockedClass}}</span>
-                <span class="chevron icon-chevron-down pull-right"></span>
-            </button>
-            <ul class="dropdown-menu extended" role="menu">
-                <li ng-repeat="option in Settings.seminarLockedClassOptions" ng-click="Settings.setSeminarSettings('seminarLockedClass', option)">
-                    <a tabindex="-1" class="ellipsis transition-third" style="text-transform: capitalize;">{{option}}</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
+<!--     </div>
+</div> -->

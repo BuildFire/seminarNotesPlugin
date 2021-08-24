@@ -173,16 +173,6 @@
             _data.rank = ContentItem.item.data.rank;
             RankOfLastItem.setRank(_rankOfLastItem);
             updateMasterItem(ContentItem.item);
-
-            buildfire.analytics.registerEvent(
-              {
-                title: ContentItem.item.data.title,
-                key: `DOCUMENT_${result.id}_OPENED`,
-                description: "Number of times this item has been opened",
-              },
-              { silentNotification: true }
-            );
-
             ContentItem.item.data.deepLinkUrl = Buildfire.deeplink.createLink({ id: result.id });
             if (ContentItem.item.id) {
               buildfire.messaging.sendMessageToWidget({

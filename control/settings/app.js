@@ -1,7 +1,7 @@
 'use strict';
 (function (angular) {
   angular
-    .module('seminarSettings', ['ngRoute', 'ui.bootstrap'])
+    .module('seminarSettings', ['ngRoute'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider
         .when('/', {

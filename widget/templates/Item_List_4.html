@@ -17,40 +17,22 @@
 			</p>
 
 			<div class="plugin-banner hasBackground">
-				<div class="plugin-slide" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData" ng-class="shouldLockItem(item.data.rank)" id="{{ 'seminarItem' + item.data.rank }}">
+				<div class="plugin-slide" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData">
 					<img ng-hide="item.data.listImage" src="../../../styles/media/holder-16x9.png">
 					<img ng-show="item.data.listImage" class="border-radius-three" ng-if="item.data.listImage"
 						load-image="16x9" crop-width="{{deviceWidth}}" crop-height="183" crop-type="crop"
 						data-final-src="{{item.data.listImage}}">
 
-					<div class="blackLayer">
-						<div class="image-overlay">
-							<div>
-								<img src="./images/lock-icon.svg">
-							</div>
-						</div>
-					</div>
+					<div class="blackLayer"></div>
 					<div ng-hide="item.data.listImage" class="backgroundLayer"
 						style="background:url('../../../styles/media/holder-16x9.png');"></div>
 					<div ng-show="item.data.listImage" class="backgroundLayer"
 						style="background:url({{item.data.listImage}});"></div>
 
-					<div class="countdown available-in" ng-hide="hideCountdown" ng-if="(seminarLastDocument.rank + 1) === item.data.rank && seminarLastDocument.nextAvailableIn">
-						<div class="timer small ellipsis">
-							<span style="display: block; line-height: 1;">Available In:</span>
-							<b>
-								<span id="timer-days" ng-if="days && days !== '00'">{{days || '00'}}d</span>
-								<span id="timer-hours" ng-if="(days && days !== '00') || (hours && hours !== '00')">{{hours || '00'}}h</span>
-								<span id="timer-mins">{{minutes || '00'}}m</span>
-								<span id="timer-secs">{{seconds || '00'}}s</span>
-							</b>
-						</div>
-					</div>
-
-					<div class="item-text" ng-click="WidgetHome.openDetails(item.id, item.data.rank, $index)">
+					<div class="item-text" ng-click="WidgetHome.openDetails(item.id)">
 						<h5 class="ellipsis item-title whiteTheme">{{item.data.title}}</h5>
 						<p class="ellipsis item-summary margin-zero whiteTheme">{{item.data.summary}} </p>
-						<p class="published-at ellipsis caption item-date margin-zero whiteTheme">{{item.data.publishDate | date}}
+						<p class="ellipsis caption item-date margin-zero whiteTheme">{{item.data.publishDate | date}}
 						</p>
 					</div>
 					<!-- <div class="bookmark-icon2 btn-icon transparent-background"
@@ -64,7 +46,7 @@
 						ng-click="WidgetHome.addToBookmark(item,item.isBookmarked, $index)">
 						<span class="icon icon-bookmark2 whiteTheme"></span>
 					</div>
-					<div class="item-click-holder" ng-click="WidgetHome.openDetails(item.id, item.data.rank, $index)"></div>
+					<div class="item-click-holder" ng-click="WidgetHome.openDetails(item.id)"></div>
 				</div>
 			</div>
 

@@ -6,7 +6,6 @@
       function ($scope, TAG_NAMES, LAYOUTS, DataStore, PAGINATION, Buildfire, Location, $rootScope, ViewStack, $sce, UserData, TempPublicDataCopy, SORT, $modal, $timeout) {
         var WidgetHome = this;
         var currentListLayout, currentSortOrder = null;
-        let nextSeminarTimout;
 
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth || 320;
@@ -24,19 +23,8 @@
         $rootScope.deeplinkingDone = false;//it makes bug if its not rootscope with cp
         var searchOptions = {
           skip: 0,
-          limit: PAGINATION.itemCount,
-          recordCount: true
+          limit: PAGINATION.itemCount
         };
-
-        // Subscribe to notifications on the device
-        buildfire.notifications.pushNotification.subscribe(
-          {},
-          (err, subscribed) => {
-            if (err) return console.error(err);
-        
-            console.log("User subscribed to group", subscribed);
-          }
-        );
 
         //Refresh list of items on pulling the tile bar
 
@@ -61,108 +49,14 @@
           });
         });
 
-        const seminarDelayHandler = (itemRank, itemIndex, callback) => {
-            if (
-                // If item rank is bigger the current rank and nextAvailableIn has not been set, exit
-                (itemRank > $rootScope.seminarLastDocument.rank &&
-                    !$rootScope.seminarLastDocument.nextAvailableIn) ||
-                // If If item rank is bigger the current rank and the item open time has not been reached, exit
-                (itemRank > $rootScope.seminarLastDocument.rank &&
-                    Date.now() < $rootScope.seminarLastDocument.nextAvailableIn)
-            ) {
-                // set navigate to false to not allow to navigate to the item
-                return callback(false);
+        WidgetHome.openDetails = function (itemId) {
+          ViewStack.push({
+            template: 'Item',
+            params: {
+              controller: "WidgetItemCtrl as WidgetItem",
+              itemId: itemId
             }
-
-            // If the item is the same rank as the current rank
-            if ($rootScope.seminarLastDocument.rank === itemRank) {
-              // if the next item open time have not been initialized, initialize it.
-              if (!$rootScope.seminarLastDocument.nextAvailableIn) {
-                $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
-                buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
-              }
-              // create a timeout function to unlock the next item if it's time reached.
-              let openAfter =  (Date.now() + ((WidgetHome.data.content.seminarDelay.value) * 60 * 1000)) - Date.now();
-              // Show countdown timer
-              countdown();
-              clearTimeout(nextSeminarTimout);
-              nextSeminarTimout = setTimeout(() => {
-                // Remove next item locked status after the time is reached 
-                let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
-                if (nextItem) {
-                  nextItem.classList.remove(WidgetHome.data.content.lockedClass);
-                }
-              }, openAfter);
-
-            } 
-            // If item rank is bigger than the current rank by one and it reached it's open time
-            else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextAvailableIn) {
-              // Change the current rank to the item rank
-              $rootScope.seminarLastDocument.rank = itemRank; 
-              // Set the time for when the next item will open
-              $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
-
-              // If not last item 
-              if (itemIndex !== ($rootScope.totalItemsCount - 1)) {
-                // Schedule a notification for the next Item
-                buildfire.notifications.pushNotification.schedule({
-                  at: $rootScope.seminarLastDocument.nextAvailableIn,
-                  title: "Push notification",
-                  text: WidgetHome.languages.nextSeminarOpen ? WidgetHome.languages.nextSeminarOpen : 'The next seminar is now open!'
-                })
-                
-                let openAfter =  $rootScope.seminarLastDocument.nextAvailableIn - Date.now();
-                buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {
-                  // Show countdown timer
-                  countdown();
-                  // Remove next item locked status after the time is reached 
-                  clearTimeout(nextSeminarTimout)
-                  nextSeminarTimout = setTimeout(() => {
-                    // Remove item locked status after the time is reached 
-                    let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
-                    if (nextItem) {
-                      nextItem.classList.remove(WidgetHome.data.content.lockedClass);
-                      $rootScope.seminarLastDocument.rank++;
-                      $rootScope.seminarLastDocument.nextAvailableIn = null;
-                      buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
-                    }
-                  }, openAfter);
-                });
-              }
-            }
-            // Set navigate to true, to allow the user to navigate to the item
-            callback(true);
-        }
-
-        WidgetHome.openDetails = function (itemId, itemRank, index) {
-          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
-            seminarDelayHandler(itemRank, index, navigate => {
-              if (navigate) {
-                buildfire.analytics.trackAction(`DOCUMENT_${itemId}_OPENED`);
-                ViewStack.push({
-                  template: 'Item',
-                  params: {
-                    controller: "WidgetItemCtrl as WidgetItem",
-                    itemId: itemId
-                  }
-                });
-              } else {
-                buildfire.dialog.toast({
-                  message: WidgetHome.languages.seminarNotAvailable ? WidgetHome.languages.seminarNotAvailable : "This seminar is not available at this time",
-                  type: "danger",
-                });
-              }
-            });
-          } else {
-            buildfire.analytics.trackAction(`DOCUMENT_${itemId}_OPENED`);
-            ViewStack.push({
-              template: 'Item',
-              params: {
-                controller: "WidgetItemCtrl as WidgetItem",
-                itemId: itemId
-              }
-            });
-          }
+          });
 
           //buildfire.messaging.sendMessageToControl({
           //  type: 'OpenItem',
@@ -318,13 +212,11 @@
               $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
             }
             console.log("==============", WidgetHome.data.design);
-            $rootScope.data = WidgetHome.data;
             cb();
           }
             , error = function (err) {
               Buildfire.spinner.hide();
               WidgetHome.data = { design: { itemListLayout: LAYOUTS.itemListLayout[0].name } };
-              $rootScope.data = WidgetHome.data
               console.error('Error while getting data', err);
               cb(err);
             };
@@ -435,44 +327,37 @@
             WidgetHome.openLogin();
           }
         };
-        
-        var updateTimeout;
         var onUpdateCallback = function (event) {
-          if (updateTimeout) clearTimeout(updateTimeout);
-
+          console.log(event);
           setTimeout(function () {
-            if (!$scope.$$phase) $scope.$digest();
+            if (!$scope.$$phase)
+              $scope.$digest();
             if (event && event.tag === TAG_NAMES.SEMINAR_INFO) {
               WidgetHome.data = event.data;
               if (!WidgetHome.data.design)
                 WidgetHome.data.design = {};
               if (!WidgetHome.data.content)
                 WidgetHome.data.content = {};
-
-              if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
-                searchOptions.skip = 0;
-                WidgetHome.busy = false;
-                WidgetHome.items = [];
-                WidgetHome.seminarItemsInitialFetch=false;
-              } else if (event.data.content.sortBy && currentSortOrder != event.data.content.sortBy) {
+              if (event.data.content.sortBy && currentSortOrder != event.data.content.sortBy) {
                 WidgetHome.data.content.sortBy = event.data.content.sortBy;
                 searchOptions.skip = 0;
                 WidgetHome.busy = false;
                 WidgetHome.items = [];
                 WidgetHome.seminarItemsInitialFetch=false;
+                WidgetHome.loadMore();
               }
               if (!WidgetHome.data.design.itemListBgImage) {
                 $rootScope.itemListbackgroundImage = "";
               } else {
                 $rootScope.itemListbackgroundImage = WidgetHome.data.design.itemListBgImage;
               }
-              $rootScope.data = WidgetHome.data;
             }
             else if (event && event.tag === TAG_NAMES.SEMINAR_ITEMS) {
               searchOptions.skip = 0;
               WidgetHome.busy = false;
               WidgetHome.items = [];
               WidgetHome.seminarItemsInitialFetch=false;
+              WidgetHome.loadMore();
             }
 
             if (!WidgetHome.data.design.itemListLayout) {
@@ -489,24 +374,17 @@
                 console.log("==========2")
               }
             }
-
             currentListLayout = WidgetHome.data.design.itemListLayout;
-
-            updateTimeout = setTimeout(() => {
-              if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
-                WidgetHome.init(() => { WidgetHome.loadMore() });
-              } else {
-                WidgetHome.loadMore();
-              }
-            }, 700);
-
-            if (!$scope.$$phase) $scope.$digest();
-            if (!$rootScope.$$phase) $rootScope.$digest();
+            if (!$scope.$$phase)
+              $scope.$digest();
+            if (!$rootScope.$$phase)
+              $rootScope.$digest();
           }, 0);
         };
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
         WidgetHome.loadMore = function () {
+          console.log("------------------------In loadmore");
           if (WidgetHome.busy) {
             return;
           }
@@ -514,15 +392,13 @@
           var itemsCount = (WidgetHome.items && WidgetHome.items.length) ? WidgetHome.items.length : 0;
 
           //If the items have loaded, and they are less than a page, don't try to load again
-          if (itemsCount > 0 && (typeof $rootScope.totalItemsCount !== undefined && itemsCount === $rootScope.totalItemsCount)) {
-            WidgetHome.busy = false;
-            Buildfire.spinner.hide();
+          if (itemsCount > 0 && itemsCount < PAGINATION.itemCount) {
             return;
           }
-
           //If there are 0 items loaded and initial fetch was done, don't try to load again.
           if (itemsCount === 0 && WidgetHome.seminarItemsInitialFetch) return;
-          if (WidgetHome.readyToLoadItems) WidgetHome.getItems();
+          if (WidgetHome.readyToLoadItems)
+            WidgetHome.getItems();
         };
 
         WidgetHome.getItems = function () {
@@ -530,18 +406,16 @@
           WidgetHome.readyToLoadItems = false;
           Buildfire.spinner.show();
           var successAll = function (resultAll) {
+
             Buildfire.spinner.hide();
             WidgetHome.busy = false;
             WidgetHome.seminarItemsInitialFetch = true;
-            WidgetHome.items = WidgetHome.items.length != 0 ? WidgetHome.items.concat(resultAll.result) : resultAll.result;
+            WidgetHome.items = WidgetHome.items.length != 0 ? WidgetHome.items.concat(resultAll) : resultAll;
             var released = WidgetHome.items.filter(result => {
               return !result.data.releaseDate || result.data.releaseDate < Date.now();
             });
             WidgetHome.released = released;
             searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;
-
-            // Set the total items count globally
-            $rootScope.totalItemsCount = resultAll.totalRecord;
 
             console.log("----------------------", WidgetHome.items);
             WidgetHome.setBookmarks();
@@ -552,9 +426,6 @@
             } else {
               WidgetHome.openLogin();
             }
-            WidgetHome.loadMore();
-            if (!$scope.$$phase) $scope.$digest();
-            if (!$rootScope.$$phase) $rootScope.$digest();
           },
             errorAll = function (error) {
               Buildfire.spinner.hide();
@@ -564,90 +435,18 @@
           if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.sortBy) {
             searchOptions = WidgetHome.getSearchOptions(WidgetHome.data.content.sortBy);
           }
-
-          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
-            if (!WidgetHome.currentLoggedInUser) {
-              WidgetHome.openLogin(() => {
-                seminarDelayInit(() => {
-                  DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
-                });
-              });
-            } else {
-              seminarDelayInit(() => {
-                DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
-              });
-            }
-          } else {
-            DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
-          }
+          DataStore.search(searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
         };
 
-        const seminarDelayInit = (callback) => {
-          buildfire.userData.get("seminarLastDocument", (err, result) => {
-            if (err) {
-              console.error("Error while retrieving your data", err)
-              return callback();
-            };
-            
-            $rootScope.seminarLastDocument = result.data;
-            
-            if (typeof $rootScope.seminarLastDocument.rank === 'undefined') {
-              $rootScope.seminarLastDocument.rank = 0;
-              buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
-            }
-
-            if ($rootScope.seminarLastDocument.nextAvailableIn) {
-              if ($rootScope.seminarLastDocument.nextAvailableIn <= Date.now()) {
-                $rootScope.seminarLastDocument.rank++;
-                $rootScope.seminarLastDocument.nextAvailableIn = null;
-                buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
-              } else {
-                let openAfter = $rootScope.seminarLastDocument.nextAvailableIn - Date.now();
-                // Show countdown timer
-                countdown();
-                clearTimeout(nextSeminarTimout);
-                nextSeminarTimout = setTimeout(() => {
-                  // Remove item locked status after the time is reached 
-                  let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
-                  if (nextItem) {
-                    nextItem.classList.remove(WidgetHome.data.content.lockedClass);
-                    $rootScope.seminarLastDocument.rank++;
-                    $rootScope.seminarLastDocument.nextAvailableIn = null;
-                    buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
-                  }
-                }, openAfter);
-              } 
-            }
-
-            callback();
-          });
-        }
-
-        $scope.shouldLockItem = (rank) => {
-          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
-            if (rank <= $rootScope.seminarLastDocument.rank) {
-              return ''
-            } else if ((rank === ($rootScope.seminarLastDocument.rank + 1)) && $rootScope.seminarLastDocument.nextAvailableIn && $rootScope.seminarLastDocument.nextAvailableIn <= Date.now()) {
-              return ''
-            }
-            return WidgetHome.data.content.lockedClass;
-          } else return '';
-        }
 
         WidgetHome.currentLoggedInUser = null;
 
         /**
          * Method to open buildfire auth login pop up and allow user to login using credentials.
          */
-        WidgetHome.openLogin = function (callback) {
-          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
-            buildfire.auth.login({ allowCancel: false }, () => {
-              if (callback) callback();
-            });
-          } else {
-            buildfire.auth.login({}, function () {
-            });
-          }
+        WidgetHome.openLogin = function () {
+          buildfire.auth.login({}, function () {
+          });
         };
 
         var loginCallback = function () {
@@ -666,9 +465,6 @@
 
         var logoutCallback = function () {
           WidgetHome.currentLoggedInUser = null;
-          if (WidgetHome.data && WidgetHome.data.content && WidgetHome.data.content.seminarDelay && WidgetHome.data.content.seminarDelay.value) {
-            WidgetHome.openLogin(() => {});
-          }
           $scope.$apply();
         };
 
@@ -812,42 +608,10 @@
               searchOptions.skip = 0;
               WidgetHome.busy = false;
               WidgetHome.loadMore();
-              if (!$scope.$$phase) $scope.$digest();
+              if (!$scope.$$phase)
+                $scope.$digest();
             });
           }
         });
-
-      let countdownInterval;
-      const countdown = () => {
-        clearInterval(countdownInterval);
-          countdownInterval = setInterval(() => {
-               let endDate  = $rootScope.seminarLastDocument.nextAvailableIn - Date.now();
-
-              if (endDate >= 0) {
-                  let days = Math.floor(endDate / (1000 * 60 * 60 * 24));
-                  let hours = Math.floor(
-                      (endDate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-                  );
-                  let mins = Math.floor(
-                      (endDate % (1000 * 60 * 60)) / (1000 * 60)
-                  );
-                  let secs = Math.floor((endDate % (1000 * 60)) / 1000);
-
-                  $scope.days = days;
-                  $scope.hours = ("0" + hours).slice(-2);
-                  $scope.minutes = ("0" + mins).slice(-2);
-                  $scope.seconds = ("0" + secs).slice(-2);
-                  $scope.hideCountdown = false;
-                  if (!$scope.$$phase) $scope.$digest();
-              } else {
-                  $scope.hours = "";
-                  $scope.minutes = "";
-                  $scope.seconds = "";
-                  clearInterval(countdownInterval);
-                  $scope.hideCountdown = true;
-                  if (!$scope.$$phase) $scope.$digest();
-              }
-          }, 1000);
-      };
       }])
 })(window.angular, window.buildfire);

@@ -36,7 +36,7 @@
       ]
     })
     .constant('PAGINATION', {
-      itemCount: 50,
+      itemCount: 30,
       noteCount: 30
     })
     .constant('SORT', {

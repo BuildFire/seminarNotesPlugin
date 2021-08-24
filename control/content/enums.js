@@ -46,8 +46,8 @@
       OLDEST_PUBLICATION_DATE: 'Oldest pub. date first',
       NEWEST_FIRST: 'Newest entry first',
       OLDEST_FIRST: 'Oldest entry first',
-      _limit: 50,
-      _maxLimit: 50,
+      _limit: 10,
+      _maxLimit: 19,
       _skip: 0
     });
 })(window.angular);

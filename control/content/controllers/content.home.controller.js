@@ -22,7 +22,7 @@
         ContentHome.searchOptions = {
           filter: {"$json.title": {"$regex": '/*'}},
           skip: SORT._skip,
-          limit: SORT._limit // the plus one is to check if there are any more
+          limit: SORT._limit + 1 // the plus one is to check if there are any more
         };
 
         /**
@@ -81,7 +81,6 @@
             if(data) {
               var item = ContentHome.items[_index];
               Deeplink.deleteById(item.id);
-              buildfire.analytics.unregisterEvent(`DOCUMENT_${item.id}_OPENED`);
               DataStore.deleteById(item.id, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
                 ContentHome.items.splice(_index, 1);
                 searchOptionUserData.filter ={"$or": [{"$json.itemID": {"$eq": item.id}}]};
@@ -192,6 +191,8 @@
                 else
                   editor.loadItems(ContentHome.data.content.carouselImages);
               }
+              if(typeof ContentHome.data.content.sortBy == "undefined")
+                ContentHome.data.content.sortBy=SORT.MANUALLY;
               ContentHome.itemSortableOptions.disabled = !(ContentHome.data.content.sortBy === SORT.MANUALLY);
               RankOfLastItem.setRank(ContentHome.data.content.rankOfLastItem || 0);
               updateMasterItem(ContentHome.data);
@@ -224,35 +225,17 @@
           if (ContentHome.data && ContentHome.data.content.sortBy && !search) {
             ContentHome.searchOptions = getSearchOptions(ContentHome.data.content.sortBy);
           }
-          
-          DataStore.search(ContentHome.searchOptions, TAG_NAMES.SEMINAR_ITEMS).then((result) => {
-
-            ContentHome.items = ContentHome.items ? ContentHome.items.concat(result) : result;
-            ContentHome.busy = false;
-
-            if (result.length < SORT._limit) {// to indicate there are more
+          DataStore.search(ContentHome.searchOptions, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
+            if (result.length <= SORT._limit) {// to indicate there are more
               ContentHome.noMore = true;
               Buildfire.spinner.hide();
             } else {
+              result.pop();
               ContentHome.searchOptions.skip = ContentHome.searchOptions.skip + SORT._limit;
               ContentHome.noMore = false;
-              return ContentHome.loadMore(search);
             }
-            
-            // Make sure Items are sorted
-            if(typeof ContentHome.data.content.sortBy == "undefined"){ 
-              return ContentHome.sortItemBy(SORT.OLDEST_FIRST)
-             } else {
-              // Make sure Items are ranked correctly;
-               for(let i = 0; i < ContentHome.items.length; i++) {
-                 if (ContentHome.items[i].data.rank !== i) {
-                   ContentHome.items[i].data.rank = i;
-                   DataStore.update(ContentHome.items[i].id, ContentHome.items[i].data, TAG_NAMES.SEMINAR_ITEMS, () => {});
-                 }  
-               }
-            }
-
-            if (!$scope.$$phase && !$scope.$root.$$phase) $scope.$apply();
+            ContentHome.items = ContentHome.items ? ContentHome.items.concat(result) : result;
+            ContentHome.busy = false;
             Buildfire.spinner.hide();
           }, function (error) {
             Buildfire.spinner.hide();
@@ -374,6 +357,7 @@
             ContentHome.loadMore();
           }
         };
+
 
         /*
          * Call the datastore to save the data object

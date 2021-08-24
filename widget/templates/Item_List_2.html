@@ -19,37 +19,17 @@
                     {{WidgetHome.languages.noItems}}
                     <img style="margin-top: 35px;" src="./images/empty_page.svg"/>
                 </p>
-                <div class="list-item" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData" ng-class="shouldLockItem(item.data.rank)" id="{{ 'seminarItem' + item.data.rank }}">
-                    <div class="item-click-holder ellipsis" ng-click="WidgetHome.openDetails(item.id, item.data.rank, $index)">
-                        <div class="list-media-holder">
-                            <img ng-if="item.data.listImage" class="border-radius-three" load-image="16x9" crop-width="120" crop-height="70"
+                <div class="list-item" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData">
+                    <div class="item-click-holder ellipsis" ng-click="WidgetHome.openDetails(item.id)">
+                        <div class="list-media-holder" ng-if="item.data.listImage">
+                            <img class="border-radius-three" load-image="16x9" crop-width="120" crop-height="70"
                                 crop-type="crop" data-final-src="{{item.data.listImage}}">
-                            <img ng-if="!item.data.listImage" class="border-radius-three" src="../../../styles/media/holder-16x9.png">
-                            <div class="image-overlay">
-                                <div>
-                                    <img src="./images/lock-icon.svg">
-                                </div>
-                            </div>
                         </div>
-                        
                         <div class="list-item-copy ellipsis">
                             <div class="copy-holder">
                                 <h5 class="ellipsis margin-zero">{{item.data.title}}</h5>
                                 <p class="ellipsis margin-zero bodyTextTheme">{{item.data.summary}}</p>
-                                <p class="published-at caption ellipsis margin-zero">
-                                    <i>{{item.data.publishDate | date}}</i>
-                                </p>
-                                <div class="countdown available-in" ng-hide="hideCountdown" ng-if="(seminarLastDocument.rank + 1) === item.data.rank && seminarLastDocument.nextAvailableIn">
-                                    <div class="timer small ellipsis">
-                                        Available In:&nbsp;
-                                        <b>
-                                            <span id="timer-days" ng-if="days && days !== '00'">{{days || '00'}}d</span>
-                                            <span id="timer-hours" ng-if="(days && days !== '00') || (hours && hours !== '00')">{{hours || '00'}}h</span>
-                                            <span id="timer-mins">{{minutes || '00'}}m</span>
-                                            <span id="timer-secs">{{seconds || '00'}}s</span>
-                                        </b>
-                                    </div>
-                                </div>
+                                <p class="caption ellipsis margin-zero"><i>{{item.data.publishDate | date}}</i></p>
                             </div>
                         </div>
                     </div>
