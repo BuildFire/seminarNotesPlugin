@@ -9,6 +9,7 @@
         $scope.toggleNoteAdd = 0;
         $scope.showNoteList = 1;
         $scope.showNoteAdd = 1;
+        $scope.isIOS = 0;
         $scope.showNoteDescription = false;
         WidgetItem.isNoteSaved = false;
         WidgetItem.listeners = {};
@@ -72,6 +73,20 @@
           if (html) {
             return $sce.trustAsHtml(html);
           }
+        };
+
+        WidgetItem.addKeyboardView = function () {
+          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+          if (isIOS) {
+            $scope.isIOS = 1;
+          }
+          else {
+            $scope.isIOS = 0;
+          }
+        };
+
+        WidgetItem.removeKeyboardView = function() {
+          $scope.isIOS = 0;
         };
 
         var getEventDetails = function () {
@@ -222,6 +237,7 @@
           searchOptions.skip = 0;
           WidgetItem.loadMore();
           $scope.showNoteDescription = false;
+          $scope.isIOS = 0;
         };
 
         WidgetItem.showHideAddNote = function () {
@@ -231,6 +247,7 @@
           if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id) {
             if ($scope.toggleNoteAdd && !$scope.toggleNoteList) {
               $scope.toggleNoteAdd = 0
+              $scope.isIOS = 0;
             } else {
               $scope.toggleNoteAdd = 1;
               $scope.showNoteAdd = 1;
@@ -534,7 +551,7 @@
 
                     buildfire.deeplink.generateUrl(link, (err, result) => {
                       if (err) {
-                        buildfire.dialog.toast({ message: WidgetItem.languages.errorSharing});
+                        buildfire.dialog.toast({ message: WidgetItem.languages.errorSharing });
                       } else {
                         buildfire.device.share({
                           subject: link.title,
@@ -542,10 +559,10 @@
                           link: result.url
                         }, (err, result) => {
                           if (err)
-                          buildfire.dialog.toast({ message: WidgetItem.languages.errorSharing});
+                            buildfire.dialog.toast({ message: WidgetItem.languages.errorSharing });
                           else
                             console.dir(result);
-                            buildfire.dialog.toast({ message: WidgetItem.languages.expireWarning});
+                          buildfire.dialog.toast({ message: WidgetItem.languages.expireWarning });
                         });
                       }
                     });

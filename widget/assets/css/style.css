@@ -619,9 +619,12 @@ html[safe-area="true"] .holder.has-bottom {
     transition: height 0.5s;
 }
 
-.holder .bottom.fixed-bottom .hidden-content-show {
+.holder .bottom.fixed-bottom .hidden-content-show-ios {
+    height: 500px;
+}
+
+.holder .bottom.fixed-bottom .hidden-content-show-android {
     height: 240px;
-    /* overflow-y:auto; */
 }
 
 .holder .bottom.fixed-bottom .hidden-content-hide {
