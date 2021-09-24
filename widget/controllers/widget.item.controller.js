@@ -9,7 +9,7 @@
         $scope.toggleNoteAdd = 0;
         $scope.showNoteList = 1;
         $scope.showNoteAdd = 1;
-        $scope.isIOS = 0;
+        $scope.addKeyboardSafeView = 0;
         $scope.showNoteDescription = false;
         WidgetItem.isNoteSaved = false;
         WidgetItem.listeners = {};
@@ -78,15 +78,11 @@
         WidgetItem.addKeyboardView = function () {
           const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
           if (isIOS) {
-            $scope.isIOS = 1;
+            $scope.addKeyboardSafeView = 1;
           }
           else {
-            $scope.isIOS = 0;
+            $scope.addKeyboardSafeView = 0;
           }
-        };
-
-        WidgetItem.removeKeyboardView = function() {
-          $scope.isIOS = 0;
         };
 
         var getEventDetails = function () {
@@ -237,7 +233,7 @@
           searchOptions.skip = 0;
           WidgetItem.loadMore();
           $scope.showNoteDescription = false;
-          $scope.isIOS = 0;
+          $scope.addKeyboardSafeView = 0;
         };
 
         WidgetItem.showHideAddNote = function () {
@@ -247,7 +243,7 @@
           if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id) {
             if ($scope.toggleNoteAdd && !$scope.toggleNoteList) {
               $scope.toggleNoteAdd = 0
-              $scope.isIOS = 0;
+              $scope.addKeyboardSafeView = 0;
             } else {
               $scope.toggleNoteAdd = 1;
               $scope.showNoteAdd = 1;
