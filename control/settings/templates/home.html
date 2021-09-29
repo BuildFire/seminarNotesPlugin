@@ -3,7 +3,7 @@
         <p class="setting-label">
             Allow Content Sharing
         </p>
-        <div class="buttons">
+        <div class="col-md-4">
             <div class="button-switch">
                 <input id="titleBarSwitch" type="checkbox" ng-checked='Settings.data.allowSharing'
                 ng-change="setAllowShare()" ng-model="Settings.data.allowSharing">
@@ -24,30 +24,32 @@
             </span>
         </span>
     </p>
-    <div class="col-md-4 pull-left padding-left-zero">
+    <div class="col-md-4">
         <div class="button-switch">
             <input id="titleBarSwitch2" type="checkbox" ng-checked="nextSeminarDelay" ng-model="nextSeminarDelay"
             ng-change="setSeminarSettings()">
             <label for="titleBarSwitch2" class="label-success"></label>
         </div>
-  
-       
     </div>
-    <div class="col-md-4 pull-left padding-left-zero" ng-if="nextSeminarDelay">
-        <div class="dropdown" dropdown >
-            <button class="btn btn-default text-left dropdown-toggle" data-toggle="dropdown" dropdown-toggle
-                aria-expanded="true">
-                <span class="pull-left">{{Settings.data.content.seminarDelay.label}}</span>
-                <span class="chevron icon-chevron-down pull-right"></span>
-            </button>
-            <ul class="dropdown-menu extended" role="menu">
-                <li ng-repeat="option in Settings.seminarDelayOptions"
-                    ng-if="option.value !== 0"
-                    ng-click="Settings.setSeminarSettings('seminarDelay', option)">
-                    <a tabindex="-1" class="ellipsis transition-third">{{option.label}}</a>
-                </li>
-            </ul>
-        </div>
+</div>
+<div class="setting-toggle" ng-if="nextSeminarDelay">
+    <p class="setting-label">
+        Seminar Delay Amount
+        </p>
+
+    <div class="dropdown" dropdown >
+        <button class="btn btn-default text-left dropdown-toggle" data-toggle="dropdown" dropdown-toggle
+            aria-expanded="true">
+            <span class="pull-left">{{Settings.data.content.seminarDelay.label}}</span>
+            <span class="chevron icon-chevron-down pull-right"></span>
+        </button>
+        <ul class="dropdown-menu extended" role="menu">
+            <li ng-repeat="option in Settings.seminarDelayOptions"
+                ng-if="option.value !== 0"
+                ng-click="Settings.setSeminarSettings('seminarDelay', option)">
+                <a tabindex="-1" class="ellipsis transition-third">{{option.label}}</a>
+            </li>
+        </ul>
     </div>
 </div>
 <div class="setting-toggle" ng-if="Settings.data.content.seminarDelay.value">

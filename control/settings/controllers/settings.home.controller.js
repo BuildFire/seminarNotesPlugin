@@ -46,7 +46,7 @@
                                 if (!Settings.data.content.seminarDelay) {
                                     Settings.data.content.seminarDelay = Settings.seminarDelayOptions[0];
                                     $scope.nextSeminarDelay = false;
-                                } else $scope.nextSeminarDelay = true;
+                                } else if(Settings.data.content.seminarDelay.value !== 0) $scope.nextSeminarDelay = true;
                                 if (!Settings.data.content.lockedClass) Settings.data.content.lockedClass = Settings.seminarLockedClassOptions[0];
                             }
                         },
@@ -70,6 +70,7 @@
                 $scope.setSeminarSettings = () => {
                     if($scope.nextSeminarDelay) 
                         Settings.setSeminarSettings('seminarDelay', Settings.seminarDelayOptions[1]);
+                    else Settings.setSeminarSettings('seminarDelay', Settings.seminarDelayOptions[0]);
                 }
 
                  Settings.setSeminarSettings = (type, value) => {

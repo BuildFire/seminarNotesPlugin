@@ -57,6 +57,13 @@
   left: 17px;
 }
 
+.col-md-4 {
+  padding: 0 !important;
+}
+
+.dropdown {
+  width: 200px;
+}
 
 .toolbar {
     display: flex;
