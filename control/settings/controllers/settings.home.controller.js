@@ -15,6 +15,8 @@
                     { label: "One Week", value: 10080 },
                 ];
 
+                $scope.nextSeminarDelay = false;
+
                 Settings.seminarLockedClassOptions = ["hidden", "locked"];
 
                 var _data = {
@@ -41,7 +43,10 @@
                                     Settings.data.content = {};
                                 }
 
-                                if (!Settings.data.content.seminarDelay) Settings.data.content.seminarDelay = Settings.seminarDelayOptions[0];
+                                if (!Settings.data.content.seminarDelay) {
+                                    Settings.data.content.seminarDelay = Settings.seminarDelayOptions[0];
+                                    $scope.nextSeminarDelay = false;
+                                } else $scope.nextSeminarDelay = true;
                                 if (!Settings.data.content.lockedClass) Settings.data.content.lockedClass = Settings.seminarLockedClassOptions[0];
                             }
                         },
@@ -52,17 +57,19 @@
                         DataStore.get(TAG_NAMES.SEMINAR_INFO).then(success, error);
                 };
 
-                Settings.setAllowShare = function(check){
-                    if(Settings.data.allowSharing!=check){
-                        Settings.data.allowSharing=check;
+                $scope.setAllowShare = function(){
                         var success = function (result) {
                             console.info('Data saved:', result);
                         },
                         error = function (err) {
                             console.error('Error while saving data', err);
                         };
-                        DataStore.save(Settings.data,TAG_NAMES.SEMINAR_INFO).then(success, error);
-                    }
+                        DataStore.save(Settings.data,TAG_NAMES.SEMINAR_INFO).then(success, error); 
+                }
+
+                $scope.setSeminarSettings = () => {
+                    if($scope.nextSeminarDelay) 
+                        Settings.setSeminarSettings('seminarDelay', Settings.seminarDelayOptions[1]);
                 }
 
                  Settings.setSeminarSettings = (type, value) => {

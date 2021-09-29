@@ -1,16 +1,20 @@
 <div>
     <div class="setting-toggle">
-    <p class="setting-label">
-        Allow Content Sharing
-    </p>
-    <div class="buttons">
-        <button ng-class="{'active': Settings.data.allowSharing}" ng-click="Settings.setAllowShare(true)">On</button>
-        <button class="toLeft" ng-class="{'active': !Settings.data.allowSharing}" ng-click="Settings.setAllowShare(false)">Off</button>
-    </div>
+        <p class="setting-label">
+            Allow Content Sharing
+        </p>
+        <div class="buttons">
+            <div class="button-switch">
+                <input id="titleBarSwitch" type="checkbox" ng-checked='Settings.data.allowSharing'
+                ng-change="setAllowShare()" ng-model="Settings.data.allowSharing">
+                <label for="titleBarSwitch" class="label-success"></label>
+            </div>
+        </div>
     </div>
     <div class="setting-toggle-children">
     </div>
 </div>
+
 <div class="setting-toggle">
     <p class="setting-label">
         Next Seminar Delay
@@ -21,13 +25,25 @@
         </span>
     </p>
     <div class="col-md-4 pull-left padding-left-zero">
-        <div class="dropdown" dropdown>
-            <button class="btn btn-default text-left dropdown-toggle" data-toggle="dropdown" dropdown-toggle aria-expanded="true">
+        <div class="button-switch">
+            <input id="titleBarSwitch2" type="checkbox" ng-checked="nextSeminarDelay" ng-model="nextSeminarDelay"
+            ng-change="setSeminarSettings()">
+            <label for="titleBarSwitch2" class="label-success"></label>
+        </div>
+  
+       
+    </div>
+    <div class="col-md-4 pull-left padding-left-zero" ng-if="nextSeminarDelay">
+        <div class="dropdown" dropdown >
+            <button class="btn btn-default text-left dropdown-toggle" data-toggle="dropdown" dropdown-toggle
+                aria-expanded="true">
                 <span class="pull-left">{{Settings.data.content.seminarDelay.label}}</span>
                 <span class="chevron icon-chevron-down pull-right"></span>
             </button>
             <ul class="dropdown-menu extended" role="menu">
-                <li ng-repeat="option in Settings.seminarDelayOptions" ng-click="Settings.setSeminarSettings('seminarDelay', option)">
+                <li ng-repeat="option in Settings.seminarDelayOptions"
+                    ng-if="option.value !== 0"
+                    ng-click="Settings.setSeminarSettings('seminarDelay', option)">
                     <a tabindex="-1" class="ellipsis transition-third">{{option.label}}</a>
                 </li>
             </ul>
@@ -40,13 +56,16 @@
     </p>
     <div class="col-md-4 pull-left padding-left-zero">
         <div class="dropdown" dropdown>
-            <button class="btn btn-default text-left dropdown-toggle" data-toggle="dropdown" dropdown-toggle aria-expanded="true">
+            <button class="btn btn-default text-left dropdown-toggle" data-toggle="dropdown" dropdown-toggle
+                aria-expanded="true">
                 <span class="pull-left" style="text-transform: capitalize;">{{Settings.data.content.lockedClass}}</span>
                 <span class="chevron icon-chevron-down pull-right"></span>
             </button>
             <ul class="dropdown-menu extended" role="menu">
-                <li ng-repeat="option in Settings.seminarLockedClassOptions" ng-click="Settings.setSeminarSettings('seminarLockedClass', option)">
-                    <a tabindex="-1" class="ellipsis transition-third" style="text-transform: capitalize;">{{option}}</a>
+                <li ng-repeat="option in Settings.seminarLockedClassOptions"
+                    ng-click="Settings.setSeminarSettings('seminarLockedClass', option)">
+                    <a tabindex="-1" class="ellipsis transition-third"
+                        style="text-transform: capitalize;">{{option}}</a>
                 </li>
             </ul>
         </div>
