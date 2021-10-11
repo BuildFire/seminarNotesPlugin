@@ -15,7 +15,8 @@
                 <div class="padded word-break">
                     <h5 class="margin-zero">{{WidgetItem.item.data.title}}</h5>
                     <p class="margin-zero margin-bottom-fifteen caption">
-                        <i>{{WidgetItem.item.data.publishDate | date}}</i></p>
+                        <i>{{WidgetItem.item.data.publishDate | date}}</i>
+                    </p>
                     <p class="word-break">{{WidgetItem.item.data.summary}}</p>
                 </div>
                 <div class="text-center menu-options" ng-if="WidgetItem.item.data.links.length"
@@ -37,8 +38,8 @@
                 ng-class="WidgetItem.item.isBookmarked?'bookmarked':''">
                 <span class="icon icon-bookmark2 whiteTheme"></span>
             </a>
-            <a ng-if="WidgetItem.currentLoggedInUser && WidgetItem.allowSharing"
-                class="bg-success btn-fab bookmarked" ng-click="WidgetItem.shareContent()">
+            <a ng-if="WidgetItem.currentLoggedInUser && WidgetItem.allowSharing" class="bg-success btn-fab bookmarked"
+                ng-click="WidgetItem.shareContent()">
                 <span class="icon icon-link2 whiteTheme"></span>
             </a>
         </div>
@@ -61,7 +62,7 @@
 
 
         <div class="col-xs-12 hidden-content infinite-scroll-parent backgroundColorTheme"
-            ng-class="toggleNoteList || toggleNoteAdd?'hidden-content-show':'hidden-content-hide'">
+            ng-class="toggleNoteList || toggleNoteAdd? addKeyboardSafeView ?'hidden-content-show-ios':'hidden-content-show-android' : 'hidden-content-hide'">
             <div class="content note-list clearfix" ng-class="showNoteList?'active':''">
                 <div class="seminar-notes layout3">
                     <p class="margin-top-twenty margin-bottom-twenty opacity-sixty text-center"
@@ -95,13 +96,14 @@
                                     ng-class="WidgetItem.isNoteSaved?'successBackgroundTheme':'whiteBackgroundTheme .save-point-disabled'">
                                 </div>
                                 <div class="headerTextTheme">
-                                    <input type="text" name="note-title"
+                                    <input type="text" name="note-title" autocomplete="off"
                                         placeholder="{{WidgetItem.languages.enterNoteTitle}}" class="form-control"
-                                        ng-model="WidgetItem.Note.noteTitle">
+                                        ng-model="WidgetItem.Note.noteTitle" ng-focus="WidgetItem.addKeyboardView()">
                                 </div>
                                 <div class="bodyTextTheme">
                                     <textarea placeholder="{{WidgetItem.languages.enterNoteContent}}"
-                                        class="form-control" ng-model="WidgetItem.Note.noteDescription"></textarea>
+                                        class="form-control" ng-model="WidgetItem.Note.noteDescription"
+                                        ng-focus="WidgetItem.addKeyboardView()"></textarea>
                                 </div>
                                 <!--<a class="btn btn-primary stretch" ng-click="WidgetItem.addNoteToItem(WidgetItem.item.id)">Add Note</a>-->
                                 <!-- <div class="savedMessage successBackgroundTheme" ng-class="{'active': WidgetItem.isNoteSaved}">
@@ -128,11 +130,13 @@
                     </div>
                     <div class="headerTextTheme">
                         <input type="text" name="note-title" placeholder="{{WidgetItem.languages.enterNoteTitle}}"
-                            class="form-control" ng-model="WidgetItem.Note.noteTitle">
+                            autocomplete="off" class="form-control" ng-model="WidgetItem.Note.noteTitle"
+                            ng-focus="WidgetItem.addKeyboardView()">
                     </div>
                     <div class="bodyTextTheme">
                         <textarea placeholder="{{WidgetItem.languages.enterNoteContent}}" class="form-control"
-                            ng-model="WidgetItem.Note.noteDescription"></textarea>
+                            autocomplete="off" ng-model="WidgetItem.Note.noteDescription"
+                            ng-focus="WidgetItem.addKeyboardView()"></textarea>
                     </div>
                     <!--<a class="btn btn-primary stretch" ng-click="WidgetItem.addNoteToItem(WidgetItem.item.id)">Add Note</a>-->
                     <!-- <div class="savedMessage successBackgroundTheme text-center" ng-class="{'active': WidgetItem.isNoteSaved}">
