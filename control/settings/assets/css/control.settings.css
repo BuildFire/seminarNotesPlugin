@@ -1,3 +1,70 @@
+
+.button-switch{
+  display: flex;
+  align-items: center;
+  height: 1.5rem;
+}
+.button-switch > label {
+  cursor: pointer;
+  height: 0;
+  position: relative;
+  width: 40px;
+  text-align: left;
+}
+
+.button-switch > label::before {
+  background: #909090;
+  border-radius: 18px;
+  content: "";
+  height: 27px;
+  margin-top: -13.5px;
+  position: absolute;
+  opacity: 0.3;
+  transition: all 0.4s ease-in-out;
+  width: 46px;
+}
+
+.button-switch > label::after {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 0 5px rgb(0 0 0 / 30%);
+  content: "";
+  height: 24px;
+  left: 0;
+  margin-top: -9px;
+  position: absolute;
+  top: -3px;
+  transition: all 0.3s ease-in-out;
+  width: 24px;
+}
+
+.button-switch > input[type="checkbox"]:checked + label::before {
+  background: inherit;
+  opacity: 0.5;
+}
+
+.button-switch > input[type="checkbox"] {
+  display: none;
+  margin: 4px 0 0;
+}
+
+.button-switch > input[type="checkbox"]:checked + label::after {
+  background: inherit;
+  left: 23px;
+}
+
+.button-switch.switch-sm > input[type="checkbox"]:checked + label::after {
+  left: 17px;
+}
+
+.col-md-4 {
+  padding: 0 !important;
+}
+
+.dropdown {
+  width: 200px;
+}
+
 .toolbar {
     display: flex;
     justify-content: space-between;

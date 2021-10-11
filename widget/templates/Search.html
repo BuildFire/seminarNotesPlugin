@@ -17,8 +17,8 @@
         </p>
         <div class="list-layout" ng-if="WidgetSearch.items.length && WidgetSearch.keyword">
 
-          <div class="list-item" ng-repeat="item in WidgetSearch.released" ng-if="isFetchedAllData">
-            <div class="item-click-holder ellipsis" ng-click="WidgetSearch.openDetails(item.id)">
+          <div class="list-item" ng-repeat="item in WidgetSearch.released" ng-if="isFetchedAllData" ng-class="shouldLockItem(item.data.rank)">
+            <div class="item-click-holder ellipsis" ng-click="WidgetSearch.openDetails(item.id, item.data.rank)">
               <div class="square-icon list-media-holder">
                 <img ng-if="!item.data.listImage"
                     src="../../../styles/media/holder-1x1.png">
