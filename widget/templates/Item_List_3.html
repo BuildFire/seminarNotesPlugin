@@ -22,10 +22,9 @@
                 </p>
                 <div class="list-item" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData" ng-class="shouldLockItem(item.data.rank)" id="{{ 'seminarItem' + item.data.rank }}">
                     <div class="item-click-holder ellipsis" ng-click="WidgetHome.openDetails(item.id, item.data.rank, $index)">
-                        <div class="square-icon list-media-holder pull-left overflow-hidden">
+                        <div class="square-icon list-media-holder pull-left overflow-hidden" ng-if="item.data.listImage || (!item.data.listImage && shouldLockItem(item.data.rank) === 'locked')">
                             <img ng-if="item.data.listImage" class="border-radius-three" load-image="1x1" crop-width="60" crop-height="60"
                                 crop-type="crop" data-final-src="{{item.data.listImage}}">
-                            <img ng-if="!item.data.listImage" class="border-radius-three" src="../../../styles/media/holder-1x1.png">
                             <div class="image-overlay">
                                 <div>
                                     <img src="./images/lock-icon.svg">
