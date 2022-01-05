@@ -162,6 +162,7 @@
             buildfire.messaging.sendMessageToControl({
               type: 'BackToHome'
             });
+            buildfire.history.pop();
           }
           ViewStack.pop();
         } else {
