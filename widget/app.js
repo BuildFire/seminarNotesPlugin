@@ -26,7 +26,7 @@
                 buildfire.history.push(currentView, { showItemInTitlebar: true })
 
                 var newScope = $rootScope.$new();
-                var _newView = '<div  id="' + view.template + '" ><div class="slide content" data-back-img="{{itemDetailbackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
+                var _newView = '<div  id="' + view.template + '" class="singleItem" ><div class="slide content" data-back-img="{{itemDetailbackgroundImage}}" ng-include="\'templates/' + view.template + '.html\'"></div></div>';
                 var parTpl = $compile(_newView)(newScope);
 
                 $(elem).append(parTpl);
@@ -34,7 +34,7 @@
 
               } else if (type === 'POP') {
 
-                var _elToRemove = $(elem).find('#' + view.template),
+                var _elToRemove = $('.singleItem').last(),
                   _child = _elToRemove.children("div").eq(0);
 
                 _child.addClass("ng-leave ng-leave-active");
@@ -158,12 +158,17 @@
     .run(['ViewStack', '$rootScope', function (ViewStack, $rootScope) {
       buildfire.navigation.onBackButtonClick = function () {
         if (ViewStack.hasViews()) {
-          if (ViewStack.getCurrentView().template == 'Item') {
+          if (ViewStack.getPreviousView().params && ViewStack.getPreviousView().params.itemId) {
+            buildfire.messaging.sendMessageToControl({
+              id: ViewStack.getPreviousView().params.itemId,
+              type: 'OpenItem'
+            });
+          } else {
             buildfire.messaging.sendMessageToControl({
               type: 'BackToHome'
             });
-            buildfire.history.pop();
           }
+            buildfire.history.pop();
           ViewStack.pop();
         } else {
           buildfire.navigation._goBackOne();

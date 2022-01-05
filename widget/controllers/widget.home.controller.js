@@ -51,12 +51,11 @@
           var successAll = function (result) {
             if (!result || !result.data || !result.data.title) notFound();
             else {
-              buildfire.history.pop();
               buildfire.analytics.trackAction(`DOCUMENT_${result.id}_OPENED`);
-              ViewStack.popAllViews(true);
               ViewStack.push({
                 template: 'Item',
                 params: {
+                  controller: "WidgetItemCtrl as WidgetItem",
                   itemId: result.id
                 }
               });
