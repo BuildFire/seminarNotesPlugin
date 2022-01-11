@@ -168,7 +168,7 @@
               type: 'BackToHome'
             });
           }
-            buildfire.history.pop();
+          buildfire.history.pop();
           ViewStack.pop();
         } else {
           buildfire.navigation._goBackOne();

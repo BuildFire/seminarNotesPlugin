@@ -20,7 +20,7 @@
                     {{WidgetHome.languages.noItems}}
                     <img style="margin-top: 35px;" src="./images/empty_page.svg"/>
                 </p>
-                <div class="list-item" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData" ng-class="shouldLockItem(item.data.rank)" id="{{ 'seminarItem' + item.data.rank }}">
+                <div class="list-item" ng-repeat="item in WidgetHome.released" ng-if="isFetchedAllData && !item.data['__$Deleted']" ng-class="shouldLockItem(item.data.rank)" id="{{ 'seminarItem' + item.data.rank }}">
                     <div class="item-click-holder ellipsis" ng-click="WidgetHome.openDetails(item.id, item.data.rank, $index)">
                         <div class="square-icon list-media-holder pull-left overflow-hidden" ng-if="item.data.listImage || (!item.data.listImage && shouldLockItem(item.data.rank) === 'locked')">
                             <img ng-if="item.data.listImage" class="border-radius-three" load-image="1x1" crop-width="60" crop-height="60"
