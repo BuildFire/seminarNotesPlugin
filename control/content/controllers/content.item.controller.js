@@ -235,7 +235,7 @@
               ContentItem.item.data.deepLinkUrl = Buildfire.deeplink.createLink({ id: result.id });
             }
             updateMasterItem(ContentItem.item);
-          }, errorItem = function () {
+          }, errorItem = function (err) {
             Buildfire.spinner.hide();
             throw console.error('There was a problem fetching your data', err);
           };
@@ -312,7 +312,7 @@
               } else if (!ContentItem.isNewItemInserted) {
                 ContentItem.addNewItem();
               }
-            }, 300);
+            }, 500);
           }
         };
 

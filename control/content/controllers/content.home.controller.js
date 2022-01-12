@@ -84,6 +84,7 @@
               buildfire.analytics.unregisterEvent(`DOCUMENT_${item.id}_OPENED`);
               DataStore.deleteById(item.id, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
                 ContentHome.items.splice(_index, 1);
+                var searchOptionUserData = {};
                 searchOptionUserData.filter ={"$or": [{"$json.itemID": {"$eq": item.id}}]};
                 var success = function(data) {
                     for (var note = 0; note < data.length; note++) {

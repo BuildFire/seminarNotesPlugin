@@ -245,24 +245,16 @@
     }])
     .factory('ViewStack', ['$rootScope', function ($rootScope) {
       var views = [];
-      var viewMap = {};
       return {
         push: function (view) {
-          console.log(">>>>>>>>>>>>", view, viewMap);
-          if (viewMap[view.template]) {
-            this.pop();
-          }
-          else {
-            viewMap[view.template] = 1;
-            views.push(view);
-            $rootScope.$broadcast('VIEW_CHANGED', 'PUSH', view);
-          }
+          console.log(">>>>>>>>>>>>", view);
+          views.push(view);
+          $rootScope.$broadcast('VIEW_CHANGED', 'PUSH', view);
           return view;
         },
         pop: function () {
           $rootScope.$broadcast('BEFORE_POP', views[views.length - 1]);
           var view = views.pop();
-          delete viewMap[view.template];
           $rootScope.$broadcast('VIEW_CHANGED', 'POP', view);
           return view;
         },
@@ -275,7 +267,6 @@
         popAllViews: function (noAnimation) {
           $rootScope.$broadcast('VIEW_CHANGED', 'POPALL', views,noAnimation);
           views = [];
-          viewMap = {};
         },
         getPreviousView: function () {
           return views.length && views[views.length - 2] || {};

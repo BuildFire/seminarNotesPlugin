@@ -38,6 +38,31 @@
           }
         );
 
+        buildfire.deeplink.onUpdate((deeplinkData) => {
+          var notFound = function(){
+            var text = WidgetHome.languages.deeplinkNoteNotFound ? WidgetHome.languages.deeplinkNoteNotFound:'Item does not exist!';
+            buildfire.dialog.toast({
+              message: text
+            });
+          }
+          var errorAll = function (err) {
+            notFound();
+          };
+          var successAll = function (result) {
+            if (!result || !result.data || !result.data.title) notFound();
+            else {
+              buildfire.analytics.trackAction(`DOCUMENT_${result.id}_OPENED`);
+              ViewStack.push({
+                template: 'Item',
+                params: {
+                  controller: "WidgetItemCtrl as WidgetItem",
+                  itemId: result.id
+                }
+              });
+            }
+          };
+          DataStore.getById(deeplinkData.id, TAG_NAMES.SEMINAR_ITEMS).then(successAll, errorAll);
+        });
         //Refresh list of items on pulling the tile bar
 
         buildfire.datastore.onRefresh(function () {
@@ -533,6 +558,7 @@
             Buildfire.spinner.hide();
             WidgetHome.busy = false;
             WidgetHome.seminarItemsInitialFetch = true;
+            if (!resultAll.result) resultAll.result = [];
             WidgetHome.items = WidgetHome.items.length != 0 ? WidgetHome.items.concat(resultAll.result) : resultAll.result;
             var released = WidgetHome.items.filter(result => {
               return !result.data.releaseDate || result.data.releaseDate < Date.now();
