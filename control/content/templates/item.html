@@ -85,13 +85,19 @@
       </div>
     </div>
     <hr class="none">
-	  <div id="actionItems" style="margin-bottom:50px;"></div>
-	  <hr class="none">
-    <div class="item clearfix row" style="width:100%; position:fixed; background-color:white; bottom:0px; z-index:0; margin-left: 0px !important;">
-      <div class="main pull-right" style="margin-right: 15px; margin-top: 5px;">
-        <a class="btn btn-primary stretch"  style="width:100px;" ng-click="ContentItem.goToHome()"
-           ng-disabled="!ContentItem.isValidItem(ContentItem.item.data)">Done
+    <div class="bottom-actions" style="z-index: 1">
+      <div class="main col-md-9 pull-right" style="margin-right: 1px; margin-top: 5px;">
+        <div class="col-md-6 pull-right padding-right-zero padding-left-ten">
+          <a class="btn btn-success pull-right btn-save"
+              ng-click="ContentItem.goToHome()"
+              ng-disabled="!ContentItem.isValidItem(ContentItem.item.data)">
+            Done
+          </a>
+          <a class="btn btn-light pull-right cancel-btn"
+          ng-click="ContentItem.goToHome()">
+          Cancel
         </a>
+        </div>
       </div>
     </div>
   </tab>

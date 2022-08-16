@@ -7,7 +7,7 @@
         var WidgetHome = this;
         var currentListLayout, currentSortOrder = null;
         let nextSeminarTimout;
-
+        var carouselContainer = null
         $rootScope.deviceHeight = window.innerHeight;
         $rootScope.deviceWidth = window.innerWidth || 320;
         WidgetHome.busy = false;
@@ -68,14 +68,7 @@
         buildfire.datastore.onRefresh(function () {
           WidgetHome.init(function (err) {
             if (!err) {
-              if (!WidgetHome.view) {
-                WidgetHome.view = new Buildfire.components.carousel.view("#carousel", []);
-              }
-              if (WidgetHome.data.content && WidgetHome.data.content.carouselImages) {
-                WidgetHome.view.loadItems(WidgetHome.data.content.carouselImages);
-              } else {
-                WidgetHome.view.loadItems([]);
-              }
+              renderCarousel();
               WidgetHome.items = [];
               searchOptions.skip = 0;
               WidgetHome.busy = false;
@@ -304,6 +297,154 @@
             itemListLayout: LAYOUTS.itemListLayout[0].name
           }
         };
+        var lastImage=null;
+        var changeTimer;
+
+      function shuffle(a,first,last) {
+          var j, x, i;
+          for (i = a.length - 1; i > 0; i--) {
+              j = Math.floor(Math.random() * (i + 1));
+              x = a[i];
+              a[i] = a[j];
+              a[j] = x;
+          }
+          if(last==a[0]||first==a[a.length-1]) return shuffle(a,first,last);
+          else return a;
+      }
+
+
+      function randomizeArray(sent){
+          shuffle(sent,null,null);
+          var dup=Array.from(sent);
+          shuffle(dup,null,sent[sent.length - 1]);
+          sent.push(...dup);
+          shuffle(dup,sent[0],sent[sent.length - 1]);
+          sent.push(...dup);
+      }
+
+      function changeImage(carouselImages,random){
+          var oldState=carouselImages;
+          if(random){
+              carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
+  
+              if(carouselImages[0]!=lastImage[0]){
+                  lastImage=carouselImages;
+                  appendOneImage(carouselImages);
+              }else changeImage(oldState);
+          }else{
+              var index=carouselImages.indexOf(lastImage[0]);
+              var sendIndex=0;
+              if(index==-1||index==carouselImages.length-1)carouselImages=[carouselImages[0]];
+              else {carouselImages=[carouselImages[index+1]];sendIndex=index+1;}
+              lastImage=carouselImages;
+              var isHome=(new URLSearchParams(window.location.search).get('fid').split("=")[0]=="launcherPluginv");
+              var storagePlace=(isHome)?"carouselLastImageHome":"carouselLastImage";
+              buildfire.localStorage.setItem(storagePlace,sendIndex, function(e,r){
+                  appendOneImage(carouselImages);
+              });
+          }
+  
+      }
+      function appendOneImage(carouselImages){
+        var carouselContainer = document.getElementById("carousel");
+          var myImg=document.getElementById("one_img");
+          
+          if(myImg==null){
+              carouselContainer.innerHTML = '';
+              var img = document.createElement('img');
+              img.setAttribute("id", "one_img");
+              img.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
+                  width: window.innerWidth,
+                  height: Math.ceil(9 * (window.innerWidth) / 16)
+              }));
+              carouselContainer.appendChild(img);
+              img.addEventListener("click", function () {
+                  buildfire.actionItems.execute(carouselImages[0], function (err, result) {
+                      if (err) {
+                          console.warn('Error openning slider action: ', err);
+                      }
+                  });
+              });
+          }else{
+              myImg.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
+                  width: window.innerWidth,
+                  height: Math.ceil(9 * (window.innerWidth) / 16)
+              }));
+              myImg.removeEventListener("click",function(){});
+              myImg.addEventListener("click", function () {
+                  buildfire.actionItems.execute(carouselImages[0], function (err, result) {
+                      if (err) {
+                          console.warn('Error openning slider action: ', err);
+                      }
+                  });
+              });
+          }
+      }
+      var renderCarousel = function(){
+          
+          if(changeTimer) clearInterval(changeTimer);
+          if(carouselContainer != null){
+            if ( WidgetHome.data.content && WidgetHome.data.content.carouselImages) {
+              var speed = WidgetHome.data.content.speed ? WidgetHome.data.content.speed : 5000 
+              var order = WidgetHome.data.content.order ? WidgetHome.data.content.order : 0 
+              var display = WidgetHome.data.content.display ? WidgetHome.data.content.display : 0 
+              var carouselImages = WidgetHome.data.content.carouselImages;
+              var isHome=(new URLSearchParams(window.location.search).get('fid').split("=")[0]=="launcherPluginv");
+              var storagePlace=(isHome)?"carouselLastImageHome":"carouselLastImage";
+              if(order == 0 && display== 1 && carouselImages.length > 1){
+                buildfire.localStorage.getItem(storagePlace, function(e,r) {
+                    var images=carouselImages;
+                    var sendIndex=0;
+                    if(r==null){
+                        carouselImages=[carouselImages[0]];
+                    }else{
+                        var index=Number(r);
+                        if(index==-1||index==carouselImages.length-1)carouselImages=[carouselImages[0]];
+                        else {carouselImages=[carouselImages[index+1]];sendIndex=index+1;}
+                    }
+                    buildfire.localStorage.setItem(storagePlace,sendIndex, function(e,r){
+                            lastImage=carouselImages;
+                            if(speed!=0)changeTimer=setInterval(changeImage, speed,images,false);
+                        });
+                });
+            }
+            else if(order == 1 && display== 1 && carouselImages.length > 1){
+                if(speed!=0){
+                    changeTimer=setInterval(changeImage, speed,carouselImages,true);
+                }
+                carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
+                lastImage=carouselImages;
+                buildfire.localStorage.removeItem(storagePlace);
+  
+            }else if(order == 1 && display== 0 && carouselImages.length > 1){
+                randomizeArray(carouselImages);
+                buildfire.localStorage.removeItem(storagePlace);
+            }
+  
+              if (carouselImages.length > 1) {
+                setTimeout(()=>{
+                  WidgetHome.view = new buildfire.components.carousel.view({
+                    selector: carouselContainer,
+                    items: carouselImages,
+                    loop: (speed!=0),
+                    infinite:false,
+                    autoInterval:speed
+                  });
+                },100)
+                
+              } else {
+                  appendOneImage(carouselImages);
+              }
+              
+              carouselContainer.classList.remove('hide');
+            } else {
+              carouselContainer.classList.add('hide');
+            }
+          }
+          
+        }
+  
+
         WidgetHome.init = function (cb) {
           Buildfire.spinner.show();
           var success = function (result) {
@@ -332,6 +473,10 @@
             }
             if (!WidgetHome.data.content)
               WidgetHome.data.content = {};
+            else {
+              carouselContainer =  document.getElementById("carousel");
+              renderCarousel();
+            }
               
             if (typeof WidgetHome.data.content.sortBy == "undefined")
                 WidgetHome.data.content.sortBy=SORT.MANUALLY;
@@ -424,15 +569,7 @@
          * This event listener is bound for "Carousel:LOADED" event broadcast
          */
         $rootScope.$on("Carousel:LOADED", function () {
-          WidgetHome.view = null;
-          if (!WidgetHome.view) {
-            WidgetHome.view = new Buildfire.components.carousel.view("#carousel", []);
-          }
-          if (WidgetHome.data.content && WidgetHome.data.content.carouselImages) {
-            WidgetHome.view.loadItems(WidgetHome.data.content.carouselImages);
-          } else {
-            WidgetHome.view.loadItems([]);
-          }
+          renderCarousel()
         });
         WidgetHome.showBookmarkItems = function () {
           if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
@@ -509,10 +646,7 @@
               console.log("==========1")
             }
             else {
-              if (WidgetHome.view) {
-                WidgetHome.view.loadItems(WidgetHome.data.content.carouselImages);
-                console.log("==========2")
-              }
+              renderCarousel();
             }
 
             currentListLayout = WidgetHome.data.design.itemListLayout;
@@ -561,7 +695,7 @@
             if (!resultAll.result) resultAll.result = [];
             WidgetHome.items = WidgetHome.items.length != 0 ? WidgetHome.items.concat(resultAll.result) : resultAll.result;
             var released = WidgetHome.items.filter(result => {
-              return !result.data.releaseDate || result.data.releaseDate < Date.now();
+              return !result.data.releaseDate || new Date(result.data.releaseDate) < Date.now();
             });
             WidgetHome.released = released;
             searchOptions.skip = searchOptions.skip + PAGINATION.itemCount;

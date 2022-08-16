@@ -620,7 +620,7 @@ html[safe-area="true"] .holder.has-bottom {
 }
 
 .holder .bottom.fixed-bottom .hidden-content-show-ios {
-    height: 500px;
+    height: 80vh;
 }
 
 .holder .bottom.fixed-bottom .hidden-content-show-android {
@@ -1152,4 +1152,16 @@ html[buildfire='widget'] .modal {
     padding: .75rem;
     text-align: left;
     font-size: 15px;
+}
+
+#carousel {
+    width: 100%;
+    min-width:100%;
+    max-height: 56vw;
+    min-height: 56vw;
+    overflow-y: hidden;
+}
+
+#carousel img {
+    width: 100vw;
 }
