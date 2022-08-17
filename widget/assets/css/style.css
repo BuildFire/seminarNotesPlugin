@@ -1165,3 +1165,15 @@ html[buildfire='widget'] .modal {
 #carousel img {
     width: 100vw;
 }
+
+#carousel1 {
+    width: 100%;
+    min-width:100%;
+    max-height: 56vw;
+    min-height: 56vw;
+    overflow-y: hidden;
+}
+
+#carousel1 img {
+    width: 100vw;
+}

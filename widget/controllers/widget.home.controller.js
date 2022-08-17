@@ -68,7 +68,7 @@
         buildfire.datastore.onRefresh(function () {
           WidgetHome.init(function (err) {
             if (!err) {
-              renderCarousel();
+              WidgetHome.renderCarousel();
               WidgetHome.items = [];
               searchOptions.skip = 0;
               WidgetHome.busy = false;
@@ -380,9 +380,9 @@
               });
           }
       }
-      var renderCarousel = function(){
-          
-          if(changeTimer) clearInterval(changeTimer);
+      WidgetHome.renderCarousel = function(){
+        carouselContainer =  document.getElementById("carousel");
+        if(changeTimer) clearInterval(changeTimer);
           if(carouselContainer != null){
             if ( WidgetHome.data.content && WidgetHome.data.content.carouselImages) {
               var speed = WidgetHome.data.content.speed ? WidgetHome.data.content.speed : 5000 
@@ -443,8 +443,8 @@
           }
           
         }
-  
 
+        
         WidgetHome.init = function (cb) {
           Buildfire.spinner.show();
           var success = function (result) {
@@ -474,8 +474,10 @@
             if (!WidgetHome.data.content)
               WidgetHome.data.content = {};
             else {
-              carouselContainer =  document.getElementById("carousel");
-              renderCarousel();
+              $timeout(function () {
+                WidgetHome.renderCarousel();
+              }, 500);
+            
             }
               
             if (typeof WidgetHome.data.content.sortBy == "undefined")
@@ -569,7 +571,7 @@
          * This event listener is bound for "Carousel:LOADED" event broadcast
          */
         $rootScope.$on("Carousel:LOADED", function () {
-          renderCarousel()
+          WidgetHome.renderCarousel()
         });
         WidgetHome.showBookmarkItems = function () {
           if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
@@ -646,6 +648,7 @@
               console.log("==========1")
             }
             else {
+              carouselContainer =  document.getElementById("carousel");
               renderCarousel();
             }
 
