@@ -649,7 +649,7 @@
             }
             else {
               carouselContainer =  document.getElementById("carousel");
-              renderCarousel();
+              WidgetHome.renderCarousel();
             }
 
             currentListLayout = WidgetHome.data.design.itemListLayout;
