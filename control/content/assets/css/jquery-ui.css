@@ -1277,3 +1277,17 @@ body .ui-tooltip {
     max-width: 40% !important;
     margin-right: 0;
 }
+
+.cancel-btn {
+	color: black;
+	border: 1px solid #7676764D;
+	border-radius: 4px;
+	width:85px;
+	height:35px;
+	padding-top: 7px;
+}
+.cancel-btn:hover {
+	color: black;
+	background-color: rgb(239, 239, 239);
+	transition: 0.5ms;
+}

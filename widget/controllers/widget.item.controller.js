@@ -18,6 +18,9 @@
         WidgetItem.swiped = [];
         WidgetItem.isNoteInserted = false;
         WidgetItem.noteIdToBeUpdate = "";
+        var carouselContainer = null
+        var changeTimer;
+        var lastImage=null;
         var searchOptions = {
           skip: 0,
           limit: PAGINATION.noteCount
@@ -92,13 +95,16 @@
 
             //$rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
             console.log("========ingeteventdetails", result);
-
+           
             if (!WidgetItem.item.data.itemListBgImage) {
               $rootScope.itemDetailbackgroundImage = "";
             } else {
               $rootScope.itemDetailbackgroundImage = WidgetItem.item.data.itemListBgImage;
             }
-
+            $timeout(function () {
+              carouselContainer =  document.getElementById("carousel1");
+              renderCarousel();
+            }, 100);
             $timeout(function () {
               WidgetItem.forceScroll = true;
             }, 0);
@@ -293,23 +299,6 @@
             UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(successItem, errorItem);
         };
 
-        /**
-         * This event listener is bound for "Carousel:LOADED" event broadcast
-         */
-        let carouselListener = $rootScope.$on("Carousel2:LOADED", function () {
-          //  WidgetItem.view = null;
-          if (WidgetItem.view)
-            WidgetItem.view._destroySlider();
-          if (!WidgetItem.view) {
-            WidgetItem.view = new Buildfire.components.carousel.view(".carousel2", []);
-          }
-          if (WidgetItem.item.data && WidgetItem.item.data.carouselImages) {
-            WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
-          } else {
-            WidgetItem.view.loadItems([]);
-          }
-        });
-
         WidgetItem.getAllNotes = function (cb) {
           searchOptions.filter = { "$or": [{ "$json.itemID": { "$eq": WidgetItem.item.id } }] };
 
@@ -485,10 +474,8 @@
                 case TAG_NAMES.SEMINAR_ITEMS:
                   if (event.data) {
                     WidgetItem.item.data = event.data;
-                    // $rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
-                    if (WidgetItem.view) {
-                      WidgetItem.view.loadItems(WidgetItem.item.data.carouselImages);
-                    }
+                      carouselContainer =  document.getElementById("carousel1");
+                      renderCarousel();
                     if (!WidgetItem.item.data.itemListBgImage) {
                       $rootScope.itemDetailbackgroundImage = "";
                     } else {
@@ -652,7 +639,6 @@
         });
 
         WidgetItem.listeners['CHANGED'] = $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
-          carouselListener();
           if (type === 'POP') {
             DataStore.onUpdate().then(null, null, onUpdateCallback);
           }
@@ -672,5 +658,146 @@
         $scope.$watch(function () {
           return WidgetItem.Note;
         }, updateNoteWithDelay, true);
+
+        function shuffle(a,first,last) {
+          var j, x, i;
+          for (i = a.length - 1; i > 0; i--) {
+              j = Math.floor(Math.random() * (i + 1));
+              x = a[i];
+              a[i] = a[j];
+              a[j] = x;
+          }
+          if(last==a[0]||first==a[a.length-1]) return shuffle(a,first,last);
+          else return a;
+      }
+
+
+      function randomizeArray(sent){
+          shuffle(sent,null,null);
+          var dup=Array.from(sent);
+          shuffle(dup,null,sent[sent.length - 1]);
+          sent.push(...dup);
+          shuffle(dup,sent[0],sent[sent.length - 1]);
+          sent.push(...dup);
+      }
+
+      function changeImage(carouselImages,random){
+          var oldState=carouselImages;
+          if(random){
+              carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
+  
+              if(carouselImages[0]!=lastImage[0]){
+                  lastImage=carouselImages;
+                  appendOneImage(carouselImages);
+              }else changeImage(oldState);
+          }else{
+              var index=carouselImages.indexOf(lastImage[0]);
+              var sendIndex=0;
+              if(index==-1||index==carouselImages.length-1)carouselImages=[carouselImages[0]];
+              else {carouselImages=[carouselImages[index+1]];sendIndex=index+1;}
+              lastImage=carouselImages;
+              var isHome=(new URLSearchParams(window.location.search).get('fid').split("=")[0]=="launcherPluginv");
+              var storagePlace=(isHome)?"carouselLastImageHome":"carouselLastImage";
+              buildfire.localStorage.setItem(storagePlace,sendIndex, function(e,r){
+                  appendOneImage(carouselImages);
+              });
+          }
+  
+      }
+      function appendOneImage(carouselImages){
+          var myImg=document.getElementById("one_img");
+          
+          if(myImg==null){
+              carouselContainer.innerHTML = '';
+              var img = document.createElement('img');
+              img.setAttribute("id", "one_img");
+              img.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
+                  width: window.innerWidth,
+                  height: Math.ceil(9 * (window.innerWidth) / 16)
+              }));
+              carouselContainer.appendChild(img);
+              img.addEventListener("click", function () {
+                  buildfire.actionItems.execute(carouselImages[0], function (err, result) {
+                      if (err) {
+                          console.warn('Error openning slider action: ', err);
+                      }
+                  });
+              });
+          }else{
+              myImg.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
+                  width: window.innerWidth,
+                  height: Math.ceil(9 * (window.innerWidth) / 16)
+              }));
+              myImg.removeEventListener("click",function(){});
+              myImg.addEventListener("click", function () {
+                  buildfire.actionItems.execute(carouselImages[0], function (err, result) {
+                      if (err) {
+                          console.warn('Error openning slider action: ', err);
+                      }
+                  });
+              });
+          }
+      }
+      var renderCarousel = function(){
+          if(changeTimer) clearInterval(changeTimer);
+          if(carouselContainer != null){
+            if ( WidgetItem.item.data && WidgetItem.item.data.carouselImages && WidgetItem.item.data.carouselImages.length > 0) {
+              var speed = WidgetItem.item.data.speed ? WidgetItem.item.data.speed : 5000 
+              var order = WidgetItem.item.data.order ? WidgetItem.item.data.order : 0 
+              var display = WidgetItem.item.data.display ? WidgetItem.item.data.display : 0 
+              var carouselImages = WidgetItem.item.data.carouselImages;
+              var isHome=(new URLSearchParams(window.location.search).get('fid').split("=")[0]=="launcherPluginv");
+              var storagePlace=(isHome)?"carouselLastImageHomeItem":"carouselLastImageItem";
+              if(order == 0 && display== 1 && carouselImages.length > 1){
+                buildfire.localStorage.getItem(storagePlace, function(e,r) {
+                    var images=carouselImages;
+                    var sendIndex=0;
+                    if(r==null){
+                        carouselImages=[carouselImages[0]];
+                    }else{
+                        var index=Number(r);
+                        if(index==-1||index==carouselImages.length-1)carouselImages=[carouselImages[0]];
+                        else {carouselImages=[carouselImages[index+1]];sendIndex=index+1;}
+                    }
+                    buildfire.localStorage.setItem(storagePlace,sendIndex, function(e,r){
+                            lastImage=carouselImages;
+                            if(speed!=0)changeTimer=setInterval(changeImage, speed,images,false);
+                        });
+                });
+            }
+            else if(order == 1 && display== 1 && carouselImages.length > 1){
+                if(speed!=0){
+                    changeTimer=setInterval(changeImage, speed,carouselImages,true);
+                }
+                carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
+                lastImage=carouselImages;
+                buildfire.localStorage.removeItem(storagePlace);
+  
+            }else if(order == 1 && display== 0 && carouselImages.length > 1){
+                randomizeArray(carouselImages);
+                buildfire.localStorage.removeItem(storagePlace);
+            }
+  
+              if (carouselImages.length > 1) {
+                setTimeout(()=>{
+                  WidgetItem.view = new buildfire.components.carousel.view({
+                    selector: carouselContainer,
+                    items: carouselImages,
+                    loop: (speed!=0),
+                    infinite:false,
+                    autoInterval:speed
+                  });
+                },100)
+                
+              } else {
+                  appendOneImage(carouselImages);
+              }
+              carouselContainer.classList.remove('hide');
+            } else {
+              carouselContainer.classList.add('hide');
+            }
+          }
+          
+        }
       }]);
 })(window.angular, window.buildfire, window);

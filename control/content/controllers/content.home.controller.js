@@ -192,6 +192,16 @@
                   editor.loadItems([]);
                 else
                   editor.loadItems(ContentHome.data.content.carouselImages);
+
+                if (ContentHome.data && ContentHome.data.content && ContentHome.data.content.speed) {
+                    editor.setOptionSpeed(ContentHome.data.content.speed);
+                }
+                if (ContentHome.data && ContentHome.data.content && ContentHome.data.content.order) {
+                    editor.setOptionOrder(ContentHome.data.content.order);
+                }
+                if (ContentHome.data && ContentHome.data.content && ContentHome.data.content.display) {
+                    editor.setOptionDisplay(ContentHome.data.content.display);
+                }
               }
               ContentHome.itemSortableOptions.disabled = !(ContentHome.data.content.sortBy === SORT.MANUALLY);
               RankOfLastItem.setRank(ContentHome.data.content.rankOfLastItem || 0);
@@ -288,7 +298,7 @@
         };
 
         // create a new instance of the buildfire carousel editor
-        var editor = new Buildfire.components.carousel.editor("#carousel");
+        var editor = new Buildfire.components.carousel.editor("#carousel",{},5000,0,0);
 
         // this method will be called when a new item added to the list
         editor.onAddItems = function (items) {
@@ -326,6 +336,21 @@
 
           ContentHome.data.content.carouselImages = items;
           $scope.$digest();
+        };
+
+        editor.onOptionSpeedChange = function (speed) {
+          ContentHome.data.content.speed = speed;
+          saveData(JSON.parse(angular.toJson(ContentHome.data)), TAG_NAMES.SEMINAR_INFO);
+        };
+
+        editor.onOptionOrderChange = function (order) {
+          ContentHome.data.content.order = order;
+          saveData(JSON.parse(angular.toJson(ContentHome.data)), TAG_NAMES.SEMINAR_INFO);
+        };
+
+        editor.onOptionDisplayChange = function (display) {
+          ContentHome.data.content.display = display;
+          saveData(JSON.parse(angular.toJson(ContentHome.data)), TAG_NAMES.SEMINAR_INFO);
         };
 
         /**

@@ -51,27 +51,32 @@
           });
         }
 
+        var isCarouselImageChanged = false; 
+
         $scope.$on('$viewContentLoaded', function () {
           $timeout(function () {
             // create a new instance of the buildfire carousel editor
-            editor = new Buildfire.components.carousel.editor("#carousel2");
-            console.log(editor);
-
+            editor = new Buildfire.components.carousel.editor("#carousel2",{},5000,0,0);
             // this method will be called when a new item added to the list
             editor.onAddItems = function (items) {
               if (!ContentItem.item.data.carouselImages)
                 ContentItem.item.data.carouselImages = [];
               ContentItem.item.data.carouselImages.push.apply(ContentItem.item.data.carouselImages, items);
+              isCarouselImageChanged = true;
               $scope.$digest();
             };
             // this method will be called when an item deleted from the list
             editor.onDeleteItem = function (item, index) {
               ContentItem.item.data.carouselImages.splice(index, 1);
+              isCarouselImageChanged = true;
+
               $scope.$digest();
             };
             // this method will be called when you edit item details
             editor.onItemChange = function (item, index) {
               ContentItem.item.data.carouselImages.splice(index, 1, item);
+              isCarouselImageChanged = true;
+
               $scope.$digest();
             };
             // this method will be called when you change the order of items
@@ -92,6 +97,28 @@
               items[newIndex] = tmp;
 
               ContentItem.item.data.carouselImages = items;
+              isCarouselImageChanged = true;
+
+              $scope.$digest();
+            };
+            editor.onOptionSpeedChange = function (speed) {
+              ContentItem.item.data.speed = speed;
+              isCarouselImageChanged = true;
+
+              $scope.$digest();
+            };
+    
+            editor.onOptionOrderChange = function (order) {
+              ContentItem.item.data.order = order;
+              isCarouselImageChanged = true;
+
+              $scope.$digest();
+            };
+    
+            editor.onOptionDisplayChange = function (display) {
+              ContentItem.item.data.display = display;
+              isCarouselImageChanged = true;
+
               $scope.$digest();
             };
 
@@ -222,10 +249,21 @@
             if (ContentItem.item.data.listImage) {
               listImage.loadbackground(ContentItem.item.data.listImage);
             }
-            if (!ContentItem.item.data.carouselImages)
-              editor.loadItems([]);
-            else
-              editor.loadItems(ContentItem.item.data.carouselImages);
+
+            //  editor = new Buildfire.components.carousel.editor("#carousel2");
+              if (ContentItem.item && ContentItem.item.data && ContentItem.item.data.speed) {
+                editor.setOptionSpeed(ContentItem.item.data.speed);
+              }
+              if (ContentItem.item && ContentItem.item.data && ContentItem.item.data.order) {
+                  editor.setOptionOrder(ContentItem.item.data.order);
+              }
+              if (ContentItem.item && ContentItem.item.data && ContentItem.item.data.display) {
+                  editor.setOptionDisplay(ContentItem.item.data.display);
+              }
+              if (!ContentItem.item.data.carouselImages)
+                editor.loadItems([]);
+              else
+                editor.loadItems(ContentItem.item.data.carouselImages);
             if (ContentItem.item.data.itemListBgImage) {
               background.loadbackground(ContentItem.item.data.itemListBgImage);
             }
@@ -305,7 +343,8 @@
           ContentItem.unchangedData = angular.equals(_data, ContentItem.item.data);
 
           ContentItem.isItemValid = ContentItem.isValidItem(ContentItem.item.data);
-          if (!ContentItem.isUpdating && !isUnchanged(ContentItem.item) && ContentItem.isItemValid) {
+          if (!ContentItem.isUpdating && (!isUnchanged(ContentItem.item) || isCarouselImageChanged) && ContentItem.isItemValid) {
+            isCarouselImageChanged = false
             tmrDelayForItem = setTimeout(function () {
               if (item.id) {
                 ContentItem.updateItemData();

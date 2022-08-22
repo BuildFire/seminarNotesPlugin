@@ -1,8 +1,7 @@
 <div class="holder padding-zero load-in has-bottom sticky-bottom-menu clearfix">
     <div class="scrollable infinite-scroll-parent">
         <div class="seminar-notes layout1">
-            <div id="carousel" ng-if="WidgetHome.data.content.carouselImages.length" build-fire-carousel=""
-                ng-style="WidgetHome.data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}">
+            <div id="carousel" class="sliderCarousel hide">
             </div>
             <div class="main-header" ng-if="WidgetHome.showDescription(WidgetHome.data.content.description)">
                 <p class="margin-zero" ng-bind-html="WidgetHome.safeHtml(WidgetHome.data.content.description)"></p>
@@ -80,3 +79,10 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    document.onload = function(){
+        console.log("Asdasd")
+    }
+</script>
