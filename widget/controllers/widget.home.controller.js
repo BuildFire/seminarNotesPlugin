@@ -347,12 +347,12 @@
       }
       function appendOneImage(carouselImages){
         var carouselContainer = document.getElementById("carousel");
-          var myImg=document.getElementById("one_img");
+          var myImg=document.getElementById("one_img_home");
           
           if(myImg==null){
               carouselContainer.innerHTML = '';
               var img = document.createElement('img');
-              img.setAttribute("id", "one_img");
+              img.setAttribute("id", "one_img_home");
               img.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
                   width: window.innerWidth,
                   height: Math.ceil(9 * (window.innerWidth) / 16)
