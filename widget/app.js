@@ -157,23 +157,31 @@
     }])
     .run(['ViewStack', '$rootScope', function (ViewStack, $rootScope) {
       buildfire.navigation.onBackButtonClick = function () {
-        if (ViewStack.hasViews()) {
-          if (ViewStack.getPreviousView().params && ViewStack.getPreviousView().params.itemId) {
-            buildfire.messaging.sendMessageToControl({
-              id: ViewStack.getPreviousView().params.itemId,
-              type: 'OpenItem'
-            });
-          } else {
-            buildfire.messaging.sendMessageToControl({
-              type: 'BackToHome'
-            });
+        buildfire.history.get(
+          { pluginBreadcrumbsOnly: true },
+          (err, result) => {
+            if (err) return console.error('error in history');
+            if (result.length && ViewStack.hasViews()) {
+              if (ViewStack.getPreviousView().params && ViewStack.getPreviousView().params.itemId) {
+                buildfire.messaging.sendMessageToControl({
+                  id: ViewStack.getPreviousView().params.itemId,
+                  type: 'OpenItem'
+                });
+              } else {
+                buildfire.messaging.sendMessageToControl({
+                  type: 'BackToHome'
+                });
+              }
+              buildfire.history.pop();
+              ViewStack.pop();
+            } else if (result.length) {
+              buildfire.history.pop();
+              location.reload();
+            } else {
+              buildfire.navigation.navigateHome();
+            }
           }
-          buildfire.history.pop();
-          ViewStack.pop();
-        } else {
-          buildfire.navigation._goBackOne();
-          buildfire.history.pop();
-        }
+        );
       };
 
       buildfire.messaging.onReceivedMessage = function (msg) {
