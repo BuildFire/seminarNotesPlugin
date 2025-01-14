@@ -28,12 +28,25 @@
           recordCount: true
         };
 
+        const applySafeAreaStyles = () => {
+            const { navbarEnabled } = buildfire.getContext();
+            const rootElement = document.querySelector('html');
+            const isSafeAreaEnabled = rootElement.getAttribute('safe-area') === 'true';
+            if (isSafeAreaEnabled) {
+              if (!navbarEnabled) {
+                const body = document.querySelector('body');
+                body.classList.add('has-safe-area');
+              }
+            }
+        };
+        applySafeAreaStyles();
+
         // Subscribe to notifications on the device
         buildfire.notifications.pushNotification.subscribe(
           {},
           (err, subscribed) => {
             if (err) return console.error(err);
-        
+
             console.log("User subscribed to group", subscribed);
           }
         );
@@ -105,22 +118,22 @@
               countdown();
               clearTimeout(nextSeminarTimout);
               nextSeminarTimout = setTimeout(() => {
-                // Remove next item locked status after the time is reached 
+                // Remove next item locked status after the time is reached
                 let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                 if (nextItem) {
                   nextItem.classList.remove(WidgetHome.data.content.lockedClass);
                 }
               }, openAfter);
 
-            } 
+            }
             // If item rank is bigger than the current rank by one and it reached it's open time
             else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextAvailableIn) {
               // Change the current rank to the item rank
-              $rootScope.seminarLastDocument.rank = itemRank; 
+              $rootScope.seminarLastDocument.rank = itemRank;
               // Set the time for when the next item will open
               $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
 
-              // If not last item 
+              // If not last item
               if (itemIndex !== ($rootScope.totalItemsCount - 1)) {
                 // Schedule a notification for the next Item
                 buildfire.notifications.pushNotification.schedule({
@@ -128,15 +141,15 @@
                   title: "Push notification",
                   text: WidgetHome.languages.nextSeminarOpen ? WidgetHome.languages.nextSeminarOpen : 'The next seminar is now open!'
                 })
-                
+
                 let openAfter =  $rootScope.seminarLastDocument.nextAvailableIn - Date.now();
                 buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {
                   // Show countdown timer
                   countdown();
-                  // Remove next item locked status after the time is reached 
+                  // Remove next item locked status after the time is reached
                   clearTimeout(nextSeminarTimout)
                   nextSeminarTimout = setTimeout(() => {
-                    // Remove item locked status after the time is reached 
+                    // Remove item locked status after the time is reached
                     let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                     if (nextItem) {
                       nextItem.classList.remove(WidgetHome.data.content.lockedClass);
@@ -302,9 +315,9 @@
         carouselContainer =  document.getElementById("carousel");
           if (carouselContainer != null){
             if ( WidgetHome.data.content && WidgetHome.data.content.carouselImages) {
-              var speed = WidgetHome.data.content.speed ? WidgetHome.data.content.speed : 5000 
-              var order = WidgetHome.data.content.order ? WidgetHome.data.content.order : 0 
-              var display = WidgetHome.data.content.display ? WidgetHome.data.content.display : 0 
+              var speed = WidgetHome.data.content.speed ? WidgetHome.data.content.speed : 5000
+              var order = WidgetHome.data.content.order ? WidgetHome.data.content.order : 0
+              var display = WidgetHome.data.content.display ? WidgetHome.data.content.display : 0
               var carouselImages = WidgetHome.data.content.carouselImages;
                 setTimeout(()=>{
                   WidgetHome.view = new buildfire.components.carousel.view({
@@ -356,9 +369,9 @@
               $timeout(function () {
                 WidgetHome.renderCarousel();
               }, 500);
-            
+
             }
-              
+
             if (typeof WidgetHome.data.content.sortBy == "undefined")
                 WidgetHome.data.content.sortBy=SORT.MANUALLY;
               currentSortOrder=WidgetHome.data.content.sortBy;
@@ -478,7 +491,7 @@
             WidgetHome.openLogin();
           }
         };
-        
+
         var updateTimeout;
         var onUpdateCallback = function (event) {
           if (updateTimeout) clearTimeout(updateTimeout);
@@ -630,9 +643,9 @@
               console.error("Error while retrieving your data", err)
               return callback();
             };
-            
+
             $rootScope.seminarLastDocument = result.data;
-            
+
             if (typeof $rootScope.seminarLastDocument.rank === 'undefined') {
               $rootScope.seminarLastDocument.rank = 0;
               buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
@@ -649,7 +662,7 @@
                 countdown();
                 clearTimeout(nextSeminarTimout);
                 nextSeminarTimout = setTimeout(() => {
-                  // Remove item locked status after the time is reached 
+                  // Remove item locked status after the time is reached
                   let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                   if (nextItem) {
                     nextItem.classList.remove(WidgetHome.data.content.lockedClass);
@@ -658,7 +671,7 @@
                     buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
                   }
                 }, openAfter);
-              } 
+              }
             }
 
             callback();
