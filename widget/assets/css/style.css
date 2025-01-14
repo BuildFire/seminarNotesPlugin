@@ -75,7 +75,7 @@ h5 {
 
 .holder .bottom .extra-links .btn-fab {
     position: absolute;
-    bottom: calc(3.5rem + (2 * env(safe-area-inset-bottom)));
+    bottom: calc(5rem);
     right: 1.5rem;
     border-radius: 50%;
     display: flex;
@@ -90,7 +90,6 @@ h5 {
 
 .holder .bottom .extra-links .btn-fab:nth-child(2) {
     position: absolute;
-    bottom: calc(3.5rem + (2 * env(safe-area-inset-bottom)));
     right: 5rem;
     border-radius: 50%;
     display: flex;
@@ -99,7 +98,11 @@ h5 {
     height: 3rem;
     width: 3rem;
     font-size: 20px;
-    /*z-index:13;*/
+}
+
+html[safe-area="true"] .holder .bottom .extra-links .btn-fab {
+  bottom: calc(5rem + env(safe-area-inset-bottom)) !important;
+  bottom: calc(5rem + constant(safe-area-inset-bottom)) !important;
 }
 
 
@@ -579,7 +582,7 @@ h5 {
 /* Fixed Bottom */
 
 .holder.has-bottom {
-    padding-bottom: 38px !important;
+    padding-bottom: 3.5rem !important;
 }
 
 .holder.has-bottom.has-extra-links {
@@ -587,35 +590,31 @@ h5 {
 }
 
 .holder .bottom.fixed-bottom {
-    position: fixed;
-    /* bottom: 0; */
+    position: absolute;
+    bottom: 0;
     left: 0;
-    width: 100%;
     z-index: 11;
-    /* background: #09a3ee; */
+    width: 100%;
+    min-height: 3.5rem;
+    background: var(--bf-theme-primary);
 }
 
 html[safe-area="true"] .holder .bottom.fixed-bottom {
     padding-bottom: env(safe-area-inset-bottom) !important;
     padding-bottom: constant(safe-area-inset-bottom) !important;
+    min-height: calc(3.5rem + env(safe-area-inset-bottom)) !important;
+    min-height: calc(3.5rem + constant(safe-area-inset-bottom)) !important;
 }
 
 html[safe-area="true"] .holder.has-bottom {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 38px) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 3.5rem) !important;
 }
 
-.holder .bottom.fixed-bottom.has-content {
-    /* bottom: -240px; */
-}
 
-.holder .bottom.fixed-bottom.has-content.open {
-    bottom: calc(0px - env(safe-area-inset-bottom));
-}
 
 .holder .bottom.fixed-bottom .hidden-content {
     overflow-y: auto;
     overflow-x: hidden;
-    background: #fff;
     transition: height 0.5s;
 }
 
@@ -673,10 +672,6 @@ html[safe-area="true"] .holder.has-bottom {
     padding-bottom: 8px !important;
 }
 
-.holder .bottom>.hidden-content {
-    background: #fff;
-}
-
 .holder .bottom div a.active {
     font-weight: bold;
 }
@@ -700,7 +695,7 @@ html[safe-area="true"] .holder.has-bottom {
 }
 
 .seminar-notes .form-holder .form-control.border-none {
-    height: 38px;
+    height: 3.5rem;
 }
 
 .seminar-notes .list-item-copy p span.selected {
@@ -872,13 +867,6 @@ html[os="Windows"][browser="Chrome"] .seminar-notes .form-holder .clear-icon:aft
     user-select: none;
 }
 
-.bottom-zero {
-    /* bottom: 0px !important; */
-    top: calc(100vh - (38px + env(safe-area-inset-bottom)));
-    height: calc(38px + env(safe-area-inset-bottom)); 
-}
-
-
 /*
 * Removed border for modal pop up
 */
@@ -977,7 +965,7 @@ html[buildfire='widget'] .modal {
 .whiteTheme2,
 .whiteTheme2:hover,
 .whiteTheme2:focus{
-	color:#fff !important;
+    color:#fff !important;
 }
 
 .transition {
