@@ -596,7 +596,6 @@ body.has-safe-area .holder .bottom .extra-links .btn-fab {
     z-index: 11;
     width: 100%;
     min-height: 7vh;
-    background: var(--bf-theme-primary);
 }
 
 body.has-safe-area .holder .bottom.fixed-bottom {
