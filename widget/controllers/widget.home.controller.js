@@ -33,7 +33,7 @@
           {},
           (err, subscribed) => {
             if (err) return console.error(err);
-        
+
             console.log("User subscribed to group", subscribed);
           }
         );
@@ -105,22 +105,22 @@
               countdown();
               clearTimeout(nextSeminarTimout);
               nextSeminarTimout = setTimeout(() => {
-                // Remove next item locked status after the time is reached 
+                // Remove next item locked status after the time is reached
                 let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                 if (nextItem) {
                   nextItem.classList.remove(WidgetHome.data.content.lockedClass);
                 }
               }, openAfter);
 
-            } 
+            }
             // If item rank is bigger than the current rank by one and it reached it's open time
             else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextAvailableIn) {
               // Change the current rank to the item rank
-              $rootScope.seminarLastDocument.rank = itemRank; 
+              $rootScope.seminarLastDocument.rank = itemRank;
               // Set the time for when the next item will open
               $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + (WidgetHome.data.content.seminarDelay.value * 60 * 1000);
 
-              // If not last item 
+              // If not last item
               if (itemIndex !== ($rootScope.totalItemsCount - 1)) {
                 // Schedule a notification for the next Item
                 buildfire.notifications.pushNotification.schedule({
@@ -128,15 +128,15 @@
                   title: "Push notification",
                   text: WidgetHome.languages.nextSeminarOpen ? WidgetHome.languages.nextSeminarOpen : 'The next seminar is now open!'
                 })
-                
+
                 let openAfter =  $rootScope.seminarLastDocument.nextAvailableIn - Date.now();
                 buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {
                   // Show countdown timer
                   countdown();
-                  // Remove next item locked status after the time is reached 
+                  // Remove next item locked status after the time is reached
                   clearTimeout(nextSeminarTimout)
                   nextSeminarTimout = setTimeout(() => {
-                    // Remove item locked status after the time is reached 
+                    // Remove item locked status after the time is reached
                     let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                     if (nextItem) {
                       nextItem.classList.remove(WidgetHome.data.content.lockedClass);
@@ -218,7 +218,7 @@
                     if (errorOrConfirmed === true || (result && result.selectedButton && result.selectedButton.key === 'confirm')) {
                       Buildfire.spinner.show();
                       WidgetHome.getAllNotes(data.itemId, (notesToDelete) => {
-                        {
+                          Buildfire.spinner.hide();
                           notesToDelete.forEach(note => {
                             UserData.delete(note.id, TAG_NAMES.SEMINAR_NOTES, WidgetHome.currentLoggedInUser._id).then(() => {
                               console.log("deleted note", note);
@@ -236,10 +236,7 @@
                               console.error("error inserting note", e);
                             });
                           });
-                        }
                       });
-
-                      Buildfire.spinner.hide();
                     }
                   });
                 }
@@ -302,9 +299,9 @@
         carouselContainer =  document.getElementById("carousel");
           if (carouselContainer != null){
             if ( WidgetHome.data.content && WidgetHome.data.content.carouselImages) {
-              var speed = WidgetHome.data.content.speed ? WidgetHome.data.content.speed : 5000 
-              var order = WidgetHome.data.content.order ? WidgetHome.data.content.order : 0 
-              var display = WidgetHome.data.content.display ? WidgetHome.data.content.display : 0 
+              var speed = WidgetHome.data.content.speed ? WidgetHome.data.content.speed : 5000
+              var order = WidgetHome.data.content.order ? WidgetHome.data.content.order : 0
+              var display = WidgetHome.data.content.display ? WidgetHome.data.content.display : 0
               var carouselImages = WidgetHome.data.content.carouselImages;
                 setTimeout(()=>{
                   WidgetHome.view = new buildfire.components.carousel.view({
@@ -356,9 +353,9 @@
               $timeout(function () {
                 WidgetHome.renderCarousel();
               }, 500);
-            
+
             }
-              
+
             if (typeof WidgetHome.data.content.sortBy == "undefined")
                 WidgetHome.data.content.sortBy=SORT.MANUALLY;
               currentSortOrder=WidgetHome.data.content.sortBy;
@@ -402,7 +399,6 @@
         };
 
         WidgetHome.getBookMarkData = function (setBookMarks) {
-          Buildfire.spinner.show();
           var err = function (error) {
             Buildfire.spinner.hide();
             console.log("============ There is an error in getting data", error);
@@ -413,8 +409,10 @@
             if (setBookMarks)
               WidgetHome.setBookmarks();
           };
-          if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)
+          if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
+            Buildfire.spinner.show();
             UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+          }
         };
 
         WidgetHome.setBookmarks = function () {
@@ -478,7 +476,7 @@
             WidgetHome.openLogin();
           }
         };
-        
+
         var updateTimeout;
         var onUpdateCallback = function (event) {
           if (updateTimeout) clearTimeout(updateTimeout);
@@ -630,9 +628,9 @@
               console.error("Error while retrieving your data", err)
               return callback();
             };
-            
+
             $rootScope.seminarLastDocument = result.data;
-            
+
             if (typeof $rootScope.seminarLastDocument.rank === 'undefined') {
               $rootScope.seminarLastDocument.rank = 0;
               buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
@@ -649,7 +647,7 @@
                 countdown();
                 clearTimeout(nextSeminarTimout);
                 nextSeminarTimout = setTimeout(() => {
-                  // Remove item locked status after the time is reached 
+                  // Remove item locked status after the time is reached
                   let nextItem = document.getElementById(`seminarItem${$rootScope.seminarLastDocument.rank + 1}`);
                   if (nextItem) {
                     nextItem.classList.remove(WidgetHome.data.content.lockedClass);
@@ -658,7 +656,7 @@
                     buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
                   }
                 }, openAfter);
-              } 
+              }
             }
 
             callback();
@@ -756,7 +754,6 @@
 
         WidgetHome.addToBookmark = function (item, isBookmarked, index) {
           console.log("$$$$$$$$$$$$$$$$$", item, isBookmarked, index);
-          Buildfire.spinner.show();
           if (isBookmarked && item.bookmarkId) {
             var successRemove = function (result) {
               Buildfire.spinner.hide();
@@ -779,8 +776,10 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem removing your data');
             };
-            if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)
+            if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
+              Buildfire.spinner.show();
               UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetHome.currentLoggedInUser._id).then(successRemove, errorRemove);
+            }
           } else {
             WidgetHome.bookmarkItem = {
               data: {
@@ -810,8 +809,10 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem saving your data');
             };
-            if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)
+            if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
+              Buildfire.spinner.show();
               UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+            }
           }
         };
 
