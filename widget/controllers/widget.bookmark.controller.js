@@ -90,7 +90,7 @@
             }
             var err = function (error) {
               Buildfire.spinner.hide();
-              console.log("============ There is an error in getting data", error);
+
             }, result = function (result) {
               Buildfire.spinner.hide();
               console.log("===========search", result);

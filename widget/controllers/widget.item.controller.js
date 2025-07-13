@@ -146,7 +146,7 @@
           });
         };
 
-        buildfire.auth.onLogin(loginCallback);
+        buildfire.auth.onLogin(loginCallback, true);
 
         /*
          * Fetch user's data from datastore
@@ -327,7 +327,7 @@
           searchOptions.filter = { "$or": [{ "$json.itemID": { "$eq": WidgetItem.item.id } }] };
           var err = function (error) {
             Buildfire.spinner.hide();
-            console.log("============ There is an error in getting data", error);
+
           }, result = function (result) {
             Buildfire.spinner.hide();
             console.log("===========Search Note", result, searchOptions);
@@ -361,7 +361,7 @@
         WidgetItem.getBookmarkedItems = function () {
           var err = function (error) {
             Buildfire.spinner.hide();
-            console.log("============ There is an error in getting data", error);
+
           }, result = function (result) {
             Buildfire.spinner.hide();
             console.log("===========searchinItem", result);

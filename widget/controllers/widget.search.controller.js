@@ -61,7 +61,7 @@
           });
         };
 
-        buildfire.auth.onLogin(loginCallback);
+        buildfire.auth.onLogin(loginCallback, true);
 
         var logoutCallback = function () {
           if ($rootScope.data && $rootScope.data.content && $rootScope.data.content.seminarDelay && $rootScope.data.content.seminarDelay.value) {
@@ -71,7 +71,7 @@
           $scope.$apply();
         };
 
-        buildfire.auth.onLogout(logoutCallback);
+        buildfire.auth.onLogout(logoutCallback, true);
 
         /**
          * Check for current logged in user, if not show ogin screen
@@ -153,7 +153,7 @@
 
           var err = function (error) {
             Buildfire.spinner.hide();
-            console.log("============ There is an error in getting data", error);
+
           }, result = function (result) {
             Buildfire.spinner.hide();
             console.log("===========search", result);

@@ -51,7 +51,7 @@
           var err = function (error) {
             Buildfire.spinner.hide();
             WidgetNotes.noItemFound = true;
-            console.log("============ There is an error in getting data", error);
+
           }, result = function (result) {
             Buildfire.spinner.hide();
             WidgetNotes.Notes = WidgetNotes.Notes.length ? WidgetNotes.Notes.concat(result) : result;
@@ -71,7 +71,7 @@
           }
           else
             buildfire.auth.getCurrentUser(function (err, user) {
-              console.log("===========LoggedInUser2", user);
+
               if (user) {
                 Buildfire.spinner.show();
                 WidgetNotes.currentLoggedInUser = user;
@@ -188,7 +188,7 @@
          * Check for current logged in user, if not show ogin screen
          */
         buildfire.auth.getCurrentUser(function (err, user) {
-          console.log("===========LoggedInUser2", user);
+
           if (user) {
             WidgetNotes.currentLoggedInUser = user;
           }
@@ -213,7 +213,7 @@
           });
         };
 
-        buildfire.auth.onLogin(loginCallback);
+        buildfire.auth.onLogin(loginCallback, true);
         var searchData = function (newValue, tag) {
           //Buildfire.spinner.show();
           var searchTerm = '';

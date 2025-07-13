@@ -28,6 +28,19 @@
           recordCount: true
         };
 
+        const applySafeAreaStyles = () => {
+            const { navbarEnabled } = buildfire.getContext();
+            const rootElement = document.querySelector('html');
+            const isSafeAreaEnabled = rootElement.getAttribute('safe-area') === 'true';
+            if (isSafeAreaEnabled) {
+              if (!navbarEnabled) {
+                const body = document.querySelector('body');
+                body.classList.add('has-safe-area');
+              }
+            }
+        };
+        applySafeAreaStyles();
+
         // Subscribe to notifications on the device
         buildfire.notifications.pushNotification.subscribe(
           {},
@@ -401,7 +414,7 @@
         WidgetHome.getBookMarkData = function (setBookMarks) {
           var err = function (error) {
             Buildfire.spinner.hide();
-            console.log("============ There is an error in getting data", error);
+
           }, result = function (result) {
             Buildfire.spinner.hide();
             console.log("===========Bookmarks", result);
@@ -702,7 +715,7 @@
           });
         };
 
-        buildfire.auth.onLogin(loginCallback);
+        buildfire.auth.onLogin(loginCallback, true);
 
         var logoutCallback = function () {
           WidgetHome.currentLoggedInUser = null;
@@ -712,7 +725,7 @@
           $scope.$apply();
         };
 
-        buildfire.auth.onLogout(logoutCallback);
+        buildfire.auth.onLogout(logoutCallback, true);
 
         /**
          * Check for current logged in user, if not show ogin screen
@@ -753,7 +766,7 @@
         };
 
         WidgetHome.addToBookmark = function (item, isBookmarked, index) {
-          console.log("$$$$$$$$$$$$$$$$$", item, isBookmarked, index);
+
           if (isBookmarked && item.bookmarkId) {
             var successRemove = function (result) {
               Buildfire.spinner.hide();
