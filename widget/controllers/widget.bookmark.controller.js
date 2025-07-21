@@ -90,7 +90,7 @@
             }
             var err = function (error) {
               Buildfire.spinner.hide();
-              console.log("============ There is an error in getting data", error);
+
             }, result = function (result) {
               Buildfire.spinner.hide();
               console.log("===========search", result);
@@ -155,11 +155,11 @@
               $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
               buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
             }
-          } 
+          }
           // If item rank is bigger than the current rank by one and it reached it's open time
           else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextAvailableIn) {
             // Change the current rank to the item rank
-            $rootScope.seminarLastDocument.rank = itemRank; 
+            $rootScope.seminarLastDocument.rank = itemRank;
             // Set the time for when the next item will open
             $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
             buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
@@ -228,7 +228,6 @@
         };
 
         WidgetBookmark.removeBookmark = function (item, index) {
-          Buildfire.spinner.show();
           var successRemove = function (result) {
             Buildfire.spinner.hide();
             WidgetBookmark.items.splice(index, 1);
@@ -251,8 +250,10 @@
             Buildfire.spinner.hide();
             return console.error('There was a problem removing your data');
           };
-          if (WidgetBookmark.currentLoggedInUser && WidgetBookmark.currentLoggedInUser._id)
+          if (WidgetBookmark.currentLoggedInUser && WidgetBookmark.currentLoggedInUser._id) {
+            Buildfire.spinner.show();
             UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetBookmark.currentLoggedInUser._id).then(successRemove, errorRemove)
+          }
         };
 
         $scope.$on("$destroy", function () {

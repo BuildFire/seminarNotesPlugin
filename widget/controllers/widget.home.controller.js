@@ -231,7 +231,7 @@
                     if (errorOrConfirmed === true || (result && result.selectedButton && result.selectedButton.key === 'confirm')) {
                       Buildfire.spinner.show();
                       WidgetHome.getAllNotes(data.itemId, (notesToDelete) => {
-                        {
+                          Buildfire.spinner.hide();
                           notesToDelete.forEach(note => {
                             UserData.delete(note.id, TAG_NAMES.SEMINAR_NOTES, WidgetHome.currentLoggedInUser._id).then(() => {
                               console.log("deleted note", note);
@@ -249,10 +249,7 @@
                               console.error("error inserting note", e);
                             });
                           });
-                        }
                       });
-
-                      Buildfire.spinner.hide();
                     }
                   });
                 }
@@ -415,10 +412,9 @@
         };
 
         WidgetHome.getBookMarkData = function (setBookMarks) {
-          Buildfire.spinner.show();
           var err = function (error) {
             Buildfire.spinner.hide();
-            console.log("============ There is an error in getting data", error);
+
           }, result = function (result) {
             Buildfire.spinner.hide();
             console.log("===========Bookmarks", result);
@@ -426,8 +422,10 @@
             if (setBookMarks)
               WidgetHome.setBookmarks();
           };
-          if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)
+          if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
+            Buildfire.spinner.show();
             UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+          }
         };
 
         WidgetHome.setBookmarks = function () {
@@ -717,7 +715,7 @@
           });
         };
 
-        buildfire.auth.onLogin(loginCallback);
+        buildfire.auth.onLogin(loginCallback, true);
 
         var logoutCallback = function () {
           WidgetHome.currentLoggedInUser = null;
@@ -727,7 +725,7 @@
           $scope.$apply();
         };
 
-        buildfire.auth.onLogout(logoutCallback);
+        buildfire.auth.onLogout(logoutCallback, true);
 
         /**
          * Check for current logged in user, if not show ogin screen
@@ -768,8 +766,7 @@
         };
 
         WidgetHome.addToBookmark = function (item, isBookmarked, index) {
-          console.log("$$$$$$$$$$$$$$$$$", item, isBookmarked, index);
-          Buildfire.spinner.show();
+
           if (isBookmarked && item.bookmarkId) {
             var successRemove = function (result) {
               Buildfire.spinner.hide();
@@ -792,8 +789,10 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem removing your data');
             };
-            if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)
+            if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
+              Buildfire.spinner.show();
               UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetHome.currentLoggedInUser._id).then(successRemove, errorRemove);
+            }
           } else {
             WidgetHome.bookmarkItem = {
               data: {
@@ -823,8 +822,10 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem saving your data');
             };
-            if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id)
+            if (WidgetHome.currentLoggedInUser && WidgetHome.currentLoggedInUser._id) {
+              Buildfire.spinner.show();
               UserData.insert(WidgetHome.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+            }
           }
         };
 

@@ -88,14 +88,11 @@
         };
 
         var getEventDetails = function () {
-          Buildfire.spinner.show();
           var success = function (result) {
             Buildfire.spinner.hide();
             WidgetItem.item = result;
 
             //$rootScope.$broadcast("NEW_ITEM_ADDED_UPDATED");
-            console.log("========ingeteventdetails", result);
-           
             if (!WidgetItem.item.data.itemListBgImage) {
               $rootScope.itemDetailbackgroundImage = "";
             } else {
@@ -114,8 +111,8 @@
               console.error('Error In Fetching Event', err);
             };
 
-          console.log(">>>>>>>>>>", currentView);
           if (currentView.params && currentView.params.itemId) {
+            Buildfire.spinner.show();
             DataStore.getById(currentView.params.itemId, TAG_NAMES.SEMINAR_ITEMS).then(success, error);
           }
         };
@@ -149,7 +146,7 @@
           });
         };
 
-        buildfire.auth.onLogin(loginCallback);
+        buildfire.auth.onLogin(loginCallback, true);
 
         /*
          * Fetch user's data from datastore
@@ -269,8 +266,7 @@
 
         WidgetItem.addNoteToItem = function () {
           WidgetItem.inInsertNote = true;
-          Buildfire.spinner.show();
-          
+
           WidgetItem.itemNote = {
             noteTitle: WidgetItem.Note.noteTitle,
             noteDescription: WidgetItem.Note.noteDescription,
@@ -279,7 +275,7 @@
             dateAdded: new Date(),
             itemRank: WidgetItem.item.data.rank
           };
-          
+
           var successItem = function (result) {
             Buildfire.spinner.hide();
             console.log("Inserted Item Note", result);
@@ -295,8 +291,10 @@
             Buildfire.spinner.hide();
             return console.error('There was a problem saving your data');
           };
-          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id) {
+            Buildfire.spinner.show();
             UserData.insert(WidgetItem.itemNote, TAG_NAMES.SEMINAR_NOTES, WidgetItem.currentLoggedInUser._id).then(successItem, errorItem);
+          }
         };
 
         WidgetItem.getAllNotes = function (cb) {
@@ -326,11 +324,10 @@
         };
 
         WidgetItem.getNoteList = function () {
-          Buildfire.spinner.show();
           searchOptions.filter = { "$or": [{ "$json.itemID": { "$eq": WidgetItem.item.id } }] };
           var err = function (error) {
             Buildfire.spinner.hide();
-            console.log("============ There is an error in getting data", error);
+
           }, result = function (result) {
             Buildfire.spinner.hide();
             console.log("===========Search Note", result, searchOptions);
@@ -340,8 +337,10 @@
               WidgetItem.busy = false;
             }
           };
-          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id) {
+            Buildfire.spinner.show();
             UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+          }
         };
 
         WidgetItem.openLinks = function (actionItems, $event) {
@@ -360,18 +359,19 @@
         };
 
         WidgetItem.getBookmarkedItems = function () {
-          Buildfire.spinner.show();
           var err = function (error) {
             Buildfire.spinner.hide();
-            console.log("============ There is an error in getting data", error);
+
           }, result = function (result) {
             Buildfire.spinner.hide();
             console.log("===========searchinItem", result);
             WidgetItem.bookmarks = result;
             WidgetItem.getBookmarks();
           };
-          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+          if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id) {
+            Buildfire.spinner.show();
             UserData.search({}, TAG_NAMES.SEMINAR_BOOKMARKS).then(result, err);
+          }
         };
 
         WidgetItem.getNoteDetail = function (noteId) {
@@ -387,7 +387,6 @@
         };
 
         WidgetItem.addToBookmark = function (itemId, item, isBookmarked) {
-          Buildfire.spinner.show();
           if (isBookmarked && item.bookmarkId) {
             var successRemove = function (result) {
               Buildfire.spinner.hide();
@@ -411,8 +410,10 @@
               return console.error('There was a problem removing your data');
             };
 
-            if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+            if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id) {
+              Buildfire.spinner.show();
               UserData.delete(item.bookmarkId, TAG_NAMES.SEMINAR_BOOKMARKS, WidgetItem.currentLoggedInUser._id).then(successRemove, errorRemove);
+            }
           } else {
             WidgetItem.bookmarkItem = {
               data: {
@@ -441,8 +442,10 @@
               Buildfire.spinner.hide();
               return console.error('There was a problem saving your data');
             };
-            if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id)
+            if (WidgetItem.currentLoggedInUser && WidgetItem.currentLoggedInUser._id) {
+              Buildfire.spinner.show();
               UserData.insert(WidgetItem.bookmarkItem.data, TAG_NAMES.SEMINAR_BOOKMARKS).then(successItem, errorItem);
+            }
           }
         };
 
@@ -685,7 +688,7 @@
           var oldState=carouselImages;
           if(random){
               carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
-  
+
               if(carouselImages[0]!=lastImage[0]){
                   lastImage=carouselImages;
                   appendOneImage(carouselImages);
@@ -702,11 +705,11 @@
                   appendOneImage(carouselImages);
               });
           }
-  
+
       }
       function appendOneImage(carouselImages){
           var myImg=document.getElementById("one_img_item");
-          
+
           if(myImg==null){
               carouselContainer.innerHTML = '';
               var img = document.createElement('img');
@@ -742,9 +745,9 @@
           if(changeTimer) clearInterval(changeTimer);
           if(carouselContainer != null){
             if ( WidgetItem.item.data && WidgetItem.item.data.carouselImages && WidgetItem.item.data.carouselImages.length > 0) {
-              var speed = WidgetItem.item.data.speed ? WidgetItem.item.data.speed : 5000 
-              var order = WidgetItem.item.data.order ? WidgetItem.item.data.order : 0 
-              var display = WidgetItem.item.data.display ? WidgetItem.item.data.display : 0 
+              var speed = WidgetItem.item.data.speed ? WidgetItem.item.data.speed : 5000
+              var order = WidgetItem.item.data.order ? WidgetItem.item.data.order : 0
+              var display = WidgetItem.item.data.display ? WidgetItem.item.data.display : 0
               var carouselImages = WidgetItem.item.data.carouselImages;
               var isHome=(new URLSearchParams(window.location.search).get('fid').split("=")[0]=="launcherPluginv");
               var storagePlace=(isHome)?"carouselLastImageHomeItem":"carouselLastImageItem";
@@ -772,12 +775,12 @@
                 carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
                 lastImage=carouselImages;
                 buildfire.localStorage.removeItem(storagePlace);
-  
+
             }else if(order == 1 && display== 0 && carouselImages.length > 1){
                 randomizeArray(carouselImages);
                 buildfire.localStorage.removeItem(storagePlace);
             }
-  
+
               if (carouselImages.length > 1) {
                 setTimeout(()=>{
                   WidgetItem.view = new buildfire.components.carousel.view({
@@ -788,7 +791,7 @@
                     autoInterval:speed
                   });
                 },100)
-                
+
               } else {
                   appendOneImage(carouselImages);
               }
@@ -797,7 +800,7 @@
               carouselContainer.classList.add('hide');
             }
           }
-          
+
         }
       }]);
 })(window.angular, window.buildfire, window);

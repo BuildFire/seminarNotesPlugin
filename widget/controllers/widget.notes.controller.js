@@ -48,11 +48,10 @@
           toggle ? WidgetNotes.swiped[i] = true : WidgetNotes.swiped[i] = false;
         };
         WidgetNotes.getNoteList = function () {
-          Buildfire.spinner.show();
           var err = function (error) {
             Buildfire.spinner.hide();
             WidgetNotes.noItemFound = true;
-            console.log("============ There is an error in getting data", error);
+
           }, result = function (result) {
             Buildfire.spinner.hide();
             WidgetNotes.Notes = WidgetNotes.Notes.length ? WidgetNotes.Notes.concat(result) : result;
@@ -66,12 +65,15 @@
               WidgetNotes.noItemFound = false;
             }
           };
-          if (WidgetNotes.currentLoggedInUser && WidgetNotes.currentLoggedInUser._id)
+          if (WidgetNotes.currentLoggedInUser && WidgetNotes.currentLoggedInUser._id) {
+            Buildfire.spinner.show();
             UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
+          }
           else
             buildfire.auth.getCurrentUser(function (err, user) {
-              console.log("===========LoggedInUser2", user);
+
               if (user) {
+                Buildfire.spinner.show();
                 WidgetNotes.currentLoggedInUser = user;
                 UserData.search(searchOptions, TAG_NAMES.SEMINAR_NOTES).then(result, err);
               }
@@ -125,11 +127,11 @@
               $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
               buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
             }
-          } 
+          }
           // If item rank is bigger than the current rank by one and it reached it's open time
           else if (($rootScope.seminarLastDocument.rank + 1) === itemRank && Date.now() >= $rootScope.seminarLastDocument.nextAvailableIn) {
             // Change the current rank to the item rank
-            $rootScope.seminarLastDocument.rank = itemRank; 
+            $rootScope.seminarLastDocument.rank = itemRank;
             // Set the time for when the next item will open
             $rootScope.seminarLastDocument.nextAvailableIn = Date.now() + ($rootScope.data.content.seminarDelay.value * 60 * 1000);
             buildfire.userData.save($rootScope.seminarLastDocument, "seminarLastDocument", false, () => {});
@@ -186,7 +188,7 @@
          * Check for current logged in user, if not show ogin screen
          */
         buildfire.auth.getCurrentUser(function (err, user) {
-          console.log("===========LoggedInUser2", user);
+
           if (user) {
             WidgetNotes.currentLoggedInUser = user;
           }
@@ -211,7 +213,7 @@
           });
         };
 
-        buildfire.auth.onLogin(loginCallback);
+        buildfire.auth.onLogin(loginCallback, true);
         var searchData = function (newValue, tag) {
           //Buildfire.spinner.show();
           var searchTerm = '';
