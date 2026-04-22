@@ -101,8 +101,7 @@ h5 {
 }
 
 body.has-safe-area .holder .bottom .extra-links .btn-fab {
-  bottom: calc(6rem + env(safe-area-inset-bottom)) !important;
-  bottom: calc(6rem + constant(safe-area-inset-bottom)) !important;
+  bottom: calc(6rem + var(--bf-safe-area-inset-bottom)) !important;
 }
 
 
@@ -411,7 +410,7 @@ body.has-safe-area .holder .bottom .extra-links .btn-fab {
 
 .holder .bottom div.edit-note {
     padding: 1rem;
-    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    padding-bottom: calc(1rem + var(--bf-safe-area-inset-bottom));
     height: 240px;
 }
 
@@ -598,13 +597,8 @@ body.has-safe-area .holder .bottom .extra-links .btn-fab {
     min-height: 7vh;
 }
 
-body.has-safe-area .holder .bottom.fixed-bottom {
-    padding-bottom: env(safe-area-inset-bottom) !important;
-    padding-bottom: constant(safe-area-inset-bottom) !important;
-}
-
 body.has-safe-area .holder.has-bottom {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 7vh) !important;
+    padding-bottom: calc(var(--bf-safe-area-inset-bottom) + 7vh) !important;
 }
 
 
@@ -662,7 +656,7 @@ body.has-safe-area .holder.has-bottom {
 }
 
 .holder .bottom .button-placeholder a {
-    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    padding-bottom: calc(8px + var(--bf-safe-area-inset-bottom));
 }
 
 .padding-bottom-8 a {
@@ -682,6 +676,9 @@ body.has-safe-area .holder.has-bottom {
 }
 
 /* Custom */
+.seminar-notes {
+    margin-top: var(--bf-safe-area-inset-top);
+}
 
 .seminar-notes .list-item-copy p {
     line-height: 18px;
@@ -891,7 +888,7 @@ html[buildfire='widget'] .modal {
 
 .form-holder-custom .savedMessage {
     position: absolute;
-    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    bottom: calc(1.5rem + var(--bf-safe-area-inset-bottom));
     left: 1rem;
     width: calc(100% - 2rem);
     font-size: .875rem;
