@@ -581,7 +581,7 @@ body.has-safe-area .holder .bottom .extra-links .btn-fab {
 /* Fixed Bottom */
 
 .holder.has-bottom {
-    padding-bottom: 7vh !important;
+    padding-bottom: calc(var(--bf-safe-area-inset-bottom) + 35px) !important;
 }
 
 .holder.has-bottom.has-extra-links {
@@ -594,14 +594,8 @@ body.has-safe-area .holder .bottom .extra-links .btn-fab {
     left: 0;
     z-index: 11;
     width: 100%;
-    min-height: 7vh;
+    min-height: calc(var(--bf-safe-area-inset-bottom) + 35px) !important;
 }
-
-body.has-safe-area .holder.has-bottom {
-    padding-bottom: calc(var(--bf-safe-area-inset-bottom) + 7vh) !important;
-}
-
-
 
 .holder .bottom.fixed-bottom .hidden-content {
     overflow-y: auto;
