@@ -600,7 +600,7 @@ body.has-safe-area .holder .bottom .extra-links .btn-fab {
 .holder .bottom.fixed-bottom .hidden-content {
     overflow-y: auto;
     overflow-x: hidden;
-    transition: height 0.5s;
+    transition: height 0.5s, background-color 0.5s;
 }
 
 .holder .bottom.fixed-bottom .hidden-content-show-ios {
@@ -614,6 +614,7 @@ body.has-safe-area .holder .bottom .extra-links .btn-fab {
 .holder .bottom.fixed-bottom .hidden-content-hide {
     /* overflow-y:hidden; */
     height: 0px;
+    background-color: var(--bf-theme-primary) !important;
 }
 
 .holder .bottom.fixed-bottom .hidden-content .content {
