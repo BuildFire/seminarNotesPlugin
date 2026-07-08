@@ -581,7 +581,7 @@ body.has-safe-area .holder .bottom .extra-links .btn-fab {
 /* Fixed Bottom */
 
 .holder.has-bottom {
-    padding-bottom: 7vh !important;
+    padding-bottom: calc(var(--bf-safe-area-inset-bottom) + 35px) !important;
 }
 
 .holder.has-bottom.has-extra-links {
@@ -594,19 +594,13 @@ body.has-safe-area .holder .bottom .extra-links .btn-fab {
     left: 0;
     z-index: 11;
     width: 100%;
-    min-height: 7vh;
+    min-height: calc(var(--bf-safe-area-inset-bottom) + 35px) !important;
 }
-
-body.has-safe-area .holder.has-bottom {
-    padding-bottom: calc(var(--bf-safe-area-inset-bottom) + 7vh) !important;
-}
-
-
 
 .holder .bottom.fixed-bottom .hidden-content {
     overflow-y: auto;
     overflow-x: hidden;
-    transition: height 0.5s;
+    transition: height 0.5s, background-color 0.5s;
 }
 
 .holder .bottom.fixed-bottom .hidden-content-show-ios {
@@ -620,6 +614,7 @@ body.has-safe-area .holder.has-bottom {
 .holder .bottom.fixed-bottom .hidden-content-hide {
     /* overflow-y:hidden; */
     height: 0px;
+    background-color: var(--bf-theme-primary) !important;
 }
 
 .holder .bottom.fixed-bottom .hidden-content .content {
