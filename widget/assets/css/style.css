@@ -408,6 +408,10 @@ body.has-safe-area .holder .bottom .extra-links .btn-fab {
 
 /* Start Edit Notes ////////////////////////////////////////////////////////////////////////////// */
 
+.note-list {
+    padding-bottom: var(--bf-safe-area-inset-bottom);
+}
+
 .holder .bottom div.edit-note {
     padding: 1rem;
     padding-bottom: calc(1rem + var(--bf-safe-area-inset-bottom));
