@@ -1,0 +1,188 @@
+{
+  "name": "updateItemsAdvanced",
+  "displayName": "Update items",
+  "type": "function",
+  "crudMode": "update",
+  "flags": [
+    "mutable",
+    "safe",
+    "throttable"
+  ],
+  "usage": "advanced",
+  "availableFor": [
+    "API"
+  ],
+  "context": {
+    "functionName": "updateItemsAdvanced",
+    "hosts": [
+      "controlBackground"
+    ]
+  },
+  "description": "Changes several seminar items at once, up to 50.",
+  "parameters": {
+    "items": {
+      "type": "list",
+      "displayName": "Items",
+      "required": true,
+      "minValue": 1,
+      "maxValue": 50,
+      "description": "The items to change and what to change on each, up to 50 at a time.",
+      "items": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item id",
+          "required": true,
+          "description": "The item's id, as shown in search results.",
+          "sampleValue": "[item id]"
+        },
+        "newTitle": {
+          "type": "string",
+          "displayName": "New title",
+          "required": false,
+          "description": "The item's new title. Leave it out to keep the current one.",
+          "sampleValue": "[new item title]"
+        },
+        "newSummary": {
+          "type": "string",
+          "displayName": "New summary",
+          "required": false,
+          "nullable": true,
+          "description": "The item's new summary. Leave it out to keep the current one, or leave it empty to remove it.",
+          "sampleValue": "[new item summary]"
+        },
+        "newDescription": {
+          "type": "wysiwyg",
+          "displayName": "New content",
+          "required": false,
+          "nullable": true,
+          "description": "The item's new formatted content. Leave it out to keep the current content, or leave it empty to remove it.",
+          "sampleValue": "<p>[item content]</p>"
+        },
+        "newPublishDate": {
+          "type": "date",
+          "displayName": "New publication date",
+          "required": false,
+          "nullable": true,
+          "description": "The new publication date shown on the item. Leave it out to keep the current one, or leave it empty to remove it.",
+          "sampleValue": "2026-09-01"
+        },
+        "newReleaseDate": {
+          "type": "date",
+          "displayName": "New release date",
+          "required": false,
+          "nullable": true,
+          "description": "The new day the item appears in the app. Leave it out to keep the current one, or leave it empty to always show it.",
+          "sampleValue": "2026-09-01"
+        },
+        "newListImage": {
+          "type": "image",
+          "displayName": "New list image",
+          "required": false,
+          "nullable": true,
+          "description": "The new picture shown for the item in the list, as a list holding one image. Leave it out to keep the current one, or pass an empty list to remove it.",
+          "minValue": 0,
+          "maxValue": 1,
+          "sampleValue": [
+            "[image url]"
+          ]
+        },
+        "newCarouselImages": {
+          "type": "action",
+          "displayName": "New slider pictures",
+          "required": false,
+          "nullable": true,
+          "description": "The item's slider pictures, in order, each with its picture and what tapping it does. Replaces the current ones; leave it out to keep them, or pass an empty list to remove them.",
+          "minValue": 0,
+          "sampleValue": [
+            {
+              "title": "[picture title]",
+              "action": "linkToWeb",
+              "url": "https://example.com",
+              "iconUrl": "[image url]"
+            }
+          ]
+        },
+        "newLinks": {
+          "type": "action",
+          "displayName": "New links",
+          "required": false,
+          "nullable": true,
+          "description": "The item's links, in order, each with a title. Replaces the current ones; leave it out to keep them, or pass an empty list to remove them.",
+          "minValue": 0,
+          "sampleValue": [
+            {
+              "title": "Visit website",
+              "action": "linkToWeb",
+              "url": "https://example.com"
+            }
+          ]
+        },
+        "newBackgroundImage": {
+          "type": "image",
+          "displayName": "New background image",
+          "required": false,
+          "nullable": true,
+          "description": "The item page's new background picture, as a list holding one image. Leave it out to keep the current one, or pass an empty list to remove it.",
+          "minValue": 0,
+          "maxValue": 1,
+          "sampleValue": [
+            "[image url]"
+          ]
+        }
+      },
+      "sampleValue": [
+        {
+          "itemId": "[item id]",
+          "newSummary": "[new item summary]"
+        }
+      ]
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when all the items are done.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why nothing was changed, such as an unknown item id."
+        },
+        "result": {
+          "type": "object",
+          "description": "How each item went.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "One result per item, in the order they were given.",
+              "items": {
+                "type": "object",
+                "description": "How one item went.",
+                "properties": {
+                  "index": {
+                    "type": "number",
+                    "description": "Which item this is, counting from 0."
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "The item's id, if it was changed."
+                  },
+                  "error": {
+                    "type": "string",
+                    "description": "Why it wasn't changed, if it wasn't."
+                  }
+                }
+              }
+            },
+            "succeeded": {
+              "type": "number",
+              "description": "How many items were changed."
+            },
+            "failed": {
+              "type": "number",
+              "description": "How many items weren't changed."
+            }
+          }
+        }
+      }
+    }
+  }
+}

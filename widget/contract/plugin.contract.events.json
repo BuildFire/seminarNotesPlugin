@@ -1,0 +1,139 @@
+{
+  "events": [
+    {
+      "name": "itemCreated",
+      "displayName": "Item Created",
+      "description": "A seminar item was added.",
+      "data": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item ID",
+          "description": "The item's id."
+        },
+        "title": {
+          "type": "string",
+          "displayName": "Title",
+          "description": "The item's title."
+        },
+        "summary": {
+          "type": "string",
+          "displayName": "Summary",
+          "description": "The item's summary."
+        },
+        "publishDate": {
+          "type": "datetime",
+          "displayName": "Publication Date",
+          "description": "The item's publication date."
+        },
+        "releaseDate": {
+          "type": "datetime",
+          "displayName": "Release Date",
+          "description": "The day the item appears in the app."
+        },
+        "listImage": {
+          "type": "string",
+          "displayName": "List Image",
+          "description": "The picture shown for the item in the list."
+        },
+        "createdAt": {
+          "type": "datetime",
+          "displayName": "Added On",
+          "description": "When it was added."
+        }
+      }
+    },
+    {
+      "name": "itemUpdated",
+      "displayName": "Item Updated",
+      "description": "A seminar item was changed.",
+      "data": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item ID",
+          "description": "The item's id."
+        },
+        "title": {
+          "type": "string",
+          "displayName": "Title",
+          "description": "The item's title."
+        },
+        "summary": {
+          "type": "string",
+          "displayName": "Summary",
+          "description": "The item's summary."
+        },
+        "publishDate": {
+          "type": "datetime",
+          "displayName": "Publication Date",
+          "description": "The item's publication date."
+        },
+        "releaseDate": {
+          "type": "datetime",
+          "displayName": "Release Date",
+          "description": "The day the item appears in the app."
+        },
+        "listImage": {
+          "type": "string",
+          "displayName": "List Image",
+          "description": "The picture shown for the item in the list."
+        }
+      }
+    },
+    {
+      "name": "itemDeleted",
+      "displayName": "Item Deleted",
+      "description": "A seminar item was removed.",
+      "data": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item ID",
+          "description": "The item's id."
+        },
+        "title": {
+          "type": "string",
+          "displayName": "Title",
+          "description": "The item's title."
+        }
+      }
+    },
+    {
+      "name": "itemBookmarked",
+      "displayName": "Item Bookmarked",
+      "description": "An app user bookmarked a seminar item.",
+      "data": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item ID",
+          "description": "The item's id."
+        },
+        "title": {
+          "type": "string",
+          "displayName": "Title",
+          "description": "The item's title."
+        },
+        "bookmarkedBy": {
+          "type": "object",
+          "displayName": "Bookmarked By",
+          "description": "Who bookmarked it.",
+          "properties": {
+            "userId": {
+              "type": "string",
+              "displayName": "User ID",
+              "description": "Their id."
+            },
+            "displayName": {
+              "type": "string",
+              "displayName": "Name",
+              "description": "Their name."
+            },
+            "email": {
+              "type": "string",
+              "displayName": "Email",
+              "description": "Their email."
+            }
+          }
+        }
+      }
+    }
+  ]
+}

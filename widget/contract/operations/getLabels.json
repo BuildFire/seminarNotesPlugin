@@ -1,0 +1,176 @@
+{
+  "name": "getLabels",
+  "displayName": "Get labels",
+  "type": "function",
+  "crudMode": "read",
+  "flags": [
+    "immutable",
+    "safe",
+    "unthrottable"
+  ],
+  "usage": "basic",
+  "availableFor": [
+    "API",
+    "form"
+  ],
+  "context": {
+    "functionName": "getLabels",
+    "hosts": [
+      "widgetBackground",
+      "controlBackground",
+      "headlessSdk"
+    ]
+  },
+  "description": "Shows the wording of every label and message the app shows.",
+  "parameters": {
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the labels are read.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why it didn't work, if it didn't."
+        },
+        "result": {
+          "type": "object",
+          "description": "The text each label shows.",
+          "properties": {
+            "items": {
+              "type": "string",
+              "description": "The text shown for \"Items\"."
+            },
+            "myNotes": {
+              "type": "string",
+              "description": "The text shown for \"My Notes\"."
+            },
+            "bookmarks": {
+              "type": "string",
+              "description": "The text shown for \"Bookmarks\"."
+            },
+            "search": {
+              "type": "string",
+              "description": "The text shown for \"Search\"."
+            },
+            "openMenuOptions": {
+              "type": "string",
+              "description": "The text shown for \"Open Menu Options\"."
+            },
+            "openItemNotes": {
+              "type": "string",
+              "description": "The text shown for \"Open Item Notes\"."
+            },
+            "addNewNote": {
+              "type": "string",
+              "description": "The text shown for \"Add New Note\"."
+            },
+            "backToNoteList": {
+              "type": "string",
+              "description": "The text shown for \"Back to Note List\"."
+            },
+            "closeNoteList": {
+              "type": "string",
+              "description": "The text shown for \"Close Note List\"."
+            },
+            "done": {
+              "type": "string",
+              "description": "The text shown for \"Done\"."
+            },
+            "itemRemovedFromBookmarks": {
+              "type": "string",
+              "description": "The text shown for \"Item removed From Bookmarks\"."
+            },
+            "itemBookmarked": {
+              "type": "string",
+              "description": "The text shown for \"Item bookmarked\"."
+            },
+            "noItems": {
+              "type": "string",
+              "description": "The text shown for \"No items added and released yet\"."
+            },
+            "noNotesAddedYet": {
+              "type": "string",
+              "description": "The text shown for \"No notes added yet\"."
+            },
+            "noBookmarksAddedYet": {
+              "type": "string",
+              "description": "The text shown for \"No bookmarks added yet\"."
+            },
+            "noSearchResults": {
+              "type": "string",
+              "description": "The text shown for \"No search results\"."
+            },
+            "enterKeywordsOrPhraseToSearchItems": {
+              "type": "string",
+              "description": "The text shown for \"Enter keywords or phrase to search items\"."
+            },
+            "searchNoteTitlesAndContent": {
+              "type": "string",
+              "description": "The text shown for \"Search note titles and content\"."
+            },
+            "enterNoteTitle": {
+              "type": "string",
+              "description": "The text shown for \"Enter Note Title\"."
+            },
+            "enterNoteContent": {
+              "type": "string",
+              "description": "The text shown for \"Enter note content\"."
+            },
+            "saved": {
+              "type": "string",
+              "description": "The text shown for \"Saved\"."
+            },
+            "areYouSureTitle": {
+              "type": "string",
+              "description": "The text shown for \"Are you sure? (sharing notes)\"."
+            },
+            "areYouSureMessage": {
+              "type": "string",
+              "description": "The text shown for \"Are you sure you want to share notes for this item?\"."
+            },
+            "areYouSureImportTitle": {
+              "type": "string",
+              "description": "The text shown for \"Are you sure? (replacing notes)\"."
+            },
+            "areYouSureImportMessage": {
+              "type": "string",
+              "description": "The text shown for \"Are you sure you want to replace notes for this item?\"."
+            },
+            "expireWarning": {
+              "type": "string",
+              "description": "The text shown for \"Shared content is available for 30 days\"."
+            },
+            "errorSharing": {
+              "type": "string",
+              "description": "The text shown for \"Error sharing notes\"."
+            },
+            "shareTitle": {
+              "type": "string",
+              "description": "The text shown for \"Sharing notes\"."
+            },
+            "shareDescription": {
+              "type": "string",
+              "description": "The text shown for \"Sharing notes for item: \"."
+            },
+            "errorSharingNoNotes": {
+              "type": "string",
+              "description": "The text shown for \"Error sharing notes: item doesn't contain notes\"."
+            },
+            "deeplinkNoteNotFound": {
+              "type": "string",
+              "description": "The text shown for \"Deep link to Item that does not exist\"."
+            },
+            "nextSeminarOpen": {
+              "type": "string",
+              "description": "The text shown for \"Next seminar is open\"."
+            },
+            "seminarNotAvailable": {
+              "type": "string",
+              "description": "The text shown for \"Seminar not available\"."
+            }
+          }
+        }
+      }
+    }
+  }
+}

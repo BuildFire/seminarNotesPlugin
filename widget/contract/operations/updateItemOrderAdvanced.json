@@ -1,0 +1,86 @@
+{
+  "name": "updateItemOrderAdvanced",
+  "displayName": "Update item order",
+  "type": "function",
+  "crudMode": "update",
+  "flags": [
+    "mutable",
+    "safe",
+    "throttable"
+  ],
+  "usage": "advanced",
+  "availableFor": [
+    "API",
+    "form"
+  ],
+  "alternatives": [
+    {
+      "operationName": "updateItemOrder",
+      "label": "Basic"
+    }
+  ],
+  "context": {
+    "functionName": "updateItemOrderAdvanced",
+    "hosts": [
+      "controlBackground",
+      "headlessSdk"
+    ]
+  },
+  "description": "Moves a seminar item to another place in the manual order, using the item's id.",
+  "parameters": {
+    "itemId": {
+      "type": "string",
+      "displayName": "Item id",
+      "required": true,
+      "description": "The item's id, as shown in search results.",
+      "sampleValue": "[item id]"
+    },
+    "position": {
+      "type": "number",
+      "displayName": "Position",
+      "required": true,
+      "minValue": 1,
+      "description": "Where to move the item, counting from 1 for the top of the list.",
+      "sampleValue": 1
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the item is moved.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why it wasn't moved, such as no item having that id."
+        },
+        "result": {
+          "type": "object",
+          "description": "The items in their new order.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "Every item, in the manual order.",
+              "items": {
+                "type": "object",
+                "description": "One item.",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The item's id."
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "The item's title."
+                  },
+                  "rank": {
+                    "type": "number",
+                    "description": "The item's place, counting from 0."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

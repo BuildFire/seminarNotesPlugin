@@ -1,0 +1,116 @@
+{
+  "name": "getSettings",
+  "displayName": "Get settings",
+  "type": "function",
+  "crudMode": "read",
+  "flags": [
+    "immutable",
+    "safe",
+    "unthrottable"
+  ],
+  "usage": "basic",
+  "availableFor": [
+    "API",
+    "form"
+  ],
+  "context": {
+    "functionName": "getSettings",
+    "hosts": [
+      "widgetBackground",
+      "controlBackground",
+      "headlessSdk"
+    ]
+  },
+  "description": "Shows the plugin's home content, design and settings.",
+  "parameters": {
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the settings are read.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why it didn't work, if it didn't."
+        },
+        "result": {
+          "type": "object",
+          "description": "The current settings.",
+          "properties": {
+            "allowSharing": {
+              "type": "boolean",
+              "description": "Whether app users may share their notes."
+            },
+            "content": {
+              "type": "object",
+              "description": "What the home screen shows, and how seminars unlock.",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The text above the item list, formatted."
+                },
+                "carouselImages": {
+                  "type": "array",
+                  "description": "The pictures in the home slider, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One picture.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The picture's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      },
+                      "iconUrl": {
+                        "type": "string",
+                        "description": "The picture's picture."
+                      }
+                    }
+                  }
+                },
+                "sortBy": {
+                  "type": "string",
+                  "description": "The order the items are listed in."
+                },
+                "seminarDelay": {
+                  "type": "object",
+                  "description": "How long app users wait before the next seminar opens.",
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "description": "The wait, in words."
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "The wait in minutes; 0 when it is off."
+                    }
+                  }
+                },
+                "lockedClass": {
+                  "type": "string",
+                  "description": "How seminars that are not open yet are shown."
+                }
+              }
+            },
+            "design": {
+              "type": "object",
+              "description": "How the item list looks.",
+              "properties": {
+                "itemListLayout": {
+                  "type": "string",
+                  "description": "The item list layout."
+                },
+                "itemListBgImage": {
+                  "type": "string",
+                  "description": "The item list's background picture."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
