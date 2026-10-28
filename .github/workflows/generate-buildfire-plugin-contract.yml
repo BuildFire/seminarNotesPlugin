@@ -1,0 +1,74 @@
+# Inline while BuildFire/github-workflows has no plugin-contract.yml yet; then this becomes the thin
+# caller (plugin-studio/action.yml) and the job below moves there.
+name: Plugin contract
+
+on:
+  push:
+    # contract-generated and contract-failed are the runs' own branches.
+    branches: [main, master, 'contract-**', 'uat-contract-**', '!contract-generated', '!contract-failed']
+    paths-ignore: ['**/plugin.contract.json', '**/plugin.contract.js', '**/contract.html', '.github/**']
+  workflow_dispatch:
+
+# One job per repository and environment at a time; a push during a job waits, and only the newest waiting push runs.
+concurrency:
+  group: plugin-contract-${{ startsWith(github.ref_name, 'uat-contract-') && 'uat' || 'prod' }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  contract:
+    # The service takes main / master and contract-* branches on prod, uat-contract-* on UAT; a dispatch
+    # on any other branch, or on the runs' own contract-generated / contract-failed, is skipped here.
+    # Merging the contract-generated PR already carries the contract, so it is skipped before a runner
+    # starts: GitHub's merge message (the newline keeps contract-generated-* branches running), or the
+    # bot's commit title after a squash or rebase.
+    if: >-
+      (github.ref_name == 'main' || github.ref_name == 'master'
+      || startsWith(github.ref_name, 'contract-') || startsWith(github.ref_name, 'uat-contract-'))
+      && github.ref_name != 'contract-generated' && github.ref_name != 'contract-failed'
+      && !contains(github.event.head_commit.message, format('from BuildFire/contract-generated{0}', fromJSON('"\n"')))
+      && !startsWith(github.event.head_commit.message, 'generate plugin contract')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      # Backstop for a contract-generated merge the job's if missed (an edited message): the lookup
+      # needs pull-requests: read, and a failed one falls through to a normal run.
+      # uat-contract-* branches call UAT with its key, every other branch prod with its own.
+      # The body comes from the runner's own env through jq, never pasted into the script.
+      # A second call only happens when the first ended before the run started; a started run holds the lock.
+      - shell: bash
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = push ] \
+            && [ "$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq 'any(.[]; .head.ref == "contract-generated")')" = true ]; then
+            echo '::notice title=Plugin contract::Skipped: this push merges the contract-generated pull request.'
+            exit 0
+          fi
+          case "$GITHUB_REF_NAME" in
+            uat-contract-*) url=$PLUGIN_STUDIO_UAT_URL key=$PLUGIN_STUDIO_UAT_CONTRACT_KEY secret=PLUGIN_STUDIO_UAT_CONTRACT_KEY ;;
+            *) url=$PLUGIN_STUDIO_URL key=$PLUGIN_STUDIO_CONTRACT_KEY secret=PLUGIN_STUDIO_CONTRACT_KEY ;;
+          esac
+          if [ -z "$key" ]; then
+            echo "::error title=Plugin contract::Missing secret $secret. Add it as a repository secret (Settings > Secrets and variables > Actions) and re-run the job."
+            exit 1
+          fi
+          body=$(jq -nc --arg repository "$GITHUB_REPOSITORY" --arg ref "$GITHUB_REF_NAME" --arg sha "$GITHUB_SHA" '{$repository, $ref, $sha}')
+          for attempt in 1 2; do
+            curl -sSN --fail-with-body --max-time 15000 -X POST "$url/api/external/contract" \
+              -H "apikey: $key" \
+              -H 'content-type: application/json' \
+              -d "$body" | tee contract.log || true
+            grep -q -E '^(✅ DONE|❌ ERROR|🚀) ' contract.log && break
+          done
+          if grep -q '^🚀 ' contract.log && ! grep -q -E '^(✅ DONE|❌ ERROR) ' contract.log; then
+            echo '::error title=Plugin contract::Lost the connection after the run started. It may still be running in Plugin Studio and push its result when it ends; a re-run before then is refused.'
+          fi
+          grep -q '^✅ DONE ' contract.log
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLUGIN_STUDIO_URL: https://pluginstudio.buildfire.com
+          PLUGIN_STUDIO_CONTRACT_KEY: ${{ secrets.PLUGIN_STUDIO_CONTRACT_KEY }}
+          PLUGIN_STUDIO_UAT_URL: https://uat-pluginstudio.buildfire.com
+          PLUGIN_STUDIO_UAT_CONTRACT_KEY: ${{ secrets.PLUGIN_STUDIO_UAT_CONTRACT_KEY }}
