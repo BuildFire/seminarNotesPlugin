@@ -22,28 +22,27 @@ jobs:
   contract:
     # The service takes main / master and contract-* branches on prod, uat-contract-* on UAT; a dispatch
     # on any other branch, or on the runs' own contract-generated / contract-failed, is skipped here.
-    # Merging the contract-generated PR already carries the contract, so it is skipped before a runner
-    # starts: GitHub's merge message (the newline keeps contract-generated-* branches running), or the
-    # bot's commit title after a squash or rebase.
+    # Merging a contract-* branch (contract-generated included) already carries the contract its run made, so it
+    # is skipped before a runner starts: GitHub's merge message, or the bot's commit title after a squash or rebase.
     if: >-
       (github.ref_name == 'main' || github.ref_name == 'master'
       || startsWith(github.ref_name, 'contract-') || startsWith(github.ref_name, 'uat-contract-'))
       && github.ref_name != 'contract-generated' && github.ref_name != 'contract-failed'
-      && !contains(github.event.head_commit.message, format('from BuildFire/contract-generated{0}', fromJSON('"\n"')))
+      && !contains(github.event.head_commit.message, 'from BuildFire/contract-')
       && !startsWith(github.event.head_commit.message, 'generate plugin contract')
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      # Backstop for a contract-generated merge the job's if missed (an edited message): the lookup
-      # needs pull-requests: read, and a failed one falls through to a normal run.
+      # Backstop for a contract-* merge the job's if missed (an edited message, a squash), merged only: a branch's own
+      # push finds its open PR. The lookup needs pull-requests: read, and a failed one falls through to a normal run.
       # uat-contract-* branches call UAT with its key, every other branch prod with its own.
       # The body comes from the runner's own env through jq, never pasted into the script.
       # A second call only happens when the first ended before the run started; a started run holds the lock.
       - shell: bash
         run: |
           if [ "$GITHUB_EVENT_NAME" = push ] \
-            && [ "$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq 'any(.[]; .head.ref == "contract-generated")')" = true ]; then
-            echo '::notice title=Plugin contract::Skipped: this push merges the contract-generated pull request.'
+            && [ "$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq 'any(.[]; .merged_at != null and (.head.ref | startswith("contract-")))')" = true ]; then
+            echo '::notice title=Plugin contract::Skipped: this push merges a contract-* pull request.'
             exit 0
           fi
           case "$GITHUB_REF_NAME" in
