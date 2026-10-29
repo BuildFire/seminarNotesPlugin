@@ -1,0 +1,170 @@
+{
+  "name": "updateSettings",
+  "displayName": "Update settings",
+  "type": "function",
+  "crudMode": "update",
+  "flags": [
+    "mutable",
+    "safe",
+    "unthrottable"
+  ],
+  "usage": "basic",
+  "availableFor": [
+    "API",
+    "form"
+  ],
+  "context": {
+    "functionName": "updateSettings",
+    "hosts": [
+      "controlBackground",
+      "headlessSdk"
+    ]
+  },
+  "description": "Changes the plugin's settings, only those given.",
+  "parameters": {
+    "allowSharing": {
+      "type": "boolean",
+      "displayName": "Allow content sharing",
+      "required": false,
+      "description": "Whether app users may share their notes. Leave it out to keep the current setting.",
+      "sampleValue": true
+    },
+    "seminarDelay": {
+      "type": "select",
+      "displayName": "Next seminar delay",
+      "required": false,
+      "description": "How long app users wait after opening a seminar before the next one opens; turning it on asks them to log in. Leave it out to keep the current setting.",
+      "enums": [
+        {
+          "label": "Off",
+          "value": 0
+        },
+        {
+          "label": "Half hour",
+          "value": 30
+        },
+        {
+          "label": "One hour",
+          "value": 60
+        },
+        {
+          "label": "One Day",
+          "value": 1440
+        },
+        {
+          "label": "One Week",
+          "value": 10080
+        }
+      ],
+      "allowEnumCustomOption": false,
+      "sampleValue": 60
+    },
+    "lockedStyle": {
+      "type": "select",
+      "displayName": "Locked seminars style",
+      "required": false,
+      "description": "How seminars that are not open yet are shown. Leave it out to keep the current style.",
+      "enums": [
+        {
+          "label": "Hidden",
+          "value": "hidden"
+        },
+        {
+          "label": "Locked",
+          "value": "locked"
+        }
+      ],
+      "allowEnumCustomOption": false,
+      "sampleValue": "locked"
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the settings are saved.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why they weren't saved, such as a delay that isn't offered."
+        },
+        "result": {
+          "type": "object",
+          "description": "The settings as they now are.",
+          "properties": {
+            "allowSharing": {
+              "type": "boolean",
+              "description": "Whether app users may share their notes."
+            },
+            "content": {
+              "type": "object",
+              "description": "What the home screen shows, and how seminars unlock.",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The text above the item list, formatted."
+                },
+                "carouselImages": {
+                  "type": "array",
+                  "description": "The pictures in the home slider, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One picture.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The picture's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      },
+                      "iconUrl": {
+                        "type": "string",
+                        "description": "The picture's picture."
+                      }
+                    }
+                  }
+                },
+                "sortBy": {
+                  "type": "string",
+                  "description": "The order the items are listed in."
+                },
+                "seminarDelay": {
+                  "type": "object",
+                  "description": "How long app users wait before the next seminar opens.",
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "description": "The wait, in words."
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "The wait in minutes; 0 when it is off."
+                    }
+                  }
+                },
+                "lockedClass": {
+                  "type": "string",
+                  "description": "How seminars that are not open yet are shown."
+                }
+              }
+            },
+            "design": {
+              "type": "object",
+              "description": "How the item list looks.",
+              "properties": {
+                "itemListLayout": {
+                  "type": "string",
+                  "description": "The item list layout."
+                },
+                "itemListBgImage": {
+                  "type": "string",
+                  "description": "The item list's background picture."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

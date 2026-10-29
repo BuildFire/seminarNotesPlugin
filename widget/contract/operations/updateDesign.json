@@ -1,0 +1,157 @@
+{
+  "name": "updateDesign",
+  "displayName": "Update design",
+  "type": "function",
+  "crudMode": "update",
+  "flags": [
+    "mutable",
+    "safe",
+    "unthrottable"
+  ],
+  "usage": "basic",
+  "availableFor": [
+    "API",
+    "form"
+  ],
+  "context": {
+    "functionName": "updateDesign",
+    "hosts": [
+      "controlBackground",
+      "headlessSdk"
+    ]
+  },
+  "description": "Changes how the item list looks, only what is given.",
+  "parameters": {
+    "listLayout": {
+      "type": "select",
+      "displayName": "Item list layout",
+      "required": false,
+      "description": "The layout of the item list. Leave it out to keep the current one.",
+      "enums": [
+        {
+          "label": "Layout 1",
+          "value": "Item_List_1"
+        },
+        {
+          "label": "Layout 2",
+          "value": "Item_List_2"
+        },
+        {
+          "label": "Layout 3",
+          "value": "Item_List_3"
+        },
+        {
+          "label": "Layout 4",
+          "value": "Item_List_4"
+        },
+        {
+          "label": "Layout 5",
+          "value": "Item_List_5"
+        }
+      ],
+      "allowEnumCustomOption": false,
+      "sampleValue": "Item_List_2"
+    },
+    "listBackgroundImage": {
+      "type": "image",
+      "displayName": "Item list background image",
+      "required": false,
+      "nullable": true,
+      "minValue": 0,
+      "maxValue": 1,
+      "description": "The item list's background picture, as a list holding one image. Leave it out to keep the current one, or pass an empty list to remove it.",
+      "sampleValue": [
+        "[image url]"
+      ]
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the design is saved.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why it wasn't saved, such as a layout that isn't offered."
+        },
+        "result": {
+          "type": "object",
+          "description": "The settings as they now are.",
+          "properties": {
+            "allowSharing": {
+              "type": "boolean",
+              "description": "Whether app users may share their notes."
+            },
+            "content": {
+              "type": "object",
+              "description": "What the home screen shows, and how seminars unlock.",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The text above the item list, formatted."
+                },
+                "carouselImages": {
+                  "type": "array",
+                  "description": "The pictures in the home slider, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One picture.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The picture's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      },
+                      "iconUrl": {
+                        "type": "string",
+                        "description": "The picture's picture."
+                      }
+                    }
+                  }
+                },
+                "sortBy": {
+                  "type": "string",
+                  "description": "The order the items are listed in."
+                },
+                "seminarDelay": {
+                  "type": "object",
+                  "description": "How long app users wait before the next seminar opens.",
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "description": "The wait, in words."
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "The wait in minutes; 0 when it is off."
+                    }
+                  }
+                },
+                "lockedClass": {
+                  "type": "string",
+                  "description": "How seminars that are not open yet are shown."
+                }
+              }
+            },
+            "design": {
+              "type": "object",
+              "description": "How the item list looks.",
+              "properties": {
+                "itemListLayout": {
+                  "type": "string",
+                  "description": "The item list layout."
+                },
+                "itemListBgImage": {
+                  "type": "string",
+                  "description": "The item list's background picture."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

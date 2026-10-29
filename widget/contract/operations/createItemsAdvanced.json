@@ -1,0 +1,176 @@
+{
+  "name": "createItemsAdvanced",
+  "displayName": "Create items",
+  "type": "function",
+  "crudMode": "create",
+  "flags": [
+    "mutable",
+    "safe",
+    "throttable"
+  ],
+  "usage": "advanced",
+  "availableFor": [
+    "API"
+  ],
+  "context": {
+    "functionName": "createItemsAdvanced",
+    "hosts": [
+      "controlBackground"
+    ]
+  },
+  "description": "Adds several seminar items at once, up to 50.",
+  "parameters": {
+    "items": {
+      "type": "list",
+      "displayName": "Items",
+      "required": true,
+      "minValue": 1,
+      "maxValue": 50,
+      "description": "The items to add, up to 50 at a time.",
+      "items": {
+        "title": {
+          "type": "string",
+          "displayName": "Item title",
+          "required": true,
+          "description": "The item's title.",
+          "sampleValue": "[item title]"
+        },
+        "summary": {
+          "type": "string",
+          "displayName": "Item summary",
+          "required": false,
+          "description": "A short line shown under the title. Leave it out for none.",
+          "sampleValue": "[item summary]"
+        },
+        "description": {
+          "type": "wysiwyg",
+          "displayName": "Content",
+          "required": false,
+          "description": "The item's formatted content, as HTML. Leave it out for none.",
+          "sampleValue": "<p>[item content]</p>"
+        },
+        "publishDate": {
+          "type": "date",
+          "displayName": "Publication date",
+          "required": false,
+          "description": "The publication date shown on the list and on the item. Leave it out for none.",
+          "sampleValue": "2026-09-01"
+        },
+        "releaseDate": {
+          "type": "date",
+          "displayName": "Release date",
+          "required": false,
+          "description": "The day the item appears in the app; before it, the item is hidden. Leave it out to always show it.",
+          "sampleValue": "2026-09-01"
+        },
+        "listImage": {
+          "type": "image",
+          "displayName": "List image",
+          "required": false,
+          "description": "The picture shown for the item in the list, as a list holding one image. Leave it out for none.",
+          "minValue": 0,
+          "maxValue": 1,
+          "sampleValue": [
+            "[image url]"
+          ]
+        },
+        "carouselImages": {
+          "type": "action",
+          "displayName": "Slider pictures",
+          "required": false,
+          "description": "The pictures in the item's slider, in order, each with its picture and what tapping it does. Leave it out for none.",
+          "minValue": 0,
+          "sampleValue": [
+            {
+              "title": "[picture title]",
+              "action": "linkToWeb",
+              "url": "https://example.com",
+              "iconUrl": "[image url]"
+            }
+          ]
+        },
+        "links": {
+          "type": "action",
+          "displayName": "Links",
+          "required": false,
+          "description": "Links shown on the item, in order, each with a title, such as a website or a phone number. Leave it out for none.",
+          "minValue": 0,
+          "sampleValue": [
+            {
+              "title": "Visit website",
+              "action": "linkToWeb",
+              "url": "https://example.com"
+            }
+          ]
+        },
+        "backgroundImage": {
+          "type": "image",
+          "displayName": "Background image",
+          "required": false,
+          "description": "The item page's background picture, as a list holding one image. Leave it out for none.",
+          "minValue": 0,
+          "maxValue": 1,
+          "sampleValue": [
+            "[image url]"
+          ]
+        }
+      },
+      "sampleValue": [
+        {
+          "title": "[item title]",
+          "summary": "[item summary]"
+        },
+        {
+          "title": "[item title]"
+        }
+      ]
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when all the items are done.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why nothing was added, such as an item missing its title."
+        },
+        "result": {
+          "type": "object",
+          "description": "How each item went.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "One result per item, in the order they were given.",
+              "items": {
+                "type": "object",
+                "description": "How one item went.",
+                "properties": {
+                  "index": {
+                    "type": "number",
+                    "description": "Which item this is, counting from 0."
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "The item's id, if it was added."
+                  },
+                  "error": {
+                    "type": "string",
+                    "description": "Why it wasn't added, if it wasn't."
+                  }
+                }
+              }
+            },
+            "succeeded": {
+              "type": "number",
+              "description": "How many items were added."
+            },
+            "failed": {
+              "type": "number",
+              "description": "How many items weren't added."
+            }
+          }
+        }
+      }
+    }
+  }
+}

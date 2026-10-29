@@ -184,6 +184,22 @@
           return angular.equals(item, ContentItem.masterItem);
         };
 
+        // Dates are stored as epoch milliseconds by the date pickers, or '' once emptied.
+        var toIsoOrNull = function (value) {
+          return value || value === 0 ? new Date(value).toISOString() : null;
+        };
+
+        var itemEventData = function (id, data) {
+          return {
+            itemId: id,
+            title: data.title,
+            summary: data.summary || null,
+            publishDate: toIsoOrNull(data.publishDate),
+            releaseDate: toIsoOrNull(data.releaseDate),
+            listImage: data.listImage || null
+          };
+        };
+
         ContentItem.addNewItem = function () {
           ContentItem.isNewItemInserted = true;
           _rankOfLastItem = _rankOfLastItem + 10;
@@ -193,6 +209,9 @@
 
           var successItem = function (result) {
             console.log("Inserted", result.id);
+            buildfire.services.contract.events.send('itemCreated', angular.extend(itemEventData(result.id, result.data), {
+              createdAt: toIsoOrNull(result.data.dateCreated)
+            }));
             ContentItem.saveDeeplink(result);
             ContentItem.isUpdating = false;
             ContentItem.item.id = result.id;
@@ -239,7 +258,9 @@
             ContentItem.isUpdating = false;
             if (err)
               return console.error('There was a problem saving your data');
-          })
+          }).then(function (result) {
+            buildfire.services.contract.events.send('itemUpdated', itemEventData(result.id, result.data));
+          });
         };
 
         ContentItem.getItem = function (id) {

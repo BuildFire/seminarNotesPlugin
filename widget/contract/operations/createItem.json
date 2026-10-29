@@ -1,0 +1,215 @@
+{
+  "name": "createItem",
+  "displayName": "Create item",
+  "type": "function",
+  "crudMode": "create",
+  "flags": [
+    "mutable",
+    "safe",
+    "unthrottable"
+  ],
+  "usage": "basic",
+  "availableFor": [
+    "API"
+  ],
+  "context": {
+    "functionName": "createItem",
+    "hosts": [
+      "controlBackground"
+    ]
+  },
+  "description": "Adds a seminar item at the end of the list.",
+  "parameters": {
+    "title": {
+      "type": "string",
+      "displayName": "Item title",
+      "required": true,
+      "description": "The item's title.",
+      "sampleValue": "[item title]"
+    },
+    "summary": {
+      "type": "string",
+      "displayName": "Item summary",
+      "required": false,
+      "description": "A short line shown under the title. Leave it out for none.",
+      "sampleValue": "[item summary]"
+    },
+    "description": {
+      "type": "wysiwyg",
+      "displayName": "Content",
+      "required": false,
+      "description": "The item's formatted content, as HTML. Leave it out for none.",
+      "sampleValue": "<p>[item content]</p>"
+    },
+    "publishDate": {
+      "type": "date",
+      "displayName": "Publication date",
+      "required": false,
+      "description": "The publication date shown on the list and on the item. Leave it out for none.",
+      "sampleValue": "2026-09-01"
+    },
+    "releaseDate": {
+      "type": "date",
+      "displayName": "Release date",
+      "required": false,
+      "description": "The day the item appears in the app; before it, the item is hidden. Leave it out to always show it.",
+      "sampleValue": "2026-09-01"
+    },
+    "listImage": {
+      "type": "image",
+      "displayName": "List image",
+      "required": false,
+      "description": "The picture shown for the item in the list, as a list holding one image. Leave it out for none.",
+      "minValue": 0,
+      "maxValue": 1,
+      "sampleValue": [
+        "[image url]"
+      ]
+    },
+    "carouselImages": {
+      "type": "action",
+      "displayName": "Slider pictures",
+      "required": false,
+      "description": "The pictures in the item's slider, in order, each with its picture and what tapping it does. Leave it out for none.",
+      "minValue": 0,
+      "sampleValue": [
+        {
+          "title": "[picture title]",
+          "action": "linkToWeb",
+          "url": "https://example.com",
+          "iconUrl": "[image url]"
+        }
+      ]
+    },
+    "links": {
+      "type": "action",
+      "displayName": "Links",
+      "required": false,
+      "description": "Links shown on the item, in order, each with a title, such as a website or a phone number. Leave it out for none.",
+      "minValue": 0,
+      "sampleValue": [
+        {
+          "title": "Visit website",
+          "action": "linkToWeb",
+          "url": "https://example.com"
+        }
+      ]
+    },
+    "backgroundImage": {
+      "type": "image",
+      "displayName": "Background image",
+      "required": false,
+      "description": "The item page's background picture, as a list holding one image. Leave it out for none.",
+      "minValue": 0,
+      "maxValue": 1,
+      "sampleValue": [
+        "[image url]"
+      ]
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the item is added.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why it wasn't added, such as a missing title."
+        },
+        "result": {
+          "type": "object",
+          "description": "The item that was added.",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The item's id."
+            },
+            "title": {
+              "type": "string",
+              "description": "The item's title."
+            },
+            "summary": {
+              "type": "string",
+              "description": "The item's summary."
+            },
+            "description": {
+              "type": "string",
+              "description": "The item's content, formatted."
+            },
+            "publishDate": {
+              "type": "number|string",
+              "description": "The publication date, if one is set."
+            },
+            "releaseDate": {
+              "type": "number|string",
+              "description": "The day the item appears in the app, if one is set."
+            },
+            "isReleased": {
+              "type": "boolean",
+              "description": "Whether the app shows the item yet."
+            },
+            "listImage": {
+              "type": "string",
+              "description": "The picture shown for the item in the list."
+            },
+            "carouselImages": {
+              "type": "array",
+              "description": "The pictures in the item's slider, in order.",
+              "items": {
+                "type": "object",
+                "description": "One picture.",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "The picture's title."
+                  },
+                  "action": {
+                    "type": "string",
+                    "description": "What tapping it does, such as opening a website."
+                  },
+                  "iconUrl": {
+                    "type": "string",
+                    "description": "The picture's picture."
+                  }
+                }
+              }
+            },
+            "links": {
+              "type": "array",
+              "description": "The item's links, in order.",
+              "items": {
+                "type": "object",
+                "description": "One link.",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "The link's title."
+                  },
+                  "action": {
+                    "type": "string",
+                    "description": "What tapping it does, such as opening a website."
+                  }
+                }
+              }
+            },
+            "itemListBgImage": {
+              "type": "string",
+              "description": "The item page's background picture."
+            },
+            "deepLinkUrl": {
+              "type": "string",
+              "description": "The item's deep link."
+            },
+            "dateCreated": {
+              "type": "number",
+              "description": "When the item was added."
+            },
+            "rank": {
+              "type": "number",
+              "description": "The item's place in the manual order."
+            }
+          }
+        }
+      }
+    }
+  }
+}
