@@ -83,6 +83,7 @@
               Deeplink.deleteById(item.id);
               buildfire.analytics.unregisterEvent(`DOCUMENT_${item.id}_OPENED`);
               DataStore.deleteById(item.id, TAG_NAMES.SEMINAR_ITEMS).then(function (result) {
+                buildfire.services.contract.events.send('itemDeleted', { itemId: item.id, title: item.data.title });
                 ContentHome.items.splice(_index, 1);
                 var searchOptionUserData = {};
                 searchOptionUserData.filter ={"$or": [{"$json.itemID": {"$eq": item.id}}]};

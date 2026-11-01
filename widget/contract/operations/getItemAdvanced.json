@@ -1,0 +1,145 @@
+{
+  "name": "getItemAdvanced",
+  "displayName": "Get item",
+  "type": "function",
+  "crudMode": "read",
+  "flags": [
+    "immutable",
+    "safe",
+    "unthrottable"
+  ],
+  "usage": "advanced",
+  "availableFor": [
+    "API",
+    "form"
+  ],
+  "alternatives": [
+    {
+      "operationName": "getItem",
+      "label": "Basic"
+    }
+  ],
+  "context": {
+    "functionName": "getItemAdvanced",
+    "hosts": [
+      "widgetBackground",
+      "controlBackground",
+      "headlessSdk"
+    ]
+  },
+  "description": "Shows one seminar item and everything on it, using the item's id.",
+  "parameters": {
+    "itemId": {
+      "type": "string",
+      "displayName": "Item id",
+      "required": true,
+      "description": "The item's id, as shown in search results.",
+      "sampleValue": "[item id]"
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the item is found.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why it didn't work, such as no item having that id."
+        },
+        "result": {
+          "type": "object",
+          "description": "The item that was found.",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The item's id."
+            },
+            "title": {
+              "type": "string",
+              "description": "The item's title."
+            },
+            "summary": {
+              "type": "string",
+              "description": "The item's summary."
+            },
+            "description": {
+              "type": "string",
+              "description": "The item's content, formatted."
+            },
+            "publishDate": {
+              "type": "number|string",
+              "description": "The publication date, if one is set."
+            },
+            "releaseDate": {
+              "type": "number|string",
+              "description": "The day the item appears in the app, if one is set."
+            },
+            "isReleased": {
+              "type": "boolean",
+              "description": "Whether the app shows the item yet."
+            },
+            "listImage": {
+              "type": "string",
+              "description": "The picture shown for the item in the list."
+            },
+            "carouselImages": {
+              "type": "array",
+              "description": "The pictures in the item's slider, in order.",
+              "items": {
+                "type": "object",
+                "description": "One picture.",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "The picture's title."
+                  },
+                  "action": {
+                    "type": "string",
+                    "description": "What tapping it does, such as opening a website."
+                  },
+                  "iconUrl": {
+                    "type": "string",
+                    "description": "The picture's picture."
+                  }
+                }
+              }
+            },
+            "links": {
+              "type": "array",
+              "description": "The item's links, in order.",
+              "items": {
+                "type": "object",
+                "description": "One link.",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "The link's title."
+                  },
+                  "action": {
+                    "type": "string",
+                    "description": "What tapping it does, such as opening a website."
+                  }
+                }
+              }
+            },
+            "itemListBgImage": {
+              "type": "string",
+              "description": "The item page's background picture."
+            },
+            "deepLinkUrl": {
+              "type": "string",
+              "description": "The item's deep link."
+            },
+            "dateCreated": {
+              "type": "number",
+              "description": "When the item was added."
+            },
+            "rank": {
+              "type": "number",
+              "description": "The item's place in the manual order."
+            }
+          }
+        }
+      }
+    }
+  }
+}

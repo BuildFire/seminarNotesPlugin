@@ -1,0 +1,638 @@
+{
+  "operations": [
+    {
+      "name": "searchItems",
+      "displayName": "Search items",
+      "type": "function",
+      "crudMode": "read",
+      "flags": [
+        "immutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "searchItems",
+        "hosts": [
+          "widgetBackground",
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Shows the seminar items, 50 at a time, in the order the app lists them.",
+      "parameters": [
+        "title",
+        "searchText",
+        "sortBy",
+        "page"
+      ],
+      "definitionPath": "operations/searchItems.json"
+    },
+    {
+      "name": "getItem",
+      "displayName": "Get item",
+      "type": "function",
+      "crudMode": "read",
+      "flags": [
+        "immutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "alternatives": [
+        {
+          "operationName": "getItemAdvanced",
+          "label": "Advanced"
+        }
+      ],
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "getItem",
+        "hosts": [
+          "widgetBackground",
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Shows one seminar item and everything on it.",
+      "parameters": [
+        "title"
+      ],
+      "definitionPath": "operations/getItem.json"
+    },
+    {
+      "name": "getItemAdvanced",
+      "displayName": "Get item",
+      "type": "function",
+      "crudMode": "read",
+      "flags": [
+        "immutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "advanced",
+      "alternatives": [
+        {
+          "operationName": "getItem",
+          "label": "Basic"
+        }
+      ],
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "getItemAdvanced",
+        "hosts": [
+          "widgetBackground",
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Shows one seminar item and everything on it, using the item's id.",
+      "parameters": [
+        "itemId"
+      ],
+      "definitionPath": "operations/getItemAdvanced.json"
+    },
+    {
+      "name": "createItem",
+      "displayName": "Create item",
+      "type": "function",
+      "crudMode": "create",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "createItem",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Adds a seminar item at the end of the list.",
+      "parameters": [
+        "title",
+        "summary",
+        "description",
+        "publishDate",
+        "releaseDate",
+        "listImage",
+        "carouselImages",
+        "links",
+        "backgroundImage"
+      ],
+      "definitionPath": "operations/createItem.json"
+    },
+    {
+      "name": "createItemsAdvanced",
+      "displayName": "Create items",
+      "type": "function",
+      "crudMode": "create",
+      "flags": [
+        "mutable",
+        "safe",
+        "throttable"
+      ],
+      "usage": "advanced",
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "createItemsAdvanced",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Adds several seminar items at once, up to 50.",
+      "parameters": [
+        "items"
+      ],
+      "definitionPath": "operations/createItemsAdvanced.json"
+    },
+    {
+      "name": "updateItem",
+      "displayName": "Update item",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "alternatives": [
+        {
+          "operationName": "updateItemAdvanced",
+          "label": "Advanced"
+        }
+      ],
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "updateItem",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Changes a seminar item's details, only those given.",
+      "parameters": [
+        "title",
+        "newTitle",
+        "newSummary",
+        "newDescription",
+        "newPublishDate",
+        "newReleaseDate",
+        "newListImage",
+        "newCarouselImages",
+        "newLinks",
+        "newBackgroundImage"
+      ],
+      "definitionPath": "operations/updateItem.json"
+    },
+    {
+      "name": "updateItemAdvanced",
+      "displayName": "Update item",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "advanced",
+      "alternatives": [
+        {
+          "operationName": "updateItem",
+          "label": "Basic"
+        }
+      ],
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "updateItemAdvanced",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Changes a seminar item's details, only those given, using the item's id.",
+      "parameters": [
+        "itemId",
+        "newTitle",
+        "newSummary",
+        "newDescription",
+        "newPublishDate",
+        "newReleaseDate",
+        "newListImage",
+        "newCarouselImages",
+        "newLinks",
+        "newBackgroundImage"
+      ],
+      "definitionPath": "operations/updateItemAdvanced.json"
+    },
+    {
+      "name": "updateItemsAdvanced",
+      "displayName": "Update items",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "throttable"
+      ],
+      "usage": "advanced",
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "updateItemsAdvanced",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Changes several seminar items at once, up to 50.",
+      "parameters": [
+        "items"
+      ],
+      "definitionPath": "operations/updateItemsAdvanced.json"
+    },
+    {
+      "name": "updateItemOrder",
+      "displayName": "Update item order",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "throttable"
+      ],
+      "usage": "basic",
+      "alternatives": [
+        {
+          "operationName": "updateItemOrderAdvanced",
+          "label": "Advanced"
+        }
+      ],
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "updateItemOrder",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Moves a seminar item to another place in the manual order.",
+      "parameters": [
+        "title",
+        "position"
+      ],
+      "definitionPath": "operations/updateItemOrder.json"
+    },
+    {
+      "name": "updateItemOrderAdvanced",
+      "displayName": "Update item order",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "throttable"
+      ],
+      "usage": "advanced",
+      "alternatives": [
+        {
+          "operationName": "updateItemOrder",
+          "label": "Basic"
+        }
+      ],
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "updateItemOrderAdvanced",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Moves a seminar item to another place in the manual order, using the item's id.",
+      "parameters": [
+        "itemId",
+        "position"
+      ],
+      "definitionPath": "operations/updateItemOrderAdvanced.json"
+    },
+    {
+      "name": "deleteItem",
+      "displayName": "Delete item",
+      "type": "function",
+      "crudMode": "delete",
+      "flags": [
+        "mutable",
+        "dangerous",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "alternatives": [
+        {
+          "operationName": "deleteItemAdvanced",
+          "label": "Advanced"
+        }
+      ],
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "deleteItem",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Permanently removes a seminar item and the notes app users wrote on it.",
+      "parameters": [
+        "title"
+      ],
+      "definitionPath": "operations/deleteItem.json"
+    },
+    {
+      "name": "deleteItemAdvanced",
+      "displayName": "Delete item",
+      "type": "function",
+      "crudMode": "delete",
+      "flags": [
+        "mutable",
+        "dangerous",
+        "unthrottable"
+      ],
+      "usage": "advanced",
+      "alternatives": [
+        {
+          "operationName": "deleteItem",
+          "label": "Basic"
+        }
+      ],
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "deleteItemAdvanced",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Permanently removes a seminar item and the notes app users wrote on it, using the item's id.",
+      "parameters": [
+        "itemId"
+      ],
+      "definitionPath": "operations/deleteItemAdvanced.json"
+    },
+    {
+      "name": "deleteItemsAdvanced",
+      "displayName": "Delete items",
+      "type": "function",
+      "crudMode": "delete",
+      "flags": [
+        "mutable",
+        "dangerous",
+        "throttable"
+      ],
+      "usage": "advanced",
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "deleteItemsAdvanced",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Permanently removes several seminar items at once, up to 50.",
+      "parameters": [
+        "items"
+      ],
+      "definitionPath": "operations/deleteItemsAdvanced.json"
+    },
+    {
+      "name": "getSettings",
+      "displayName": "Get settings",
+      "type": "function",
+      "crudMode": "read",
+      "flags": [
+        "immutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "getSettings",
+        "hosts": [
+          "widgetBackground",
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Shows the plugin's home content, design and settings.",
+      "parameters": [],
+      "definitionPath": "operations/getSettings.json"
+    },
+    {
+      "name": "updateSettings",
+      "displayName": "Update settings",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "updateSettings",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Changes the plugin's settings, only those given.",
+      "parameters": [
+        "allowSharing",
+        "seminarDelay",
+        "lockedStyle"
+      ],
+      "definitionPath": "operations/updateSettings.json"
+    },
+    {
+      "name": "updateDesign",
+      "displayName": "Update design",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "updateDesign",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Changes how the item list looks, only what is given.",
+      "parameters": [
+        "listLayout",
+        "listBackgroundImage"
+      ],
+      "definitionPath": "operations/updateDesign.json"
+    },
+    {
+      "name": "updateHomeContent",
+      "displayName": "Update home content",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "dangerous",
+        "throttable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "updateHomeContent",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Changes the slider, the text and the item order on the home screen, only what is given.",
+      "parameters": [
+        "carouselImages",
+        "description",
+        "sortBy"
+      ],
+      "definitionPath": "operations/updateHomeContent.json"
+    },
+    {
+      "name": "getLabels",
+      "displayName": "Get labels",
+      "type": "function",
+      "crudMode": "read",
+      "flags": [
+        "immutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "getLabels",
+        "hosts": [
+          "widgetBackground",
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Shows the wording of every label and message the app shows.",
+      "parameters": [],
+      "definitionPath": "operations/getLabels.json"
+    },
+    {
+      "name": "updateLabels",
+      "displayName": "Update labels",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "updateLabels",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Changes the wording of labels and messages the app shows, only those given.",
+      "parameters": [
+        "items",
+        "myNotes",
+        "bookmarks",
+        "search",
+        "openMenuOptions",
+        "openItemNotes",
+        "addNewNote",
+        "backToNoteList",
+        "closeNoteList",
+        "done",
+        "itemRemovedFromBookmarks",
+        "itemBookmarked",
+        "noItems",
+        "noNotesAddedYet",
+        "noBookmarksAddedYet",
+        "noSearchResults",
+        "enterKeywordsOrPhraseToSearchItems",
+        "searchNoteTitlesAndContent",
+        "enterNoteTitle",
+        "enterNoteContent",
+        "saved",
+        "areYouSureTitle",
+        "areYouSureMessage",
+        "areYouSureImportTitle",
+        "areYouSureImportMessage",
+        "expireWarning",
+        "errorSharing",
+        "shareTitle",
+        "shareDescription",
+        "errorSharingNoNotes",
+        "deeplinkNoteNotFound",
+        "nextSeminarOpen",
+        "seminarNotAvailable"
+      ],
+      "definitionPath": "operations/updateLabels.json"
+    }
+  ]
+}

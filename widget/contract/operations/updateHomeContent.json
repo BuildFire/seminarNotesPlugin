@@ -1,0 +1,176 @@
+{
+  "name": "updateHomeContent",
+  "displayName": "Update home content",
+  "type": "function",
+  "crudMode": "update",
+  "flags": [
+    "mutable",
+    "dangerous",
+    "throttable"
+  ],
+  "usage": "basic",
+  "availableFor": [
+    "API"
+  ],
+  "context": {
+    "functionName": "updateHomeContent",
+    "hosts": [
+      "controlBackground",
+      "headlessSdk"
+    ]
+  },
+  "description": "Changes the slider, the text and the item order on the home screen, only what is given.",
+  "parameters": {
+    "carouselImages": {
+      "type": "action",
+      "displayName": "Slider pictures",
+      "required": false,
+      "nullable": true,
+      "minValue": 0,
+      "description": "The home slider pictures, in order, each with its picture and what tapping it does. Replaces the current ones; leave it out to keep them, or pass an empty list to remove them.",
+      "sampleValue": [
+        {
+          "title": "[picture title]",
+          "action": "linkToWeb",
+          "url": "https://example.com",
+          "iconUrl": "[image url]"
+        }
+      ]
+    },
+    "description": {
+      "type": "wysiwyg",
+      "displayName": "Text",
+      "required": false,
+      "nullable": true,
+      "description": "The formatted text shown above the item list. Leave it out to keep the current text, or leave it empty to remove it.",
+      "sampleValue": "<p>[home text]</p>"
+    },
+    "sortBy": {
+      "type": "select",
+      "displayName": "Sort",
+      "required": false,
+      "description": "The order the items are listed in; choosing one replaces any manual order. Leave it out to keep the current order.",
+      "enums": [
+        {
+          "label": "Manually",
+          "value": "Manually"
+        },
+        {
+          "label": "Item title A-Z",
+          "value": "Item title A-Z"
+        },
+        {
+          "label": "Item title Z-A",
+          "value": "Item title Z-A"
+        },
+        {
+          "label": "Newest pub. date first",
+          "value": "Newest pub. date first"
+        },
+        {
+          "label": "Oldest pub. date first",
+          "value": "Oldest pub. date first"
+        },
+        {
+          "label": "Newest entry first",
+          "value": "Newest entry first"
+        },
+        {
+          "label": "Oldest entry first",
+          "value": "Oldest entry first"
+        }
+      ],
+      "allowEnumCustomOption": false,
+      "sampleValue": "Manually"
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the home content is saved.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why it wasn't saved, such as an order that isn't offered."
+        },
+        "result": {
+          "type": "object",
+          "description": "The settings as they now are.",
+          "properties": {
+            "allowSharing": {
+              "type": "boolean",
+              "description": "Whether app users may share their notes."
+            },
+            "content": {
+              "type": "object",
+              "description": "What the home screen shows, and how seminars unlock.",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The text above the item list, formatted."
+                },
+                "carouselImages": {
+                  "type": "array",
+                  "description": "The pictures in the home slider, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One picture.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The picture's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      },
+                      "iconUrl": {
+                        "type": "string",
+                        "description": "The picture's picture."
+                      }
+                    }
+                  }
+                },
+                "sortBy": {
+                  "type": "string",
+                  "description": "The order the items are listed in."
+                },
+                "seminarDelay": {
+                  "type": "object",
+                  "description": "How long app users wait before the next seminar opens.",
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "description": "The wait, in words."
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "The wait in minutes; 0 when it is off."
+                    }
+                  }
+                },
+                "lockedClass": {
+                  "type": "string",
+                  "description": "How seminars that are not open yet are shown."
+                }
+              }
+            },
+            "design": {
+              "type": "object",
+              "description": "How the item list looks.",
+              "properties": {
+                "itemListLayout": {
+                  "type": "string",
+                  "description": "The item list layout."
+                },
+                "itemListBgImage": {
+                  "type": "string",
+                  "description": "The item list's background picture."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

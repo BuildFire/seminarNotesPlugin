@@ -1,0 +1,3330 @@
+{
+  "description": "Lets you publish seminar, lecture or sermon notes as items, release them by date or one at a time, and lets app users bookmark items and keep their own notes.",
+  "events": [
+    {
+      "name": "itemCreated",
+      "displayName": "Item Created",
+      "description": "A seminar item was added.",
+      "data": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item ID",
+          "description": "The item's id."
+        },
+        "title": {
+          "type": "string",
+          "displayName": "Title",
+          "description": "The item's title."
+        },
+        "summary": {
+          "type": "string",
+          "displayName": "Summary",
+          "description": "The item's summary."
+        },
+        "publishDate": {
+          "type": "datetime",
+          "displayName": "Publication Date",
+          "description": "The item's publication date."
+        },
+        "releaseDate": {
+          "type": "datetime",
+          "displayName": "Release Date",
+          "description": "The day the item appears in the app."
+        },
+        "listImage": {
+          "type": "string",
+          "displayName": "List Image",
+          "description": "The picture shown for the item in the list."
+        },
+        "createdAt": {
+          "type": "datetime",
+          "displayName": "Added On",
+          "description": "When it was added."
+        }
+      }
+    },
+    {
+      "name": "itemUpdated",
+      "displayName": "Item Updated",
+      "description": "A seminar item was changed.",
+      "data": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item ID",
+          "description": "The item's id."
+        },
+        "title": {
+          "type": "string",
+          "displayName": "Title",
+          "description": "The item's title."
+        },
+        "summary": {
+          "type": "string",
+          "displayName": "Summary",
+          "description": "The item's summary."
+        },
+        "publishDate": {
+          "type": "datetime",
+          "displayName": "Publication Date",
+          "description": "The item's publication date."
+        },
+        "releaseDate": {
+          "type": "datetime",
+          "displayName": "Release Date",
+          "description": "The day the item appears in the app."
+        },
+        "listImage": {
+          "type": "string",
+          "displayName": "List Image",
+          "description": "The picture shown for the item in the list."
+        }
+      }
+    },
+    {
+      "name": "itemDeleted",
+      "displayName": "Item Deleted",
+      "description": "A seminar item was removed.",
+      "data": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item ID",
+          "description": "The item's id."
+        },
+        "title": {
+          "type": "string",
+          "displayName": "Title",
+          "description": "The item's title."
+        }
+      }
+    },
+    {
+      "name": "itemBookmarked",
+      "displayName": "Item Bookmarked",
+      "description": "An app user bookmarked a seminar item.",
+      "data": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item ID",
+          "description": "The item's id."
+        },
+        "title": {
+          "type": "string",
+          "displayName": "Title",
+          "description": "The item's title."
+        },
+        "bookmarkedBy": {
+          "type": "object",
+          "displayName": "Bookmarked By",
+          "description": "Who bookmarked it.",
+          "properties": {
+            "userId": {
+              "type": "string",
+              "displayName": "User ID",
+              "description": "Their id."
+            },
+            "displayName": {
+              "type": "string",
+              "displayName": "Name",
+              "description": "Their name."
+            },
+            "email": {
+              "type": "string",
+              "displayName": "Email",
+              "description": "Their email."
+            }
+          }
+        }
+      }
+    }
+  ],
+  "operations": [
+    {
+      "name": "searchItems",
+      "displayName": "Search items",
+      "type": "function",
+      "crudMode": "read",
+      "flags": [
+        "immutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "searchItems",
+        "hosts": [
+          "widgetBackground",
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Shows the seminar items, 50 at a time, in the order the app lists them.",
+      "parameters": {
+        "title": {
+          "type": "string",
+          "displayName": "Item title",
+          "required": false,
+          "description": "Only show items with exactly this title. Leave it out to show every item.",
+          "sampleValue": "[item title]"
+        },
+        "searchText": {
+          "type": "string",
+          "displayName": "Search",
+          "required": false,
+          "description": "Only show items whose title or summary holds these words. Leave it out to show every item.",
+          "sampleValue": "[search words]"
+        },
+        "sortBy": {
+          "type": "select",
+          "displayName": "Sort",
+          "required": false,
+          "description": "The order to show the items in. Leave it out for the order chosen in the content tab.",
+          "enums": [
+            {
+              "label": "Manually",
+              "value": "Manually"
+            },
+            {
+              "label": "Item title A-Z",
+              "value": "Item title A-Z"
+            },
+            {
+              "label": "Item title Z-A",
+              "value": "Item title Z-A"
+            },
+            {
+              "label": "Newest pub. date first",
+              "value": "Newest pub. date first"
+            },
+            {
+              "label": "Oldest pub. date first",
+              "value": "Oldest pub. date first"
+            },
+            {
+              "label": "Newest entry first",
+              "value": "Newest entry first"
+            },
+            {
+              "label": "Oldest entry first",
+              "value": "Oldest entry first"
+            }
+          ],
+          "allowEnumCustomOption": false,
+          "sampleValue": "Item title A-Z"
+        },
+        "page": {
+          "type": "number",
+          "displayName": "Page",
+          "required": false,
+          "minValue": 0,
+          "description": "Which page of 50 items to show, starting at 0. Leave it out for the first page.",
+          "sampleValue": 0
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the search is done.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it didn't work, if it didn't."
+            },
+            "result": {
+              "type": "object",
+              "description": "The items that were found.",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "description": "The items on this page, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One item.",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The item's id."
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "The item's title."
+                      },
+                      "summary": {
+                        "type": "string",
+                        "description": "The item's summary."
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "The item's content, formatted."
+                      },
+                      "publishDate": {
+                        "type": "number|string",
+                        "description": "The publication date, if one is set."
+                      },
+                      "releaseDate": {
+                        "type": "number|string",
+                        "description": "The day the item appears in the app, if one is set."
+                      },
+                      "isReleased": {
+                        "type": "boolean",
+                        "description": "Whether the app shows the item yet."
+                      },
+                      "listImage": {
+                        "type": "string",
+                        "description": "The picture shown for the item in the list."
+                      },
+                      "carouselImages": {
+                        "type": "array",
+                        "description": "The pictures in the item's slider, in order.",
+                        "items": {
+                          "type": "object",
+                          "description": "One picture.",
+                          "properties": {
+                            "title": {
+                              "type": "string",
+                              "description": "The picture's title."
+                            },
+                            "action": {
+                              "type": "string",
+                              "description": "What tapping it does, such as opening a website."
+                            },
+                            "iconUrl": {
+                              "type": "string",
+                              "description": "The picture's picture."
+                            }
+                          }
+                        }
+                      },
+                      "links": {
+                        "type": "array",
+                        "description": "The item's links, in order.",
+                        "items": {
+                          "type": "object",
+                          "description": "One link.",
+                          "properties": {
+                            "title": {
+                              "type": "string",
+                              "description": "The link's title."
+                            },
+                            "action": {
+                              "type": "string",
+                              "description": "What tapping it does, such as opening a website."
+                            }
+                          }
+                        }
+                      },
+                      "itemListBgImage": {
+                        "type": "string",
+                        "description": "The item page's background picture."
+                      },
+                      "deepLinkUrl": {
+                        "type": "string",
+                        "description": "The item's deep link."
+                      },
+                      "dateCreated": {
+                        "type": "number",
+                        "description": "When the item was added."
+                      },
+                      "rank": {
+                        "type": "number",
+                        "description": "The item's place in the manual order."
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "number",
+                  "description": "How many items match in all."
+                },
+                "page": {
+                  "type": "number",
+                  "description": "Which page this is."
+                },
+                "hasMore": {
+                  "type": "boolean",
+                  "description": "Whether there are more items on later pages."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "getItem",
+      "displayName": "Get item",
+      "type": "function",
+      "crudMode": "read",
+      "flags": [
+        "immutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "alternatives": [
+        {
+          "operationName": "getItemAdvanced",
+          "label": "Advanced"
+        }
+      ],
+      "context": {
+        "functionName": "getItem",
+        "hosts": [
+          "widgetBackground",
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Shows one seminar item and everything on it.",
+      "parameters": {
+        "title": {
+          "type": "string",
+          "displayName": "Item title",
+          "required": true,
+          "description": "The exact title of the item to show.",
+          "sampleValue": "[item title]"
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the item is found.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it didn't work, such as no item or several items having that title."
+            },
+            "result": {
+              "type": "object",
+              "description": "The item that was found.",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The item's id."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "The item's title."
+                },
+                "summary": {
+                  "type": "string",
+                  "description": "The item's summary."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The item's content, formatted."
+                },
+                "publishDate": {
+                  "type": "number|string",
+                  "description": "The publication date, if one is set."
+                },
+                "releaseDate": {
+                  "type": "number|string",
+                  "description": "The day the item appears in the app, if one is set."
+                },
+                "isReleased": {
+                  "type": "boolean",
+                  "description": "Whether the app shows the item yet."
+                },
+                "listImage": {
+                  "type": "string",
+                  "description": "The picture shown for the item in the list."
+                },
+                "carouselImages": {
+                  "type": "array",
+                  "description": "The pictures in the item's slider, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One picture.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The picture's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      },
+                      "iconUrl": {
+                        "type": "string",
+                        "description": "The picture's picture."
+                      }
+                    }
+                  }
+                },
+                "links": {
+                  "type": "array",
+                  "description": "The item's links, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One link.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The link's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      }
+                    }
+                  }
+                },
+                "itemListBgImage": {
+                  "type": "string",
+                  "description": "The item page's background picture."
+                },
+                "deepLinkUrl": {
+                  "type": "string",
+                  "description": "The item's deep link."
+                },
+                "dateCreated": {
+                  "type": "number",
+                  "description": "When the item was added."
+                },
+                "rank": {
+                  "type": "number",
+                  "description": "The item's place in the manual order."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "getItemAdvanced",
+      "displayName": "Get item",
+      "type": "function",
+      "crudMode": "read",
+      "flags": [
+        "immutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "advanced",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "alternatives": [
+        {
+          "operationName": "getItem",
+          "label": "Basic"
+        }
+      ],
+      "context": {
+        "functionName": "getItemAdvanced",
+        "hosts": [
+          "widgetBackground",
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Shows one seminar item and everything on it, using the item's id.",
+      "parameters": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item id",
+          "required": true,
+          "description": "The item's id, as shown in search results.",
+          "sampleValue": "[item id]"
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the item is found.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it didn't work, such as no item having that id."
+            },
+            "result": {
+              "type": "object",
+              "description": "The item that was found.",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The item's id."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "The item's title."
+                },
+                "summary": {
+                  "type": "string",
+                  "description": "The item's summary."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The item's content, formatted."
+                },
+                "publishDate": {
+                  "type": "number|string",
+                  "description": "The publication date, if one is set."
+                },
+                "releaseDate": {
+                  "type": "number|string",
+                  "description": "The day the item appears in the app, if one is set."
+                },
+                "isReleased": {
+                  "type": "boolean",
+                  "description": "Whether the app shows the item yet."
+                },
+                "listImage": {
+                  "type": "string",
+                  "description": "The picture shown for the item in the list."
+                },
+                "carouselImages": {
+                  "type": "array",
+                  "description": "The pictures in the item's slider, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One picture.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The picture's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      },
+                      "iconUrl": {
+                        "type": "string",
+                        "description": "The picture's picture."
+                      }
+                    }
+                  }
+                },
+                "links": {
+                  "type": "array",
+                  "description": "The item's links, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One link.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The link's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      }
+                    }
+                  }
+                },
+                "itemListBgImage": {
+                  "type": "string",
+                  "description": "The item page's background picture."
+                },
+                "deepLinkUrl": {
+                  "type": "string",
+                  "description": "The item's deep link."
+                },
+                "dateCreated": {
+                  "type": "number",
+                  "description": "When the item was added."
+                },
+                "rank": {
+                  "type": "number",
+                  "description": "The item's place in the manual order."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "createItem",
+      "displayName": "Create item",
+      "type": "function",
+      "crudMode": "create",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "createItem",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Adds a seminar item at the end of the list.",
+      "parameters": {
+        "title": {
+          "type": "string",
+          "displayName": "Item title",
+          "required": true,
+          "description": "The item's title.",
+          "sampleValue": "[item title]"
+        },
+        "summary": {
+          "type": "string",
+          "displayName": "Item summary",
+          "required": false,
+          "description": "A short line shown under the title. Leave it out for none.",
+          "sampleValue": "[item summary]"
+        },
+        "description": {
+          "type": "wysiwyg",
+          "displayName": "Content",
+          "required": false,
+          "description": "The item's formatted content, as HTML. Leave it out for none.",
+          "sampleValue": "<p>[item content]</p>"
+        },
+        "publishDate": {
+          "type": "date",
+          "displayName": "Publication date",
+          "required": false,
+          "description": "The publication date shown on the list and on the item. Leave it out for none.",
+          "sampleValue": "2026-09-01"
+        },
+        "releaseDate": {
+          "type": "date",
+          "displayName": "Release date",
+          "required": false,
+          "description": "The day the item appears in the app; before it, the item is hidden. Leave it out to always show it.",
+          "sampleValue": "2026-09-01"
+        },
+        "listImage": {
+          "type": "image",
+          "displayName": "List image",
+          "required": false,
+          "description": "The picture shown for the item in the list, as a list holding one image. Leave it out for none.",
+          "minValue": 0,
+          "maxValue": 1,
+          "sampleValue": [
+            "[image url]"
+          ]
+        },
+        "carouselImages": {
+          "type": "action",
+          "displayName": "Slider pictures",
+          "required": false,
+          "description": "The pictures in the item's slider, in order, each with its picture and what tapping it does. Leave it out for none.",
+          "minValue": 0,
+          "sampleValue": [
+            {
+              "title": "[picture title]",
+              "action": "linkToWeb",
+              "url": "https://example.com",
+              "iconUrl": "[image url]"
+            }
+          ]
+        },
+        "links": {
+          "type": "action",
+          "displayName": "Links",
+          "required": false,
+          "description": "Links shown on the item, in order, each with a title, such as a website or a phone number. Leave it out for none.",
+          "minValue": 0,
+          "sampleValue": [
+            {
+              "title": "Visit website",
+              "action": "linkToWeb",
+              "url": "https://example.com"
+            }
+          ]
+        },
+        "backgroundImage": {
+          "type": "image",
+          "displayName": "Background image",
+          "required": false,
+          "description": "The item page's background picture, as a list holding one image. Leave it out for none.",
+          "minValue": 0,
+          "maxValue": 1,
+          "sampleValue": [
+            "[image url]"
+          ]
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the item is added.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it wasn't added, such as a missing title."
+            },
+            "result": {
+              "type": "object",
+              "description": "The item that was added.",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The item's id."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "The item's title."
+                },
+                "summary": {
+                  "type": "string",
+                  "description": "The item's summary."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The item's content, formatted."
+                },
+                "publishDate": {
+                  "type": "number|string",
+                  "description": "The publication date, if one is set."
+                },
+                "releaseDate": {
+                  "type": "number|string",
+                  "description": "The day the item appears in the app, if one is set."
+                },
+                "isReleased": {
+                  "type": "boolean",
+                  "description": "Whether the app shows the item yet."
+                },
+                "listImage": {
+                  "type": "string",
+                  "description": "The picture shown for the item in the list."
+                },
+                "carouselImages": {
+                  "type": "array",
+                  "description": "The pictures in the item's slider, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One picture.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The picture's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      },
+                      "iconUrl": {
+                        "type": "string",
+                        "description": "The picture's picture."
+                      }
+                    }
+                  }
+                },
+                "links": {
+                  "type": "array",
+                  "description": "The item's links, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One link.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The link's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      }
+                    }
+                  }
+                },
+                "itemListBgImage": {
+                  "type": "string",
+                  "description": "The item page's background picture."
+                },
+                "deepLinkUrl": {
+                  "type": "string",
+                  "description": "The item's deep link."
+                },
+                "dateCreated": {
+                  "type": "number",
+                  "description": "When the item was added."
+                },
+                "rank": {
+                  "type": "number",
+                  "description": "The item's place in the manual order."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "createItemsAdvanced",
+      "displayName": "Create items",
+      "type": "function",
+      "crudMode": "create",
+      "flags": [
+        "mutable",
+        "safe",
+        "throttable"
+      ],
+      "usage": "advanced",
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "createItemsAdvanced",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Adds several seminar items at once, up to 50.",
+      "parameters": {
+        "items": {
+          "type": "list",
+          "displayName": "Items",
+          "required": true,
+          "minValue": 1,
+          "maxValue": 50,
+          "description": "The items to add, up to 50 at a time.",
+          "items": {
+            "title": {
+              "type": "string",
+              "displayName": "Item title",
+              "required": true,
+              "description": "The item's title.",
+              "sampleValue": "[item title]"
+            },
+            "summary": {
+              "type": "string",
+              "displayName": "Item summary",
+              "required": false,
+              "description": "A short line shown under the title. Leave it out for none.",
+              "sampleValue": "[item summary]"
+            },
+            "description": {
+              "type": "wysiwyg",
+              "displayName": "Content",
+              "required": false,
+              "description": "The item's formatted content, as HTML. Leave it out for none.",
+              "sampleValue": "<p>[item content]</p>"
+            },
+            "publishDate": {
+              "type": "date",
+              "displayName": "Publication date",
+              "required": false,
+              "description": "The publication date shown on the list and on the item. Leave it out for none.",
+              "sampleValue": "2026-09-01"
+            },
+            "releaseDate": {
+              "type": "date",
+              "displayName": "Release date",
+              "required": false,
+              "description": "The day the item appears in the app; before it, the item is hidden. Leave it out to always show it.",
+              "sampleValue": "2026-09-01"
+            },
+            "listImage": {
+              "type": "image",
+              "displayName": "List image",
+              "required": false,
+              "description": "The picture shown for the item in the list, as a list holding one image. Leave it out for none.",
+              "minValue": 0,
+              "maxValue": 1,
+              "sampleValue": [
+                "[image url]"
+              ]
+            },
+            "carouselImages": {
+              "type": "action",
+              "displayName": "Slider pictures",
+              "required": false,
+              "description": "The pictures in the item's slider, in order, each with its picture and what tapping it does. Leave it out for none.",
+              "minValue": 0,
+              "sampleValue": [
+                {
+                  "title": "[picture title]",
+                  "action": "linkToWeb",
+                  "url": "https://example.com",
+                  "iconUrl": "[image url]"
+                }
+              ]
+            },
+            "links": {
+              "type": "action",
+              "displayName": "Links",
+              "required": false,
+              "description": "Links shown on the item, in order, each with a title, such as a website or a phone number. Leave it out for none.",
+              "minValue": 0,
+              "sampleValue": [
+                {
+                  "title": "Visit website",
+                  "action": "linkToWeb",
+                  "url": "https://example.com"
+                }
+              ]
+            },
+            "backgroundImage": {
+              "type": "image",
+              "displayName": "Background image",
+              "required": false,
+              "description": "The item page's background picture, as a list holding one image. Leave it out for none.",
+              "minValue": 0,
+              "maxValue": 1,
+              "sampleValue": [
+                "[image url]"
+              ]
+            }
+          },
+          "sampleValue": [
+            {
+              "title": "[item title]",
+              "summary": "[item summary]"
+            },
+            {
+              "title": "[item title]"
+            }
+          ]
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when all the items are done.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why nothing was added, such as an item missing its title."
+            },
+            "result": {
+              "type": "object",
+              "description": "How each item went.",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "description": "One result per item, in the order they were given.",
+                  "items": {
+                    "type": "object",
+                    "description": "How one item went.",
+                    "properties": {
+                      "index": {
+                        "type": "number",
+                        "description": "Which item this is, counting from 0."
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "The item's id, if it was added."
+                      },
+                      "error": {
+                        "type": "string",
+                        "description": "Why it wasn't added, if it wasn't."
+                      }
+                    }
+                  }
+                },
+                "succeeded": {
+                  "type": "number",
+                  "description": "How many items were added."
+                },
+                "failed": {
+                  "type": "number",
+                  "description": "How many items weren't added."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "updateItem",
+      "displayName": "Update item",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API"
+      ],
+      "alternatives": [
+        {
+          "operationName": "updateItemAdvanced",
+          "label": "Advanced"
+        }
+      ],
+      "context": {
+        "functionName": "updateItem",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Changes a seminar item's details, only those given.",
+      "parameters": {
+        "title": {
+          "type": "string",
+          "displayName": "Item title",
+          "required": true,
+          "description": "The current title of the item to change.",
+          "sampleValue": "[item title]"
+        },
+        "newTitle": {
+          "type": "string",
+          "displayName": "New title",
+          "required": false,
+          "description": "The item's new title. Leave it out to keep the current one.",
+          "sampleValue": "[new item title]"
+        },
+        "newSummary": {
+          "type": "string",
+          "displayName": "New summary",
+          "required": false,
+          "nullable": true,
+          "description": "The item's new summary. Leave it out to keep the current one, or leave it empty to remove it.",
+          "sampleValue": "[new item summary]"
+        },
+        "newDescription": {
+          "type": "wysiwyg",
+          "displayName": "New content",
+          "required": false,
+          "nullable": true,
+          "description": "The item's new formatted content. Leave it out to keep the current content, or leave it empty to remove it.",
+          "sampleValue": "<p>[item content]</p>"
+        },
+        "newPublishDate": {
+          "type": "date",
+          "displayName": "New publication date",
+          "required": false,
+          "nullable": true,
+          "description": "The new publication date shown on the item. Leave it out to keep the current one, or leave it empty to remove it.",
+          "sampleValue": "2026-09-01"
+        },
+        "newReleaseDate": {
+          "type": "date",
+          "displayName": "New release date",
+          "required": false,
+          "nullable": true,
+          "description": "The new day the item appears in the app. Leave it out to keep the current one, or leave it empty to always show it.",
+          "sampleValue": "2026-09-01"
+        },
+        "newListImage": {
+          "type": "image",
+          "displayName": "New list image",
+          "required": false,
+          "nullable": true,
+          "description": "The new picture shown for the item in the list, as a list holding one image. Leave it out to keep the current one, or pass an empty list to remove it.",
+          "minValue": 0,
+          "maxValue": 1,
+          "sampleValue": [
+            "[image url]"
+          ]
+        },
+        "newCarouselImages": {
+          "type": "action",
+          "displayName": "New slider pictures",
+          "required": false,
+          "nullable": true,
+          "description": "The item's slider pictures, in order, each with its picture and what tapping it does. Replaces the current ones; leave it out to keep them, or pass an empty list to remove them.",
+          "minValue": 0,
+          "sampleValue": [
+            {
+              "title": "[picture title]",
+              "action": "linkToWeb",
+              "url": "https://example.com",
+              "iconUrl": "[image url]"
+            }
+          ]
+        },
+        "newLinks": {
+          "type": "action",
+          "displayName": "New links",
+          "required": false,
+          "nullable": true,
+          "description": "The item's links, in order, each with a title. Replaces the current ones; leave it out to keep them, or pass an empty list to remove them.",
+          "minValue": 0,
+          "sampleValue": [
+            {
+              "title": "Visit website",
+              "action": "linkToWeb",
+              "url": "https://example.com"
+            }
+          ]
+        },
+        "newBackgroundImage": {
+          "type": "image",
+          "displayName": "New background image",
+          "required": false,
+          "nullable": true,
+          "description": "The item page's new background picture, as a list holding one image. Leave it out to keep the current one, or pass an empty list to remove it.",
+          "minValue": 0,
+          "maxValue": 1,
+          "sampleValue": [
+            "[image url]"
+          ]
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the item is changed.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it wasn't changed, such as no item having that title."
+            },
+            "result": {
+              "type": "object",
+              "description": "The item as it now is.",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The item's id."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "The item's title."
+                },
+                "summary": {
+                  "type": "string",
+                  "description": "The item's summary."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The item's content, formatted."
+                },
+                "publishDate": {
+                  "type": "number|string",
+                  "description": "The publication date, if one is set."
+                },
+                "releaseDate": {
+                  "type": "number|string",
+                  "description": "The day the item appears in the app, if one is set."
+                },
+                "isReleased": {
+                  "type": "boolean",
+                  "description": "Whether the app shows the item yet."
+                },
+                "listImage": {
+                  "type": "string",
+                  "description": "The picture shown for the item in the list."
+                },
+                "carouselImages": {
+                  "type": "array",
+                  "description": "The pictures in the item's slider, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One picture.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The picture's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      },
+                      "iconUrl": {
+                        "type": "string",
+                        "description": "The picture's picture."
+                      }
+                    }
+                  }
+                },
+                "links": {
+                  "type": "array",
+                  "description": "The item's links, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One link.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The link's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      }
+                    }
+                  }
+                },
+                "itemListBgImage": {
+                  "type": "string",
+                  "description": "The item page's background picture."
+                },
+                "deepLinkUrl": {
+                  "type": "string",
+                  "description": "The item's deep link."
+                },
+                "dateCreated": {
+                  "type": "number",
+                  "description": "When the item was added."
+                },
+                "rank": {
+                  "type": "number",
+                  "description": "The item's place in the manual order."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "updateItemAdvanced",
+      "displayName": "Update item",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "advanced",
+      "availableFor": [
+        "API"
+      ],
+      "alternatives": [
+        {
+          "operationName": "updateItem",
+          "label": "Basic"
+        }
+      ],
+      "context": {
+        "functionName": "updateItemAdvanced",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Changes a seminar item's details, only those given, using the item's id.",
+      "parameters": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item id",
+          "required": true,
+          "description": "The item's id, as shown in search results.",
+          "sampleValue": "[item id]"
+        },
+        "newTitle": {
+          "type": "string",
+          "displayName": "New title",
+          "required": false,
+          "description": "The item's new title. Leave it out to keep the current one.",
+          "sampleValue": "[new item title]"
+        },
+        "newSummary": {
+          "type": "string",
+          "displayName": "New summary",
+          "required": false,
+          "nullable": true,
+          "description": "The item's new summary. Leave it out to keep the current one, or leave it empty to remove it.",
+          "sampleValue": "[new item summary]"
+        },
+        "newDescription": {
+          "type": "wysiwyg",
+          "displayName": "New content",
+          "required": false,
+          "nullable": true,
+          "description": "The item's new formatted content. Leave it out to keep the current content, or leave it empty to remove it.",
+          "sampleValue": "<p>[item content]</p>"
+        },
+        "newPublishDate": {
+          "type": "date",
+          "displayName": "New publication date",
+          "required": false,
+          "nullable": true,
+          "description": "The new publication date shown on the item. Leave it out to keep the current one, or leave it empty to remove it.",
+          "sampleValue": "2026-09-01"
+        },
+        "newReleaseDate": {
+          "type": "date",
+          "displayName": "New release date",
+          "required": false,
+          "nullable": true,
+          "description": "The new day the item appears in the app. Leave it out to keep the current one, or leave it empty to always show it.",
+          "sampleValue": "2026-09-01"
+        },
+        "newListImage": {
+          "type": "image",
+          "displayName": "New list image",
+          "required": false,
+          "nullable": true,
+          "description": "The new picture shown for the item in the list, as a list holding one image. Leave it out to keep the current one, or pass an empty list to remove it.",
+          "minValue": 0,
+          "maxValue": 1,
+          "sampleValue": [
+            "[image url]"
+          ]
+        },
+        "newCarouselImages": {
+          "type": "action",
+          "displayName": "New slider pictures",
+          "required": false,
+          "nullable": true,
+          "description": "The item's slider pictures, in order, each with its picture and what tapping it does. Replaces the current ones; leave it out to keep them, or pass an empty list to remove them.",
+          "minValue": 0,
+          "sampleValue": [
+            {
+              "title": "[picture title]",
+              "action": "linkToWeb",
+              "url": "https://example.com",
+              "iconUrl": "[image url]"
+            }
+          ]
+        },
+        "newLinks": {
+          "type": "action",
+          "displayName": "New links",
+          "required": false,
+          "nullable": true,
+          "description": "The item's links, in order, each with a title. Replaces the current ones; leave it out to keep them, or pass an empty list to remove them.",
+          "minValue": 0,
+          "sampleValue": [
+            {
+              "title": "Visit website",
+              "action": "linkToWeb",
+              "url": "https://example.com"
+            }
+          ]
+        },
+        "newBackgroundImage": {
+          "type": "image",
+          "displayName": "New background image",
+          "required": false,
+          "nullable": true,
+          "description": "The item page's new background picture, as a list holding one image. Leave it out to keep the current one, or pass an empty list to remove it.",
+          "minValue": 0,
+          "maxValue": 1,
+          "sampleValue": [
+            "[image url]"
+          ]
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the item is changed.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it wasn't changed, such as no item having that id."
+            },
+            "result": {
+              "type": "object",
+              "description": "The item as it now is.",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The item's id."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "The item's title."
+                },
+                "summary": {
+                  "type": "string",
+                  "description": "The item's summary."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "The item's content, formatted."
+                },
+                "publishDate": {
+                  "type": "number|string",
+                  "description": "The publication date, if one is set."
+                },
+                "releaseDate": {
+                  "type": "number|string",
+                  "description": "The day the item appears in the app, if one is set."
+                },
+                "isReleased": {
+                  "type": "boolean",
+                  "description": "Whether the app shows the item yet."
+                },
+                "listImage": {
+                  "type": "string",
+                  "description": "The picture shown for the item in the list."
+                },
+                "carouselImages": {
+                  "type": "array",
+                  "description": "The pictures in the item's slider, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One picture.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The picture's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      },
+                      "iconUrl": {
+                        "type": "string",
+                        "description": "The picture's picture."
+                      }
+                    }
+                  }
+                },
+                "links": {
+                  "type": "array",
+                  "description": "The item's links, in order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One link.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "The link's title."
+                      },
+                      "action": {
+                        "type": "string",
+                        "description": "What tapping it does, such as opening a website."
+                      }
+                    }
+                  }
+                },
+                "itemListBgImage": {
+                  "type": "string",
+                  "description": "The item page's background picture."
+                },
+                "deepLinkUrl": {
+                  "type": "string",
+                  "description": "The item's deep link."
+                },
+                "dateCreated": {
+                  "type": "number",
+                  "description": "When the item was added."
+                },
+                "rank": {
+                  "type": "number",
+                  "description": "The item's place in the manual order."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "updateItemsAdvanced",
+      "displayName": "Update items",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "throttable"
+      ],
+      "usage": "advanced",
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "updateItemsAdvanced",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Changes several seminar items at once, up to 50.",
+      "parameters": {
+        "items": {
+          "type": "list",
+          "displayName": "Items",
+          "required": true,
+          "minValue": 1,
+          "maxValue": 50,
+          "description": "The items to change and what to change on each, up to 50 at a time.",
+          "items": {
+            "itemId": {
+              "type": "string",
+              "displayName": "Item id",
+              "required": true,
+              "description": "The item's id, as shown in search results.",
+              "sampleValue": "[item id]"
+            },
+            "newTitle": {
+              "type": "string",
+              "displayName": "New title",
+              "required": false,
+              "description": "The item's new title. Leave it out to keep the current one.",
+              "sampleValue": "[new item title]"
+            },
+            "newSummary": {
+              "type": "string",
+              "displayName": "New summary",
+              "required": false,
+              "nullable": true,
+              "description": "The item's new summary. Leave it out to keep the current one, or leave it empty to remove it.",
+              "sampleValue": "[new item summary]"
+            },
+            "newDescription": {
+              "type": "wysiwyg",
+              "displayName": "New content",
+              "required": false,
+              "nullable": true,
+              "description": "The item's new formatted content. Leave it out to keep the current content, or leave it empty to remove it.",
+              "sampleValue": "<p>[item content]</p>"
+            },
+            "newPublishDate": {
+              "type": "date",
+              "displayName": "New publication date",
+              "required": false,
+              "nullable": true,
+              "description": "The new publication date shown on the item. Leave it out to keep the current one, or leave it empty to remove it.",
+              "sampleValue": "2026-09-01"
+            },
+            "newReleaseDate": {
+              "type": "date",
+              "displayName": "New release date",
+              "required": false,
+              "nullable": true,
+              "description": "The new day the item appears in the app. Leave it out to keep the current one, or leave it empty to always show it.",
+              "sampleValue": "2026-09-01"
+            },
+            "newListImage": {
+              "type": "image",
+              "displayName": "New list image",
+              "required": false,
+              "nullable": true,
+              "description": "The new picture shown for the item in the list, as a list holding one image. Leave it out to keep the current one, or pass an empty list to remove it.",
+              "minValue": 0,
+              "maxValue": 1,
+              "sampleValue": [
+                "[image url]"
+              ]
+            },
+            "newCarouselImages": {
+              "type": "action",
+              "displayName": "New slider pictures",
+              "required": false,
+              "nullable": true,
+              "description": "The item's slider pictures, in order, each with its picture and what tapping it does. Replaces the current ones; leave it out to keep them, or pass an empty list to remove them.",
+              "minValue": 0,
+              "sampleValue": [
+                {
+                  "title": "[picture title]",
+                  "action": "linkToWeb",
+                  "url": "https://example.com",
+                  "iconUrl": "[image url]"
+                }
+              ]
+            },
+            "newLinks": {
+              "type": "action",
+              "displayName": "New links",
+              "required": false,
+              "nullable": true,
+              "description": "The item's links, in order, each with a title. Replaces the current ones; leave it out to keep them, or pass an empty list to remove them.",
+              "minValue": 0,
+              "sampleValue": [
+                {
+                  "title": "Visit website",
+                  "action": "linkToWeb",
+                  "url": "https://example.com"
+                }
+              ]
+            },
+            "newBackgroundImage": {
+              "type": "image",
+              "displayName": "New background image",
+              "required": false,
+              "nullable": true,
+              "description": "The item page's new background picture, as a list holding one image. Leave it out to keep the current one, or pass an empty list to remove it.",
+              "minValue": 0,
+              "maxValue": 1,
+              "sampleValue": [
+                "[image url]"
+              ]
+            }
+          },
+          "sampleValue": [
+            {
+              "itemId": "[item id]",
+              "newSummary": "[new item summary]"
+            }
+          ]
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when all the items are done.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why nothing was changed, such as an unknown item id."
+            },
+            "result": {
+              "type": "object",
+              "description": "How each item went.",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "description": "One result per item, in the order they were given.",
+                  "items": {
+                    "type": "object",
+                    "description": "How one item went.",
+                    "properties": {
+                      "index": {
+                        "type": "number",
+                        "description": "Which item this is, counting from 0."
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "The item's id, if it was changed."
+                      },
+                      "error": {
+                        "type": "string",
+                        "description": "Why it wasn't changed, if it wasn't."
+                      }
+                    }
+                  }
+                },
+                "succeeded": {
+                  "type": "number",
+                  "description": "How many items were changed."
+                },
+                "failed": {
+                  "type": "number",
+                  "description": "How many items weren't changed."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "updateItemOrder",
+      "displayName": "Update item order",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "throttable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "alternatives": [
+        {
+          "operationName": "updateItemOrderAdvanced",
+          "label": "Advanced"
+        }
+      ],
+      "context": {
+        "functionName": "updateItemOrder",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Moves a seminar item to another place in the manual order.",
+      "parameters": {
+        "title": {
+          "type": "string",
+          "displayName": "Item title",
+          "required": true,
+          "description": "The exact title of the item to move.",
+          "sampleValue": "[item title]"
+        },
+        "position": {
+          "type": "number",
+          "displayName": "Position",
+          "required": true,
+          "minValue": 1,
+          "description": "Where to move the item, counting from 1 for the top of the list.",
+          "sampleValue": 1
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the item is moved.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it wasn't moved, such as the items not being sorted manually."
+            },
+            "result": {
+              "type": "object",
+              "description": "The items in their new order.",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "description": "Every item, in the manual order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One item.",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The item's id."
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "The item's title."
+                      },
+                      "rank": {
+                        "type": "number",
+                        "description": "The item's place, counting from 0."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "updateItemOrderAdvanced",
+      "displayName": "Update item order",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "throttable"
+      ],
+      "usage": "advanced",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "alternatives": [
+        {
+          "operationName": "updateItemOrder",
+          "label": "Basic"
+        }
+      ],
+      "context": {
+        "functionName": "updateItemOrderAdvanced",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Moves a seminar item to another place in the manual order, using the item's id.",
+      "parameters": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item id",
+          "required": true,
+          "description": "The item's id, as shown in search results.",
+          "sampleValue": "[item id]"
+        },
+        "position": {
+          "type": "number",
+          "displayName": "Position",
+          "required": true,
+          "minValue": 1,
+          "description": "Where to move the item, counting from 1 for the top of the list.",
+          "sampleValue": 1
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the item is moved.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it wasn't moved, such as no item having that id."
+            },
+            "result": {
+              "type": "object",
+              "description": "The items in their new order.",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "description": "Every item, in the manual order.",
+                  "items": {
+                    "type": "object",
+                    "description": "One item.",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The item's id."
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "The item's title."
+                      },
+                      "rank": {
+                        "type": "number",
+                        "description": "The item's place, counting from 0."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "deleteItem",
+      "displayName": "Delete item",
+      "type": "function",
+      "crudMode": "delete",
+      "flags": [
+        "mutable",
+        "dangerous",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "alternatives": [
+        {
+          "operationName": "deleteItemAdvanced",
+          "label": "Advanced"
+        }
+      ],
+      "context": {
+        "functionName": "deleteItem",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Permanently removes a seminar item and the notes app users wrote on it.",
+      "parameters": {
+        "title": {
+          "type": "string",
+          "displayName": "Item title",
+          "required": true,
+          "description": "The exact title of the item to remove.",
+          "sampleValue": "[item title]"
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the item is removed.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it wasn't removed, such as no item or several items having that title."
+            },
+            "result": {
+              "type": "object",
+              "description": "The item that was deleted.",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The deleted item's id."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "The deleted item's title."
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Confirms the item was deleted."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "deleteItemAdvanced",
+      "displayName": "Delete item",
+      "type": "function",
+      "crudMode": "delete",
+      "flags": [
+        "mutable",
+        "dangerous",
+        "unthrottable"
+      ],
+      "usage": "advanced",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "alternatives": [
+        {
+          "operationName": "deleteItem",
+          "label": "Basic"
+        }
+      ],
+      "context": {
+        "functionName": "deleteItemAdvanced",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Permanently removes a seminar item and the notes app users wrote on it, using the item's id.",
+      "parameters": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item id",
+          "required": true,
+          "description": "The item's id, as shown in search results.",
+          "sampleValue": "[item id]"
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the item is removed.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it wasn't removed, such as no item having that id."
+            },
+            "result": {
+              "type": "object",
+              "description": "The item that was deleted.",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The deleted item's id."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "The deleted item's title."
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Confirms the item was deleted."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "deleteItemsAdvanced",
+      "displayName": "Delete items",
+      "type": "function",
+      "crudMode": "delete",
+      "flags": [
+        "mutable",
+        "dangerous",
+        "throttable"
+      ],
+      "usage": "advanced",
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "deleteItemsAdvanced",
+        "hosts": [
+          "controlBackground"
+        ]
+      },
+      "description": "Permanently removes several seminar items at once, up to 50.",
+      "parameters": {
+        "items": {
+          "type": "list",
+          "displayName": "Items",
+          "required": true,
+          "minValue": 1,
+          "maxValue": 50,
+          "description": "The items to remove, up to 50 at a time.",
+          "items": {
+            "itemId": {
+              "type": "string",
+              "displayName": "Item id",
+              "required": true,
+              "description": "The item's id, as shown in search results.",
+              "sampleValue": "[item id]"
+            }
+          },
+          "sampleValue": [
+            {
+              "itemId": "[item id]"
+            }
+          ]
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when all the items are done.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why nothing was removed, such as an unknown item id."
+            },
+            "result": {
+              "type": "object",
+              "description": "How each item went.",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "description": "One result per item, in the order they were given.",
+                  "items": {
+                    "type": "object",
+                    "description": "How one item went.",
+                    "properties": {
+                      "index": {
+                        "type": "number",
+                        "description": "Which item this is, counting from 0."
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "The item's id, if it was removed."
+                      },
+                      "error": {
+                        "type": "string",
+                        "description": "Why it wasn't removed, if it wasn't."
+                      }
+                    }
+                  }
+                },
+                "succeeded": {
+                  "type": "number",
+                  "description": "How many items were removed."
+                },
+                "failed": {
+                  "type": "number",
+                  "description": "How many items weren't removed."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "getSettings",
+      "displayName": "Get settings",
+      "type": "function",
+      "crudMode": "read",
+      "flags": [
+        "immutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "getSettings",
+        "hosts": [
+          "widgetBackground",
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Shows the plugin's home content, design and settings.",
+      "parameters": {
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the settings are read.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it didn't work, if it didn't."
+            },
+            "result": {
+              "type": "object",
+              "description": "The current settings.",
+              "properties": {
+                "allowSharing": {
+                  "type": "boolean",
+                  "description": "Whether app users may share their notes."
+                },
+                "content": {
+                  "type": "object",
+                  "description": "What the home screen shows, and how seminars unlock.",
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "The text above the item list, formatted."
+                    },
+                    "carouselImages": {
+                      "type": "array",
+                      "description": "The pictures in the home slider, in order.",
+                      "items": {
+                        "type": "object",
+                        "description": "One picture.",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "description": "The picture's title."
+                          },
+                          "action": {
+                            "type": "string",
+                            "description": "What tapping it does, such as opening a website."
+                          },
+                          "iconUrl": {
+                            "type": "string",
+                            "description": "The picture's picture."
+                          }
+                        }
+                      }
+                    },
+                    "sortBy": {
+                      "type": "string",
+                      "description": "The order the items are listed in."
+                    },
+                    "seminarDelay": {
+                      "type": "object",
+                      "description": "How long app users wait before the next seminar opens.",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "description": "The wait, in words."
+                        },
+                        "value": {
+                          "type": "number",
+                          "description": "The wait in minutes; 0 when it is off."
+                        }
+                      }
+                    },
+                    "lockedClass": {
+                      "type": "string",
+                      "description": "How seminars that are not open yet are shown."
+                    }
+                  }
+                },
+                "design": {
+                  "type": "object",
+                  "description": "How the item list looks.",
+                  "properties": {
+                    "itemListLayout": {
+                      "type": "string",
+                      "description": "The item list layout."
+                    },
+                    "itemListBgImage": {
+                      "type": "string",
+                      "description": "The item list's background picture."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "updateSettings",
+      "displayName": "Update settings",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "updateSettings",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Changes the plugin's settings, only those given.",
+      "parameters": {
+        "allowSharing": {
+          "type": "boolean",
+          "displayName": "Allow content sharing",
+          "required": false,
+          "description": "Whether app users may share their notes. Leave it out to keep the current setting.",
+          "sampleValue": true
+        },
+        "seminarDelay": {
+          "type": "select",
+          "displayName": "Next seminar delay",
+          "required": false,
+          "description": "How long app users wait after opening a seminar before the next one opens; turning it on asks them to log in. Leave it out to keep the current setting.",
+          "enums": [
+            {
+              "label": "Off",
+              "value": 0
+            },
+            {
+              "label": "Half hour",
+              "value": 30
+            },
+            {
+              "label": "One hour",
+              "value": 60
+            },
+            {
+              "label": "One Day",
+              "value": 1440
+            },
+            {
+              "label": "One Week",
+              "value": 10080
+            }
+          ],
+          "allowEnumCustomOption": false,
+          "sampleValue": 60
+        },
+        "lockedStyle": {
+          "type": "select",
+          "displayName": "Locked seminars style",
+          "required": false,
+          "description": "How seminars that are not open yet are shown. Leave it out to keep the current style.",
+          "enums": [
+            {
+              "label": "Hidden",
+              "value": "hidden"
+            },
+            {
+              "label": "Locked",
+              "value": "locked"
+            }
+          ],
+          "allowEnumCustomOption": false,
+          "sampleValue": "locked"
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the settings are saved.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why they weren't saved, such as a delay that isn't offered."
+            },
+            "result": {
+              "type": "object",
+              "description": "The settings as they now are.",
+              "properties": {
+                "allowSharing": {
+                  "type": "boolean",
+                  "description": "Whether app users may share their notes."
+                },
+                "content": {
+                  "type": "object",
+                  "description": "What the home screen shows, and how seminars unlock.",
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "The text above the item list, formatted."
+                    },
+                    "carouselImages": {
+                      "type": "array",
+                      "description": "The pictures in the home slider, in order.",
+                      "items": {
+                        "type": "object",
+                        "description": "One picture.",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "description": "The picture's title."
+                          },
+                          "action": {
+                            "type": "string",
+                            "description": "What tapping it does, such as opening a website."
+                          },
+                          "iconUrl": {
+                            "type": "string",
+                            "description": "The picture's picture."
+                          }
+                        }
+                      }
+                    },
+                    "sortBy": {
+                      "type": "string",
+                      "description": "The order the items are listed in."
+                    },
+                    "seminarDelay": {
+                      "type": "object",
+                      "description": "How long app users wait before the next seminar opens.",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "description": "The wait, in words."
+                        },
+                        "value": {
+                          "type": "number",
+                          "description": "The wait in minutes; 0 when it is off."
+                        }
+                      }
+                    },
+                    "lockedClass": {
+                      "type": "string",
+                      "description": "How seminars that are not open yet are shown."
+                    }
+                  }
+                },
+                "design": {
+                  "type": "object",
+                  "description": "How the item list looks.",
+                  "properties": {
+                    "itemListLayout": {
+                      "type": "string",
+                      "description": "The item list layout."
+                    },
+                    "itemListBgImage": {
+                      "type": "string",
+                      "description": "The item list's background picture."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "updateDesign",
+      "displayName": "Update design",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "updateDesign",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Changes how the item list looks, only what is given.",
+      "parameters": {
+        "listLayout": {
+          "type": "select",
+          "displayName": "Item list layout",
+          "required": false,
+          "description": "The layout of the item list. Leave it out to keep the current one.",
+          "enums": [
+            {
+              "label": "Layout 1",
+              "value": "Item_List_1"
+            },
+            {
+              "label": "Layout 2",
+              "value": "Item_List_2"
+            },
+            {
+              "label": "Layout 3",
+              "value": "Item_List_3"
+            },
+            {
+              "label": "Layout 4",
+              "value": "Item_List_4"
+            },
+            {
+              "label": "Layout 5",
+              "value": "Item_List_5"
+            }
+          ],
+          "allowEnumCustomOption": false,
+          "sampleValue": "Item_List_2"
+        },
+        "listBackgroundImage": {
+          "type": "image",
+          "displayName": "Item list background image",
+          "required": false,
+          "nullable": true,
+          "minValue": 0,
+          "maxValue": 1,
+          "description": "The item list's background picture, as a list holding one image. Leave it out to keep the current one, or pass an empty list to remove it.",
+          "sampleValue": [
+            "[image url]"
+          ]
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the design is saved.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it wasn't saved, such as a layout that isn't offered."
+            },
+            "result": {
+              "type": "object",
+              "description": "The settings as they now are.",
+              "properties": {
+                "allowSharing": {
+                  "type": "boolean",
+                  "description": "Whether app users may share their notes."
+                },
+                "content": {
+                  "type": "object",
+                  "description": "What the home screen shows, and how seminars unlock.",
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "The text above the item list, formatted."
+                    },
+                    "carouselImages": {
+                      "type": "array",
+                      "description": "The pictures in the home slider, in order.",
+                      "items": {
+                        "type": "object",
+                        "description": "One picture.",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "description": "The picture's title."
+                          },
+                          "action": {
+                            "type": "string",
+                            "description": "What tapping it does, such as opening a website."
+                          },
+                          "iconUrl": {
+                            "type": "string",
+                            "description": "The picture's picture."
+                          }
+                        }
+                      }
+                    },
+                    "sortBy": {
+                      "type": "string",
+                      "description": "The order the items are listed in."
+                    },
+                    "seminarDelay": {
+                      "type": "object",
+                      "description": "How long app users wait before the next seminar opens.",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "description": "The wait, in words."
+                        },
+                        "value": {
+                          "type": "number",
+                          "description": "The wait in minutes; 0 when it is off."
+                        }
+                      }
+                    },
+                    "lockedClass": {
+                      "type": "string",
+                      "description": "How seminars that are not open yet are shown."
+                    }
+                  }
+                },
+                "design": {
+                  "type": "object",
+                  "description": "How the item list looks.",
+                  "properties": {
+                    "itemListLayout": {
+                      "type": "string",
+                      "description": "The item list layout."
+                    },
+                    "itemListBgImage": {
+                      "type": "string",
+                      "description": "The item list's background picture."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "updateHomeContent",
+      "displayName": "Update home content",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "dangerous",
+        "throttable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API"
+      ],
+      "context": {
+        "functionName": "updateHomeContent",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Changes the slider, the text and the item order on the home screen, only what is given.",
+      "parameters": {
+        "carouselImages": {
+          "type": "action",
+          "displayName": "Slider pictures",
+          "required": false,
+          "nullable": true,
+          "minValue": 0,
+          "description": "The home slider pictures, in order, each with its picture and what tapping it does. Replaces the current ones; leave it out to keep them, or pass an empty list to remove them.",
+          "sampleValue": [
+            {
+              "title": "[picture title]",
+              "action": "linkToWeb",
+              "url": "https://example.com",
+              "iconUrl": "[image url]"
+            }
+          ]
+        },
+        "description": {
+          "type": "wysiwyg",
+          "displayName": "Text",
+          "required": false,
+          "nullable": true,
+          "description": "The formatted text shown above the item list. Leave it out to keep the current text, or leave it empty to remove it.",
+          "sampleValue": "<p>[home text]</p>"
+        },
+        "sortBy": {
+          "type": "select",
+          "displayName": "Sort",
+          "required": false,
+          "description": "The order the items are listed in; choosing one replaces any manual order. Leave it out to keep the current order.",
+          "enums": [
+            {
+              "label": "Manually",
+              "value": "Manually"
+            },
+            {
+              "label": "Item title A-Z",
+              "value": "Item title A-Z"
+            },
+            {
+              "label": "Item title Z-A",
+              "value": "Item title Z-A"
+            },
+            {
+              "label": "Newest pub. date first",
+              "value": "Newest pub. date first"
+            },
+            {
+              "label": "Oldest pub. date first",
+              "value": "Oldest pub. date first"
+            },
+            {
+              "label": "Newest entry first",
+              "value": "Newest entry first"
+            },
+            {
+              "label": "Oldest entry first",
+              "value": "Oldest entry first"
+            }
+          ],
+          "allowEnumCustomOption": false,
+          "sampleValue": "Manually"
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the home content is saved.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it wasn't saved, such as an order that isn't offered."
+            },
+            "result": {
+              "type": "object",
+              "description": "The settings as they now are.",
+              "properties": {
+                "allowSharing": {
+                  "type": "boolean",
+                  "description": "Whether app users may share their notes."
+                },
+                "content": {
+                  "type": "object",
+                  "description": "What the home screen shows, and how seminars unlock.",
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "The text above the item list, formatted."
+                    },
+                    "carouselImages": {
+                      "type": "array",
+                      "description": "The pictures in the home slider, in order.",
+                      "items": {
+                        "type": "object",
+                        "description": "One picture.",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "description": "The picture's title."
+                          },
+                          "action": {
+                            "type": "string",
+                            "description": "What tapping it does, such as opening a website."
+                          },
+                          "iconUrl": {
+                            "type": "string",
+                            "description": "The picture's picture."
+                          }
+                        }
+                      }
+                    },
+                    "sortBy": {
+                      "type": "string",
+                      "description": "The order the items are listed in."
+                    },
+                    "seminarDelay": {
+                      "type": "object",
+                      "description": "How long app users wait before the next seminar opens.",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "description": "The wait, in words."
+                        },
+                        "value": {
+                          "type": "number",
+                          "description": "The wait in minutes; 0 when it is off."
+                        }
+                      }
+                    },
+                    "lockedClass": {
+                      "type": "string",
+                      "description": "How seminars that are not open yet are shown."
+                    }
+                  }
+                },
+                "design": {
+                  "type": "object",
+                  "description": "How the item list looks.",
+                  "properties": {
+                    "itemListLayout": {
+                      "type": "string",
+                      "description": "The item list layout."
+                    },
+                    "itemListBgImage": {
+                      "type": "string",
+                      "description": "The item list's background picture."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "getLabels",
+      "displayName": "Get labels",
+      "type": "function",
+      "crudMode": "read",
+      "flags": [
+        "immutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "getLabels",
+        "hosts": [
+          "widgetBackground",
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Shows the wording of every label and message the app shows.",
+      "parameters": {
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the labels are read.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why it didn't work, if it didn't."
+            },
+            "result": {
+              "type": "object",
+              "description": "The text each label shows.",
+              "properties": {
+                "items": {
+                  "type": "string",
+                  "description": "The text shown for \"Items\"."
+                },
+                "myNotes": {
+                  "type": "string",
+                  "description": "The text shown for \"My Notes\"."
+                },
+                "bookmarks": {
+                  "type": "string",
+                  "description": "The text shown for \"Bookmarks\"."
+                },
+                "search": {
+                  "type": "string",
+                  "description": "The text shown for \"Search\"."
+                },
+                "openMenuOptions": {
+                  "type": "string",
+                  "description": "The text shown for \"Open Menu Options\"."
+                },
+                "openItemNotes": {
+                  "type": "string",
+                  "description": "The text shown for \"Open Item Notes\"."
+                },
+                "addNewNote": {
+                  "type": "string",
+                  "description": "The text shown for \"Add New Note\"."
+                },
+                "backToNoteList": {
+                  "type": "string",
+                  "description": "The text shown for \"Back to Note List\"."
+                },
+                "closeNoteList": {
+                  "type": "string",
+                  "description": "The text shown for \"Close Note List\"."
+                },
+                "done": {
+                  "type": "string",
+                  "description": "The text shown for \"Done\"."
+                },
+                "itemRemovedFromBookmarks": {
+                  "type": "string",
+                  "description": "The text shown for \"Item removed From Bookmarks\"."
+                },
+                "itemBookmarked": {
+                  "type": "string",
+                  "description": "The text shown for \"Item bookmarked\"."
+                },
+                "noItems": {
+                  "type": "string",
+                  "description": "The text shown for \"No items added and released yet\"."
+                },
+                "noNotesAddedYet": {
+                  "type": "string",
+                  "description": "The text shown for \"No notes added yet\"."
+                },
+                "noBookmarksAddedYet": {
+                  "type": "string",
+                  "description": "The text shown for \"No bookmarks added yet\"."
+                },
+                "noSearchResults": {
+                  "type": "string",
+                  "description": "The text shown for \"No search results\"."
+                },
+                "enterKeywordsOrPhraseToSearchItems": {
+                  "type": "string",
+                  "description": "The text shown for \"Enter keywords or phrase to search items\"."
+                },
+                "searchNoteTitlesAndContent": {
+                  "type": "string",
+                  "description": "The text shown for \"Search note titles and content\"."
+                },
+                "enterNoteTitle": {
+                  "type": "string",
+                  "description": "The text shown for \"Enter Note Title\"."
+                },
+                "enterNoteContent": {
+                  "type": "string",
+                  "description": "The text shown for \"Enter note content\"."
+                },
+                "saved": {
+                  "type": "string",
+                  "description": "The text shown for \"Saved\"."
+                },
+                "areYouSureTitle": {
+                  "type": "string",
+                  "description": "The text shown for \"Are you sure? (sharing notes)\"."
+                },
+                "areYouSureMessage": {
+                  "type": "string",
+                  "description": "The text shown for \"Are you sure you want to share notes for this item?\"."
+                },
+                "areYouSureImportTitle": {
+                  "type": "string",
+                  "description": "The text shown for \"Are you sure? (replacing notes)\"."
+                },
+                "areYouSureImportMessage": {
+                  "type": "string",
+                  "description": "The text shown for \"Are you sure you want to replace notes for this item?\"."
+                },
+                "expireWarning": {
+                  "type": "string",
+                  "description": "The text shown for \"Shared content is available for 30 days\"."
+                },
+                "errorSharing": {
+                  "type": "string",
+                  "description": "The text shown for \"Error sharing notes\"."
+                },
+                "shareTitle": {
+                  "type": "string",
+                  "description": "The text shown for \"Sharing notes\"."
+                },
+                "shareDescription": {
+                  "type": "string",
+                  "description": "The text shown for \"Sharing notes for item: \"."
+                },
+                "errorSharingNoNotes": {
+                  "type": "string",
+                  "description": "The text shown for \"Error sharing notes: item doesn't contain notes\"."
+                },
+                "deeplinkNoteNotFound": {
+                  "type": "string",
+                  "description": "The text shown for \"Deep link to Item that does not exist\"."
+                },
+                "nextSeminarOpen": {
+                  "type": "string",
+                  "description": "The text shown for \"Next seminar is open\"."
+                },
+                "seminarNotAvailable": {
+                  "type": "string",
+                  "description": "The text shown for \"Seminar not available\"."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "updateLabels",
+      "displayName": "Update labels",
+      "type": "function",
+      "crudMode": "update",
+      "flags": [
+        "mutable",
+        "safe",
+        "unthrottable"
+      ],
+      "usage": "basic",
+      "availableFor": [
+        "API",
+        "form"
+      ],
+      "context": {
+        "functionName": "updateLabels",
+        "hosts": [
+          "controlBackground",
+          "headlessSdk"
+        ]
+      },
+      "description": "Changes the wording of labels and messages the app shows, only those given.",
+      "parameters": {
+        "items": {
+          "type": "string",
+          "displayName": "Items",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Items\", up to 20 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Items"
+        },
+        "myNotes": {
+          "type": "string",
+          "displayName": "My Notes",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"My Notes\", up to 20 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "My Notes"
+        },
+        "bookmarks": {
+          "type": "string",
+          "displayName": "Bookmarks",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Bookmarks\", up to 20 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Bookmarks"
+        },
+        "search": {
+          "type": "string",
+          "displayName": "Search",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Search\", up to 20 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Search"
+        },
+        "openMenuOptions": {
+          "type": "string",
+          "displayName": "Open Menu Options",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Open Menu Options\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Open Menu Options"
+        },
+        "openItemNotes": {
+          "type": "string",
+          "displayName": "Open Item Notes",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Open Item Notes\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Open Item Notes"
+        },
+        "addNewNote": {
+          "type": "string",
+          "displayName": "Add New Note",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Add New Note\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Add New Note"
+        },
+        "backToNoteList": {
+          "type": "string",
+          "displayName": "Back to Note List",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Back to Note List\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Back to Note List"
+        },
+        "closeNoteList": {
+          "type": "string",
+          "displayName": "Close Note List",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Close Note List\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Close Note List"
+        },
+        "done": {
+          "type": "string",
+          "displayName": "Done",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Done\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Done"
+        },
+        "itemRemovedFromBookmarks": {
+          "type": "string",
+          "displayName": "Item removed From Bookmarks",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Item removed From Bookmarks\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Item removed From Bookmarks"
+        },
+        "itemBookmarked": {
+          "type": "string",
+          "displayName": "Item bookmarked",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Item bookmarked\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Item bookmarked"
+        },
+        "noItems": {
+          "type": "string",
+          "displayName": "No items added and released yet",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"No items added and released yet\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "No items added and released yet"
+        },
+        "noNotesAddedYet": {
+          "type": "string",
+          "displayName": "No notes added yet",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"No notes added yet\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "No notes added yet"
+        },
+        "noBookmarksAddedYet": {
+          "type": "string",
+          "displayName": "No bookmarks added yet",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"No bookmarks added yet\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "No bookmarks added yet"
+        },
+        "noSearchResults": {
+          "type": "string",
+          "displayName": "No search results",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"No search results\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "No search results"
+        },
+        "enterKeywordsOrPhraseToSearchItems": {
+          "type": "string",
+          "displayName": "Enter keywords or phrase to search items",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Enter keywords or phrase to search items\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Enter keywords or phrase to search items"
+        },
+        "searchNoteTitlesAndContent": {
+          "type": "string",
+          "displayName": "Search note titles and content",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Search note titles and content\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Search note titles and content"
+        },
+        "enterNoteTitle": {
+          "type": "string",
+          "displayName": "Enter Note Title",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Enter Note Title\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Enter Note Title"
+        },
+        "enterNoteContent": {
+          "type": "string",
+          "displayName": "Enter note content",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Enter note content\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Enter note content"
+        },
+        "saved": {
+          "type": "string",
+          "displayName": "Saved",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Saved\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Saved"
+        },
+        "areYouSureTitle": {
+          "type": "string",
+          "displayName": "Are you sure? (sharing notes)",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Are you sure? (sharing notes)\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Are you sure?"
+        },
+        "areYouSureMessage": {
+          "type": "string",
+          "displayName": "Are you sure you want to share notes for this item?",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Are you sure you want to share notes for this item?\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Are you sure you want to share notes for this item?"
+        },
+        "areYouSureImportTitle": {
+          "type": "string",
+          "displayName": "Are you sure? (replacing notes)",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Are you sure? (replacing notes)\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Are you sure?"
+        },
+        "areYouSureImportMessage": {
+          "type": "string",
+          "displayName": "Are you sure you want to replace notes for this item?",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Are you sure you want to replace notes for this item?\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Are you sure you want to replace notes for this item?"
+        },
+        "expireWarning": {
+          "type": "string",
+          "displayName": "Shared content is available for 30 days",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Shared content is available for 30 days\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Shared content is available for 30 days"
+        },
+        "errorSharing": {
+          "type": "string",
+          "displayName": "Error sharing notes",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Error sharing notes\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Error sharing notes"
+        },
+        "shareTitle": {
+          "type": "string",
+          "displayName": "Sharing notes",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Sharing notes\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Sharing notes"
+        },
+        "shareDescription": {
+          "type": "string",
+          "displayName": "Sharing notes for item: ",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Sharing notes for item: \", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Sharing notes for item: "
+        },
+        "errorSharingNoNotes": {
+          "type": "string",
+          "displayName": "Error sharing notes: item doesn't contain notes",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Error sharing notes: item doesn't contain notes\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Error sharing notes: item doesn't contain notes"
+        },
+        "deeplinkNoteNotFound": {
+          "type": "string",
+          "displayName": "Deep link to Item that does not exist",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Deep link to Item that does not exist\", up to 50 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "Item does not exist!"
+        },
+        "nextSeminarOpen": {
+          "type": "string",
+          "displayName": "Next seminar is open",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Next seminar is open\", up to 160 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "The next seminar is now open"
+        },
+        "seminarNotAvailable": {
+          "type": "string",
+          "displayName": "Seminar not available",
+          "required": false,
+          "nullable": true,
+          "description": "New text for \"Seminar not available\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+          "sampleValue": "This seminar is not available at this time"
+        },
+        "callback": {
+          "type": "function",
+          "required": true,
+          "description": "Runs when the labels are saved.",
+          "parameters": {
+            "error": {
+              "type": "object|string",
+              "description": "Why they weren't saved, such as a text that is too long."
+            },
+            "result": {
+              "type": "object",
+              "description": "The text each label now shows.",
+              "properties": {
+                "items": {
+                  "type": "string",
+                  "description": "The text shown for \"Items\"."
+                },
+                "myNotes": {
+                  "type": "string",
+                  "description": "The text shown for \"My Notes\"."
+                },
+                "bookmarks": {
+                  "type": "string",
+                  "description": "The text shown for \"Bookmarks\"."
+                },
+                "search": {
+                  "type": "string",
+                  "description": "The text shown for \"Search\"."
+                },
+                "openMenuOptions": {
+                  "type": "string",
+                  "description": "The text shown for \"Open Menu Options\"."
+                },
+                "openItemNotes": {
+                  "type": "string",
+                  "description": "The text shown for \"Open Item Notes\"."
+                },
+                "addNewNote": {
+                  "type": "string",
+                  "description": "The text shown for \"Add New Note\"."
+                },
+                "backToNoteList": {
+                  "type": "string",
+                  "description": "The text shown for \"Back to Note List\"."
+                },
+                "closeNoteList": {
+                  "type": "string",
+                  "description": "The text shown for \"Close Note List\"."
+                },
+                "done": {
+                  "type": "string",
+                  "description": "The text shown for \"Done\"."
+                },
+                "itemRemovedFromBookmarks": {
+                  "type": "string",
+                  "description": "The text shown for \"Item removed From Bookmarks\"."
+                },
+                "itemBookmarked": {
+                  "type": "string",
+                  "description": "The text shown for \"Item bookmarked\"."
+                },
+                "noItems": {
+                  "type": "string",
+                  "description": "The text shown for \"No items added and released yet\"."
+                },
+                "noNotesAddedYet": {
+                  "type": "string",
+                  "description": "The text shown for \"No notes added yet\"."
+                },
+                "noBookmarksAddedYet": {
+                  "type": "string",
+                  "description": "The text shown for \"No bookmarks added yet\"."
+                },
+                "noSearchResults": {
+                  "type": "string",
+                  "description": "The text shown for \"No search results\"."
+                },
+                "enterKeywordsOrPhraseToSearchItems": {
+                  "type": "string",
+                  "description": "The text shown for \"Enter keywords or phrase to search items\"."
+                },
+                "searchNoteTitlesAndContent": {
+                  "type": "string",
+                  "description": "The text shown for \"Search note titles and content\"."
+                },
+                "enterNoteTitle": {
+                  "type": "string",
+                  "description": "The text shown for \"Enter Note Title\"."
+                },
+                "enterNoteContent": {
+                  "type": "string",
+                  "description": "The text shown for \"Enter note content\"."
+                },
+                "saved": {
+                  "type": "string",
+                  "description": "The text shown for \"Saved\"."
+                },
+                "areYouSureTitle": {
+                  "type": "string",
+                  "description": "The text shown for \"Are you sure? (sharing notes)\"."
+                },
+                "areYouSureMessage": {
+                  "type": "string",
+                  "description": "The text shown for \"Are you sure you want to share notes for this item?\"."
+                },
+                "areYouSureImportTitle": {
+                  "type": "string",
+                  "description": "The text shown for \"Are you sure? (replacing notes)\"."
+                },
+                "areYouSureImportMessage": {
+                  "type": "string",
+                  "description": "The text shown for \"Are you sure you want to replace notes for this item?\"."
+                },
+                "expireWarning": {
+                  "type": "string",
+                  "description": "The text shown for \"Shared content is available for 30 days\"."
+                },
+                "errorSharing": {
+                  "type": "string",
+                  "description": "The text shown for \"Error sharing notes\"."
+                },
+                "shareTitle": {
+                  "type": "string",
+                  "description": "The text shown for \"Sharing notes\"."
+                },
+                "shareDescription": {
+                  "type": "string",
+                  "description": "The text shown for \"Sharing notes for item: \"."
+                },
+                "errorSharingNoNotes": {
+                  "type": "string",
+                  "description": "The text shown for \"Error sharing notes: item doesn't contain notes\"."
+                },
+                "deeplinkNoteNotFound": {
+                  "type": "string",
+                  "description": "The text shown for \"Deep link to Item that does not exist\"."
+                },
+                "nextSeminarOpen": {
+                  "type": "string",
+                  "description": "The text shown for \"Next seminar is open\"."
+                },
+                "seminarNotAvailable": {
+                  "type": "string",
+                  "description": "The text shown for \"Seminar not available\"."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

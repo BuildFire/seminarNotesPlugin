@@ -802,6 +802,11 @@
             var successItem = function (result) {
               Buildfire.spinner.hide();
               console.log("Inserted", result);
+              buildfire.services.contract.events.send('itemBookmarked', {
+                itemId: item.id,
+                title: item.data.title,
+                bookmarkedBy: WidgetHome.currentLoggedInUser ? { userId: WidgetHome.currentLoggedInUser._id, displayName: WidgetHome.currentLoggedInUser.displayName || null, email: WidgetHome.currentLoggedInUser.email || null } : null
+              });
               WidgetHome.released[index].isBookmarked = true;
               WidgetHome.released[index].bookmarkId = result.id;
               if (!$scope.$$phase)

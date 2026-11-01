@@ -339,6 +339,11 @@
               WidgetSearch.released[index].isBookmarked = true;
               WidgetSearch.released[index].bookmarkId = result.id;
               console.log("Inserted", result);
+              buildfire.services.contract.events.send('itemBookmarked', {
+                itemId: itemId,
+                title: item.data.title,
+                bookmarkedBy: WidgetSearch.currentLoggedInUser ? { userId: WidgetSearch.currentLoggedInUser._id, displayName: WidgetSearch.currentLoggedInUser.displayName || null, email: WidgetSearch.currentLoggedInUser.email || null } : null
+              });
               $scope.isClicked = itemId;
               if (!$scope.$$phase)
                 $scope.$digest();

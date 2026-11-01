@@ -1,0 +1,214 @@
+{
+  "name": "searchItems",
+  "displayName": "Search items",
+  "type": "function",
+  "crudMode": "read",
+  "flags": [
+    "immutable",
+    "safe",
+    "unthrottable"
+  ],
+  "usage": "basic",
+  "availableFor": [
+    "API",
+    "form"
+  ],
+  "context": {
+    "functionName": "searchItems",
+    "hosts": [
+      "widgetBackground",
+      "controlBackground",
+      "headlessSdk"
+    ]
+  },
+  "description": "Shows the seminar items, 50 at a time, in the order the app lists them.",
+  "parameters": {
+    "title": {
+      "type": "string",
+      "displayName": "Item title",
+      "required": false,
+      "description": "Only show items with exactly this title. Leave it out to show every item.",
+      "sampleValue": "[item title]"
+    },
+    "searchText": {
+      "type": "string",
+      "displayName": "Search",
+      "required": false,
+      "description": "Only show items whose title or summary holds these words. Leave it out to show every item.",
+      "sampleValue": "[search words]"
+    },
+    "sortBy": {
+      "type": "select",
+      "displayName": "Sort",
+      "required": false,
+      "description": "The order to show the items in. Leave it out for the order chosen in the content tab.",
+      "enums": [
+        {
+          "label": "Manually",
+          "value": "Manually"
+        },
+        {
+          "label": "Item title A-Z",
+          "value": "Item title A-Z"
+        },
+        {
+          "label": "Item title Z-A",
+          "value": "Item title Z-A"
+        },
+        {
+          "label": "Newest pub. date first",
+          "value": "Newest pub. date first"
+        },
+        {
+          "label": "Oldest pub. date first",
+          "value": "Oldest pub. date first"
+        },
+        {
+          "label": "Newest entry first",
+          "value": "Newest entry first"
+        },
+        {
+          "label": "Oldest entry first",
+          "value": "Oldest entry first"
+        }
+      ],
+      "allowEnumCustomOption": false,
+      "sampleValue": "Item title A-Z"
+    },
+    "page": {
+      "type": "number",
+      "displayName": "Page",
+      "required": false,
+      "minValue": 0,
+      "description": "Which page of 50 items to show, starting at 0. Leave it out for the first page.",
+      "sampleValue": 0
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the search is done.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why it didn't work, if it didn't."
+        },
+        "result": {
+          "type": "object",
+          "description": "The items that were found.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "The items on this page, in order.",
+              "items": {
+                "type": "object",
+                "description": "One item.",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The item's id."
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "The item's title."
+                  },
+                  "summary": {
+                    "type": "string",
+                    "description": "The item's summary."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The item's content, formatted."
+                  },
+                  "publishDate": {
+                    "type": "number|string",
+                    "description": "The publication date, if one is set."
+                  },
+                  "releaseDate": {
+                    "type": "number|string",
+                    "description": "The day the item appears in the app, if one is set."
+                  },
+                  "isReleased": {
+                    "type": "boolean",
+                    "description": "Whether the app shows the item yet."
+                  },
+                  "listImage": {
+                    "type": "string",
+                    "description": "The picture shown for the item in the list."
+                  },
+                  "carouselImages": {
+                    "type": "array",
+                    "description": "The pictures in the item's slider, in order.",
+                    "items": {
+                      "type": "object",
+                      "description": "One picture.",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "description": "The picture's title."
+                        },
+                        "action": {
+                          "type": "string",
+                          "description": "What tapping it does, such as opening a website."
+                        },
+                        "iconUrl": {
+                          "type": "string",
+                          "description": "The picture's picture."
+                        }
+                      }
+                    }
+                  },
+                  "links": {
+                    "type": "array",
+                    "description": "The item's links, in order.",
+                    "items": {
+                      "type": "object",
+                      "description": "One link.",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "description": "The link's title."
+                        },
+                        "action": {
+                          "type": "string",
+                          "description": "What tapping it does, such as opening a website."
+                        }
+                      }
+                    }
+                  },
+                  "itemListBgImage": {
+                    "type": "string",
+                    "description": "The item page's background picture."
+                  },
+                  "deepLinkUrl": {
+                    "type": "string",
+                    "description": "The item's deep link."
+                  },
+                  "dateCreated": {
+                    "type": "number",
+                    "description": "When the item was added."
+                  },
+                  "rank": {
+                    "type": "number",
+                    "description": "The item's place in the manual order."
+                  }
+                }
+              }
+            },
+            "total": {
+              "type": "number",
+              "description": "How many items match in all."
+            },
+            "page": {
+              "type": "number",
+              "description": "Which page this is."
+            },
+            "hasMore": {
+              "type": "boolean",
+              "description": "Whether there are more items on later pages."
+            }
+          }
+        }
+      }
+    }
+  }
+}

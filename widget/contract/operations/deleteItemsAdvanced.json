@@ -1,0 +1,93 @@
+{
+  "name": "deleteItemsAdvanced",
+  "displayName": "Delete items",
+  "type": "function",
+  "crudMode": "delete",
+  "flags": [
+    "mutable",
+    "dangerous",
+    "throttable"
+  ],
+  "usage": "advanced",
+  "availableFor": [
+    "API"
+  ],
+  "context": {
+    "functionName": "deleteItemsAdvanced",
+    "hosts": [
+      "controlBackground"
+    ]
+  },
+  "description": "Permanently removes several seminar items at once, up to 50.",
+  "parameters": {
+    "items": {
+      "type": "list",
+      "displayName": "Items",
+      "required": true,
+      "minValue": 1,
+      "maxValue": 50,
+      "description": "The items to remove, up to 50 at a time.",
+      "items": {
+        "itemId": {
+          "type": "string",
+          "displayName": "Item id",
+          "required": true,
+          "description": "The item's id, as shown in search results.",
+          "sampleValue": "[item id]"
+        }
+      },
+      "sampleValue": [
+        {
+          "itemId": "[item id]"
+        }
+      ]
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when all the items are done.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why nothing was removed, such as an unknown item id."
+        },
+        "result": {
+          "type": "object",
+          "description": "How each item went.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "One result per item, in the order they were given.",
+              "items": {
+                "type": "object",
+                "description": "How one item went.",
+                "properties": {
+                  "index": {
+                    "type": "number",
+                    "description": "Which item this is, counting from 0."
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "The item's id, if it was removed."
+                  },
+                  "error": {
+                    "type": "string",
+                    "description": "Why it wasn't removed, if it wasn't."
+                  }
+                }
+              }
+            },
+            "succeeded": {
+              "type": "number",
+              "description": "How many items were removed."
+            },
+            "failed": {
+              "type": "number",
+              "description": "How many items weren't removed."
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -425,6 +425,11 @@
               WidgetItem.item.isBookmarked = true;
               WidgetItem.item.bookmarkId = result.id;
               console.log("Inserted", result);
+              buildfire.services.contract.events.send('itemBookmarked', {
+                itemId: itemId,
+                title: WidgetItem.item.data.title,
+                bookmarkedBy: WidgetItem.currentLoggedInUser ? { userId: WidgetItem.currentLoggedInUser._id, displayName: WidgetItem.currentLoggedInUser.displayName || null, email: WidgetItem.currentLoggedInUser.email || null } : null
+              });
               $scope.isClicked = itemId;
               //  WidgetItem.getBookmarks();
               $scope.text = WidgetItem.languages.itemBookmarked;

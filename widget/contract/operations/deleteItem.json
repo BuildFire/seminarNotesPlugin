@@ -1,0 +1,67 @@
+{
+  "name": "deleteItem",
+  "displayName": "Delete item",
+  "type": "function",
+  "crudMode": "delete",
+  "flags": [
+    "mutable",
+    "dangerous",
+    "unthrottable"
+  ],
+  "usage": "basic",
+  "availableFor": [
+    "API",
+    "form"
+  ],
+  "alternatives": [
+    {
+      "operationName": "deleteItemAdvanced",
+      "label": "Advanced"
+    }
+  ],
+  "context": {
+    "functionName": "deleteItem",
+    "hosts": [
+      "controlBackground"
+    ]
+  },
+  "description": "Permanently removes a seminar item and the notes app users wrote on it.",
+  "parameters": {
+    "title": {
+      "type": "string",
+      "displayName": "Item title",
+      "required": true,
+      "description": "The exact title of the item to remove.",
+      "sampleValue": "[item title]"
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the item is removed.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why it wasn't removed, such as no item or several items having that title."
+        },
+        "result": {
+          "type": "object",
+          "description": "The item that was deleted.",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The deleted item's id."
+            },
+            "title": {
+              "type": "string",
+              "description": "The deleted item's title."
+            },
+            "status": {
+              "type": "string",
+              "description": "Confirms the item was deleted."
+            }
+          }
+        }
+      }
+    }
+  }
+}

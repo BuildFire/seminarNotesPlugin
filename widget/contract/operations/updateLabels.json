@@ -1,0 +1,439 @@
+{
+  "name": "updateLabels",
+  "displayName": "Update labels",
+  "type": "function",
+  "crudMode": "update",
+  "flags": [
+    "mutable",
+    "safe",
+    "unthrottable"
+  ],
+  "usage": "basic",
+  "availableFor": [
+    "API",
+    "form"
+  ],
+  "context": {
+    "functionName": "updateLabels",
+    "hosts": [
+      "controlBackground",
+      "headlessSdk"
+    ]
+  },
+  "description": "Changes the wording of labels and messages the app shows, only those given.",
+  "parameters": {
+    "items": {
+      "type": "string",
+      "displayName": "Items",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Items\", up to 20 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Items"
+    },
+    "myNotes": {
+      "type": "string",
+      "displayName": "My Notes",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"My Notes\", up to 20 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "My Notes"
+    },
+    "bookmarks": {
+      "type": "string",
+      "displayName": "Bookmarks",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Bookmarks\", up to 20 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Bookmarks"
+    },
+    "search": {
+      "type": "string",
+      "displayName": "Search",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Search\", up to 20 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Search"
+    },
+    "openMenuOptions": {
+      "type": "string",
+      "displayName": "Open Menu Options",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Open Menu Options\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Open Menu Options"
+    },
+    "openItemNotes": {
+      "type": "string",
+      "displayName": "Open Item Notes",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Open Item Notes\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Open Item Notes"
+    },
+    "addNewNote": {
+      "type": "string",
+      "displayName": "Add New Note",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Add New Note\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Add New Note"
+    },
+    "backToNoteList": {
+      "type": "string",
+      "displayName": "Back to Note List",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Back to Note List\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Back to Note List"
+    },
+    "closeNoteList": {
+      "type": "string",
+      "displayName": "Close Note List",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Close Note List\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Close Note List"
+    },
+    "done": {
+      "type": "string",
+      "displayName": "Done",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Done\", up to 40 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Done"
+    },
+    "itemRemovedFromBookmarks": {
+      "type": "string",
+      "displayName": "Item removed From Bookmarks",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Item removed From Bookmarks\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Item removed From Bookmarks"
+    },
+    "itemBookmarked": {
+      "type": "string",
+      "displayName": "Item bookmarked",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Item bookmarked\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Item bookmarked"
+    },
+    "noItems": {
+      "type": "string",
+      "displayName": "No items added and released yet",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"No items added and released yet\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "No items added and released yet"
+    },
+    "noNotesAddedYet": {
+      "type": "string",
+      "displayName": "No notes added yet",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"No notes added yet\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "No notes added yet"
+    },
+    "noBookmarksAddedYet": {
+      "type": "string",
+      "displayName": "No bookmarks added yet",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"No bookmarks added yet\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "No bookmarks added yet"
+    },
+    "noSearchResults": {
+      "type": "string",
+      "displayName": "No search results",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"No search results\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "No search results"
+    },
+    "enterKeywordsOrPhraseToSearchItems": {
+      "type": "string",
+      "displayName": "Enter keywords or phrase to search items",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Enter keywords or phrase to search items\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Enter keywords or phrase to search items"
+    },
+    "searchNoteTitlesAndContent": {
+      "type": "string",
+      "displayName": "Search note titles and content",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Search note titles and content\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Search note titles and content"
+    },
+    "enterNoteTitle": {
+      "type": "string",
+      "displayName": "Enter Note Title",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Enter Note Title\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Enter Note Title"
+    },
+    "enterNoteContent": {
+      "type": "string",
+      "displayName": "Enter note content",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Enter note content\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Enter note content"
+    },
+    "saved": {
+      "type": "string",
+      "displayName": "Saved",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Saved\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Saved"
+    },
+    "areYouSureTitle": {
+      "type": "string",
+      "displayName": "Are you sure? (sharing notes)",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Are you sure? (sharing notes)\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Are you sure?"
+    },
+    "areYouSureMessage": {
+      "type": "string",
+      "displayName": "Are you sure you want to share notes for this item?",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Are you sure you want to share notes for this item?\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Are you sure you want to share notes for this item?"
+    },
+    "areYouSureImportTitle": {
+      "type": "string",
+      "displayName": "Are you sure? (replacing notes)",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Are you sure? (replacing notes)\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Are you sure?"
+    },
+    "areYouSureImportMessage": {
+      "type": "string",
+      "displayName": "Are you sure you want to replace notes for this item?",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Are you sure you want to replace notes for this item?\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Are you sure you want to replace notes for this item?"
+    },
+    "expireWarning": {
+      "type": "string",
+      "displayName": "Shared content is available for 30 days",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Shared content is available for 30 days\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Shared content is available for 30 days"
+    },
+    "errorSharing": {
+      "type": "string",
+      "displayName": "Error sharing notes",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Error sharing notes\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Error sharing notes"
+    },
+    "shareTitle": {
+      "type": "string",
+      "displayName": "Sharing notes",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Sharing notes\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Sharing notes"
+    },
+    "shareDescription": {
+      "type": "string",
+      "displayName": "Sharing notes for item: ",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Sharing notes for item: \", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Sharing notes for item: "
+    },
+    "errorSharingNoNotes": {
+      "type": "string",
+      "displayName": "Error sharing notes: item doesn't contain notes",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Error sharing notes: item doesn't contain notes\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Error sharing notes: item doesn't contain notes"
+    },
+    "deeplinkNoteNotFound": {
+      "type": "string",
+      "displayName": "Deep link to Item that does not exist",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Deep link to Item that does not exist\", up to 50 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "Item does not exist!"
+    },
+    "nextSeminarOpen": {
+      "type": "string",
+      "displayName": "Next seminar is open",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Next seminar is open\", up to 160 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "The next seminar is now open"
+    },
+    "seminarNotAvailable": {
+      "type": "string",
+      "displayName": "Seminar not available",
+      "required": false,
+      "nullable": true,
+      "description": "New text for \"Seminar not available\", up to 60 characters. Leave it out to keep the current text, or leave it empty to go back to the original.",
+      "sampleValue": "This seminar is not available at this time"
+    },
+    "callback": {
+      "type": "function",
+      "required": true,
+      "description": "Runs when the labels are saved.",
+      "parameters": {
+        "error": {
+          "type": "object|string",
+          "description": "Why they weren't saved, such as a text that is too long."
+        },
+        "result": {
+          "type": "object",
+          "description": "The text each label now shows.",
+          "properties": {
+            "items": {
+              "type": "string",
+              "description": "The text shown for \"Items\"."
+            },
+            "myNotes": {
+              "type": "string",
+              "description": "The text shown for \"My Notes\"."
+            },
+            "bookmarks": {
+              "type": "string",
+              "description": "The text shown for \"Bookmarks\"."
+            },
+            "search": {
+              "type": "string",
+              "description": "The text shown for \"Search\"."
+            },
+            "openMenuOptions": {
+              "type": "string",
+              "description": "The text shown for \"Open Menu Options\"."
+            },
+            "openItemNotes": {
+              "type": "string",
+              "description": "The text shown for \"Open Item Notes\"."
+            },
+            "addNewNote": {
+              "type": "string",
+              "description": "The text shown for \"Add New Note\"."
+            },
+            "backToNoteList": {
+              "type": "string",
+              "description": "The text shown for \"Back to Note List\"."
+            },
+            "closeNoteList": {
+              "type": "string",
+              "description": "The text shown for \"Close Note List\"."
+            },
+            "done": {
+              "type": "string",
+              "description": "The text shown for \"Done\"."
+            },
+            "itemRemovedFromBookmarks": {
+              "type": "string",
+              "description": "The text shown for \"Item removed From Bookmarks\"."
+            },
+            "itemBookmarked": {
+              "type": "string",
+              "description": "The text shown for \"Item bookmarked\"."
+            },
+            "noItems": {
+              "type": "string",
+              "description": "The text shown for \"No items added and released yet\"."
+            },
+            "noNotesAddedYet": {
+              "type": "string",
+              "description": "The text shown for \"No notes added yet\"."
+            },
+            "noBookmarksAddedYet": {
+              "type": "string",
+              "description": "The text shown for \"No bookmarks added yet\"."
+            },
+            "noSearchResults": {
+              "type": "string",
+              "description": "The text shown for \"No search results\"."
+            },
+            "enterKeywordsOrPhraseToSearchItems": {
+              "type": "string",
+              "description": "The text shown for \"Enter keywords or phrase to search items\"."
+            },
+            "searchNoteTitlesAndContent": {
+              "type": "string",
+              "description": "The text shown for \"Search note titles and content\"."
+            },
+            "enterNoteTitle": {
+              "type": "string",
+              "description": "The text shown for \"Enter Note Title\"."
+            },
+            "enterNoteContent": {
+              "type": "string",
+              "description": "The text shown for \"Enter note content\"."
+            },
+            "saved": {
+              "type": "string",
+              "description": "The text shown for \"Saved\"."
+            },
+            "areYouSureTitle": {
+              "type": "string",
+              "description": "The text shown for \"Are you sure? (sharing notes)\"."
+            },
+            "areYouSureMessage": {
+              "type": "string",
+              "description": "The text shown for \"Are you sure you want to share notes for this item?\"."
+            },
+            "areYouSureImportTitle": {
+              "type": "string",
+              "description": "The text shown for \"Are you sure? (replacing notes)\"."
+            },
+            "areYouSureImportMessage": {
+              "type": "string",
+              "description": "The text shown for \"Are you sure you want to replace notes for this item?\"."
+            },
+            "expireWarning": {
+              "type": "string",
+              "description": "The text shown for \"Shared content is available for 30 days\"."
+            },
+            "errorSharing": {
+              "type": "string",
+              "description": "The text shown for \"Error sharing notes\"."
+            },
+            "shareTitle": {
+              "type": "string",
+              "description": "The text shown for \"Sharing notes\"."
+            },
+            "shareDescription": {
+              "type": "string",
+              "description": "The text shown for \"Sharing notes for item: \"."
+            },
+            "errorSharingNoNotes": {
+              "type": "string",
+              "description": "The text shown for \"Error sharing notes: item doesn't contain notes\"."
+            },
+            "deeplinkNoteNotFound": {
+              "type": "string",
+              "description": "The text shown for \"Deep link to Item that does not exist\"."
+            },
+            "nextSeminarOpen": {
+              "type": "string",
+              "description": "The text shown for \"Next seminar is open\"."
+            },
+            "seminarNotAvailable": {
+              "type": "string",
+              "description": "The text shown for \"Seminar not available\"."
+            }
+          }
+        }
+      }
+    }
+  }
+}
